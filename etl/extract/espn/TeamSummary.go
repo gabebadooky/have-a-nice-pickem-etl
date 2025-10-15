@@ -8,9 +8,9 @@ import (
 	"net/http"
 )
 
-func callEspnTeamDataEndpoint(teamID string) any {
+func CallEspnTeamDataEndpoint(teamID string) any {
 	const espnHiddenTeamSummaryBaseURL string = "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/"
-	var espnTeamEndpoint string = fmt.Sprintf("%s?event=%s", espnHiddenTeamSummaryBaseURL, teamID)
+	var espnTeamEndpoint string = fmt.Sprintf("%s%s", espnHiddenTeamSummaryBaseURL, teamID)
 	var logmessage string
 
 	logmessage = fmt.Sprintf("\nCalling Team %s endpoint: %s", teamID, espnTeamEndpoint)
@@ -39,11 +39,11 @@ func callEspnTeamDataEndpoint(teamID string) any {
 	}
 
 	var teamDetails any
-	log.Println(string(body))
+	//log.Println(string(body))
 
-	jsonerr := json.Unmarshal(body, teamDetails)
+	jsonerr := json.Unmarshal(body, &teamDetails)
 	if jsonerr != nil {
-		logmessage = fmt.Sprintf("Error occurred decoding ESPN Team Summary JSON formatted game details for TeamID %s: %s", teamID, err)
+		logmessage = fmt.Sprintf("Error occurred decoding ESPN Team Summary JSON formatted team details for TeamID %s: %s", teamID, jsonerr)
 		fmt.Println(logmessage)
 		log.Println(logmessage)
 		return nil
@@ -53,5 +53,3 @@ func callEspnTeamDataEndpoint(teamID string) any {
 	return teamDetails
 
 }
-
-// "401754528"

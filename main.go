@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+
+	"github.com/gabebadooky/have-a-nice-pickem-etl/etl/extract/espn"
 )
 
 type details struct {
@@ -51,5 +53,6 @@ type odds struct {
 
 func main() {
 	fmt.Println("Hello, World")
-	fmt.Println(espn.getEspnGameData("401754528"))
+	fmt.Println((espn.CallEspnGameDataEndpoint("401754528")))
+	fmt.Println(espn.CallEspnTeamDataEndpoint("158"))
 }
