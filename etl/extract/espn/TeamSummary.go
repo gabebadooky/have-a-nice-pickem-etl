@@ -8,7 +8,7 @@ import (
 	"net/http"
 )
 
-func TeamSummary(teamID string) any {
+func TeamSummary(teamID string) map[string]any {
 	const espnHiddenTeamSummaryBaseURL string = "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/"
 	var espnTeamEndpoint string = fmt.Sprintf("%s%s", espnHiddenTeamSummaryBaseURL, teamID)
 
@@ -28,7 +28,7 @@ func TeamSummary(teamID string) any {
 
 	}
 
-	var teamDetails any
+	var teamDetails map[string]any
 	jsonerr := json.Unmarshal(body, &teamDetails)
 	if jsonerr != nil {
 		log.Printf("Error occurred decoding ESPN Team Summary JSON formatted team details for TeamID %s: %s\n", teamID, jsonerr)
@@ -36,7 +36,7 @@ func TeamSummary(teamID string) any {
 
 	}
 
-	log.Println("\n")
+	log.Println()
 	return teamDetails
 
 }

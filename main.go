@@ -11,7 +11,10 @@ type details struct {
 	league     string
 	week       uint8
 	year       uint16
-	code       string
+	espnCode   string
+	cbsCode    string
+	foxCode    string
+	vegasCode  string
 	awayTeamID string
 	homeTeamID string
 	date       string
