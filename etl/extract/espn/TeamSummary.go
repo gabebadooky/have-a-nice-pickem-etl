@@ -8,48 +8,35 @@ import (
 	"net/http"
 )
 
-func CallEspnTeamDataEndpoint(teamID string) any {
+func TeamSummary(teamID string) any {
 	const espnHiddenTeamSummaryBaseURL string = "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/"
 	var espnTeamEndpoint string = fmt.Sprintf("%s%s", espnHiddenTeamSummaryBaseURL, teamID)
-	var logmessage string
 
-	logmessage = fmt.Sprintf("\nCalling Team %s endpoint: %s", teamID, espnTeamEndpoint)
-	fmt.Println(logmessage)
-	log.Println(logmessage)
-
+	log.Printf("\nCalling Team %s endpoint: %s", teamID, espnTeamEndpoint)
 	resp, err := http.Get(espnTeamEndpoint)
-
 	if err != nil {
-		logmessage = fmt.Sprintf("Error occurred calling ESPN Team Summary Hidden Endpoint for TeamID %s: %s", teamID, err)
-		fmt.Println(logmessage)
-		log.Println(logmessage)
+		log.Printf("Error occurred calling ESPN Team Summary Hidden Endpoint for TeamID %s: %s\n", teamID, err)
 		return nil
 
 	}
-
 	defer resp.Body.Close()
-	body, err := io.ReadAll(resp.Body)
 
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		logmessage = fmt.Sprintf("Error occurred parsing ESPN Team Summary Hidden Endpoint Response for TeamID %s: %s", teamID, err)
-		fmt.Println(logmessage)
-		log.Println(logmessage)
+		log.Printf("Error occurred parsing ESPN Team Summary Hidden Endpoint Response for TeamID %s: %s\n", teamID, err)
 		return nil
 
 	}
 
 	var teamDetails any
-	//log.Println(string(body))
-
 	jsonerr := json.Unmarshal(body, &teamDetails)
 	if jsonerr != nil {
-		logmessage = fmt.Sprintf("Error occurred decoding ESPN Team Summary JSON formatted team details for TeamID %s: %s", teamID, jsonerr)
-		fmt.Println(logmessage)
-		log.Println(logmessage)
+		log.Printf("Error occurred decoding ESPN Team Summary JSON formatted team details for TeamID %s: %s\n", teamID, jsonerr)
 		return nil
 
 	}
 
+	log.Println("\n")
 	return teamDetails
 
 }
