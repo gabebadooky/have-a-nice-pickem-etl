@@ -3,7 +3,7 @@ package transform
 type Details struct {
 	gameID     string
 	league     string
-	week       uint8
+	week       int8
 	year       uint16
 	espnCode   string
 	cbsCode    string
@@ -17,46 +17,50 @@ type Details struct {
 	finished   string
 }
 
-type Team struct {
-
+func parseWeek(espnGameDetails map[string]interface{}) int8 {
+	week := espnGameDetails["header"].(map[string]interface{})["week"]
+	if value, ok := week.(int8); ok {
+		return value
+	} else {
+		return -1
+	}
 }
 
-
-func parseAwayTeam(espnGameDetails map[string]any) map[string] any {
+func parseAwayTeam(espnGameDetails map[string]any) map[string]interface{} {
 	var team map[string]any = espnGameDetails["header"]["competitions"][0]["competitors"][0]
-	if (team["homeAway"] == "away") {
+	if team["homeAway"] == "away" {
 		return team
 	} else {
 		return espnGameDetails["header"]["competitions"][0]["competitors"][1]
 	}
 }
 
-
-func parseHomeTeam(espnGameDetails map[string]any) map[string] any {
+func parseHomeTeam(espnGameDetails map[string]interface{}) map[string]interface{} {
 	var team map[string]any = espnGameDetails["header"]["competitions"][0]["competitors"][0]
-	if (team["homeAway"] == "home") {
+	if team["homeAway"] == "home" {
 		return team
 	} else {
 		return espnGameDetails["header"]["competitions"][0]["competitors"][1]
 	}
 }
 
+func InstantiateGameDetails(espnGameDetails map[string]interface{}) Details {
+	var details Details
 
-func InstantiateGameDetails(espnGameDetails map[string]any) Details {
-	return Details{
-		gameID: "",
-		league: "",
-		week: espnGameDetails["header"]["week"],
-		year: espnGameDetails["header"]["season"]["year"],
-		espnCode: espnGameDetails["header"]["id"],
-		cbsCode: "",
-		foxCode: "",
-		vegasCode: "",
-		awayTeamID: parseAwayTeam(espnGameDetails),
-		homeTeamID: parseHomeTeam(espnGameDetails),
-		date: "",
-		time: "",
-		tvCoverage: "",
-		finished: espnGameDetails["header"]["competitions"][0]["status"]["type"]["completed"]
-	}
+	details.gameID = ""
+	details.league = ""
+	details.week = int8(parseWeek(espnGameDetails))
+	details.year = espnGameDetails["header"]["season"]["year"]
+	details.espnCode = espnGameDetails["header"]["id"]
+	details.cbsCode = ""
+	details.foxCode = ""
+	details.vegasCode = ""
+	details.awayTeamID = parseAwayTeam(espnGameDetails)
+	details.homeTeamID = parseHomeTeam(espnGameDetails)
+	details.date = ""
+	details.time = ""
+	details.tvCoverage = ""
+	details.finished = espnGameDetails["header"]["competitions"][0]["status"]["type"]["completed"]
+
+	return details
 }
