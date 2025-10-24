@@ -6,23 +6,6 @@ import (
 	extractESPN "github.com/gabebadooky/have-a-nice-pickem-etl/etl/extract/espn"
 )
 
-type details struct {
-	gameID     string
-	league     string
-	week       uint8
-	year       uint16
-	espnCode   string
-	cbsCode    string
-	foxCode    string
-	vegasCode  string
-	awayTeamID string
-	homeTeamID string
-	date       string
-	time       string
-	tvCoverage string
-	finished   string
-}
-
 type boxScore struct {
 	awayQ1score       uint8
 	awayQ2score       uint8
