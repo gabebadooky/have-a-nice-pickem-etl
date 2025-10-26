@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 
+	gameDetails "github.com/gabebadooky/have-a-nice-pickem-elt/transform"
 	extractESPN "github.com/gabebadooky/have-a-nice-pickem-etl/etl/extract/espn"
 )
 
@@ -39,6 +40,7 @@ type odds struct {
 
 func main() {
 	fmt.Println("Hello, World")
-	extractESPN.GameSummary("401754528")
-	extractESPN.TeamSummary("158")
+	espnGameSummary := extractESPN.GameSummary("401754528")
+	//extractESPN.TeamSummary("158")
+	fmt.Println(gameDetails.GameDetails(espnGameSummary))
 }
