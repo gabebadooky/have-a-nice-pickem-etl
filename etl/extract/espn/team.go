@@ -1,3 +1,9 @@
+/*
+  - Calls the Team Summary endpoint (espnHiddenTeamSummaryBaseURL),
+    for a given ESPN TeamID, from the ESPN Hidden API:
+    https://gist.github.com/akeaswaran/b48b02f1c94f873c6655e7129910fc3b
+  - Parses and returns the JSON encoded response into `map`
+*/
 package espn
 
 import (
@@ -8,7 +14,7 @@ import (
 	"net/http"
 )
 
-func TeamSummary(teamID string) map[string]any {
+func Team(teamID string) map[string]any {
 	const espnHiddenTeamSummaryBaseURL string = "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/"
 	var espnTeamEndpoint string = fmt.Sprintf("%s%s", espnHiddenTeamSummaryBaseURL, teamID)
 
