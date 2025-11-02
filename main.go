@@ -2,8 +2,7 @@ package main
 
 import (
 	"fmt"
-	extract "have-a-nice-pickem-etl/etl/extract/espn"
-	transform "have-a-nice-pickem-etl/etl/transform"
+	extractCBS "have-a-nice-pickem-etl/etl/extract/cbs"
 )
 
 type ESPNGameDetailsResponse struct {
@@ -81,9 +80,10 @@ type odds struct {
 }
 
 func main() {
-	fmt.Println("Hello, World")
-	espnGameSummary := extract.Game("401754528")
-	fmt.Println(transform.Game("CFB", espnGameSummary))
+	//fmt.Println("Hello, World")
+	//espnGameSummary := extract.Game("401754528")
+	//fmt.Println(transform.Game("CFB", espnGameSummary))
+	fmt.Println(extractCBS.Week("CFB", 11, 2025))
 	//espnGameSummary := extractESPN.GameSummary("401754528")
 	//extractESPN.TeamSummary("158")
 	//fmt.Println(gameDetails.GameDetails(espnGameSummary))
