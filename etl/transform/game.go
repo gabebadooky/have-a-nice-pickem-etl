@@ -3,6 +3,9 @@ package transform
 import (
 	"fmt"
 	"have-a-nice-pickem-etl/etl/types"
+	"strings"
+
+	"github.com/PuerkitoBio/goquery"
 )
 
 func parseGameID(espnGameDetails types.ESPNGameDetailsResponse) string {
@@ -40,6 +43,22 @@ func parseEspnGameCode(espnGameDetails types.ESPNGameDetailsResponse) string {
 
 }
 
+func extractCbsGameCode(cbsSchedulePage *goquery.Selection) string {
+	var scorecards *goquery.Selection = cbsSchedulePage.Find("div.Page-colMain").Find("div.score-card-container").Find("div.score-cards").Find("div.single-score-card")
+	scorecards.Each(func(i int, s *goquery.Selection) {
+		var cbsGameCode string = s.AttrOr("data-abbrev", "cbsGameCode")
+		var scorecardProgressTable *goquery.Selection = s.Find("div.team-details-wrapper").Find("div.in-progress-table").Find("table").Find("tbody").Find("tr")
+		var awayTeamHREF string = scorecardProgressTable.Find("td.team").Eq(0).Find("div.team-details-wrapper").Find("a").First().AttrOr("href", "cbsTeamHREF")
+		var awayTeamCBScodeIndex int = strings.Index(awayTeamHREF, "teams/")
+		var awayTeamCBScode string = awayTeamHREF[awayTeamCBScodeIndex:]
+
+		var homeTeamHREF string = scorecardProgressTable.Find("td.team").Eq(0).Find("div.team-details-wrapper").Find("a").First().AttrOr("href", "cbsTeamHREF")
+		var homeTeamCBScodeIndex int = strings.Index(homeTeamHREF, "teams/")
+		var homeTeamCBScode string = homeTeamHREF[homeTeamCBScodeIndex:]
+	})
+
+}
+
 func parseTeamID(homeAway string, espnGameDetails types.ESPNGameDetailsResponse) string {
 	var competitorHomeAway string = espnGameDetails.Header.Competitions[0].Competitors[0].HomeAway
 	if homeAway == competitorHomeAway {
@@ -70,7 +89,7 @@ func parseGameStatus(espnGameDetails types.ESPNGameDetailsResponse) bool {
 
 }
 
-func Game(league string, espnGameDetails types.ESPNGameDetailsResponse) types.GameDetails {
+func Game(espnGameDetails types.ESPNGameDetailsResponse, cbsSchedulePage *goquery.Selection) types.GameDetails {
 	var game types.GameDetails
 
 	game.GameID = parseGameID(espnGameDetails)
@@ -78,7 +97,7 @@ func Game(league string, espnGameDetails types.ESPNGameDetailsResponse) types.Ga
 	game.Week = parseWeek(espnGameDetails)
 	game.Year = parseYear(espnGameDetails)
 	game.ESPNCode = parseEspnGameCode(espnGameDetails)
-	game.CBSCode = ""
+	game.CBSCode = extractCbsGameCode(cbsSchedulePage)
 	game.FoxCode = ""
 	game.VegasCode = ""
 	game.AwayTeamID = parseTeamID("away", espnGameDetails)

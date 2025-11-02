@@ -15,9 +15,13 @@ func Schedule(league string, weeknum uint8) *http.Response {
 
 	resp, err := http.Get(schedulePageLink)
 	if err != nil {
-		log.Printf("Error occurred navigating to %s:\n%s", schedulePageLink, err)
+		log.Panicf("Error occurred navigating to %s:\n%s", schedulePageLink, err)
 	}
 	defer resp.Body.Close()
+
+	if resp.StatusCode != 200 {
+		log.Panicf("Non 200 response code returned from %s:\n%d", schedulePageLink, resp.StatusCode)
+	}
 
 	return resp
 }
