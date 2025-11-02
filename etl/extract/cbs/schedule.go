@@ -10,7 +10,7 @@ import (
 	"net/http"
 )
 
-func Week(league string, weeknum uint8, year uint16) *http.Response {
+func Schedule(league string, weeknum uint8, year uint16) *http.Response {
 	var schedulePageLink string = fmt.Sprintf("https://www.cbssports.com/college-football/scoreboard/FBS/%d/regular/%d/?layout=compact", year, weeknum)
 
 	resp, err := http.Get(schedulePageLink)
