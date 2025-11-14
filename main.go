@@ -4,7 +4,10 @@ import (
 	"fmt"
 	extractcbs "have-a-nice-pickem-etl/etl/extract/cbs"
 	extractespn "have-a-nice-pickem-etl/etl/extract/espn"
-	"have-a-nice-pickem-etl/etl/transform"
+	transform "have-a-nice-pickem-etl/etl/transform"
+	etltypes "have-a-nice-pickem-etl/etl/types"
+
+	"github.com/PuerkitoBio/goquery"
 )
 
 type ESPNGameDetailsResponse struct {
@@ -82,8 +85,7 @@ type odds struct {
 }
 
 func main() {
-	//fmt.Println("Hello, World")
-	espnGameSummary := extractespn.Game("401754528")
-	cbsSchedulePage := extractcbs.Schedule("CFB", 11, 2025)
+	var espnGameSummary etltypes.ESPNGameDetailsResponse = extractespn.Game("401754528")
+	var cbsSchedulePage *goquery.Selection = extractcbs.Schedule("CFB", 11, 2025)
 	fmt.Println(transform.Game(espnGameSummary, cbsSchedulePage))
 }
