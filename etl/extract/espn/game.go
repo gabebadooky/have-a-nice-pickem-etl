@@ -25,7 +25,7 @@ func Game(gameID string) types.ESPNGameDetailsResponse {
 	log.Printf("\nCalling Game %s endpoint: %s", gameID, espnGameEndpoint)
 	resp, err := http.Get(espnGameEndpoint)
 	if err != nil {
-		log.Printf("Error occurred calling ESPN Game Summary Hidden Endpoint for GameID %s: %s\n", gameID, err)
+		log.Printf("Error occurred calling ESPN Game Summary Hidden Endpoint for GameID %s:\n%s\n", gameID, err)
 		return types.ESPNGameDetailsResponse{}
 
 	}

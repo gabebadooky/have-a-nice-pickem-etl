@@ -8,9 +8,11 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+
+	"github.com/PuerkitoBio/goquery"
 )
 
-func Schedule(league string, weeknum uint8) *http.Response {
+func Schedule(league string, weeknum uint8) *goquery.Selection {
 	var schedulePageLink string = fmt.Sprintf("https://www.foxsports.com/college-football/schedule?groupId=2&seasonType=reg&week=%d", weeknum)
 
 	resp, err := http.Get(schedulePageLink)
@@ -23,5 +25,11 @@ func Schedule(league string, weeknum uint8) *http.Response {
 		log.Panicf("Non 200 response code returned from %s:\n%d", schedulePageLink, resp.StatusCode)
 	}
 
-	return resp
+	doc, err := goquery.NewDocumentFromReader(resp.Body)
+	if err != nil {
+		log.Panicf("Error occurred instanitating goquery document:\n%s", err)
+	}
+
+	var htmlbody *goquery.Selection = doc.Find("body").First()
+	return htmlbody
 }

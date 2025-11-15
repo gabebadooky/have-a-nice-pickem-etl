@@ -30,6 +30,6 @@ func Schedule(league string, weeknum uint8, year uint16) *goquery.Selection {
 		log.Panicf("Error occurred instantiating goquery document:\n%s", err)
 	}
 
-	htmlbody := doc.Find("body").First()
+	var htmlbody *goquery.Selection = doc.Find("body").First()
 	return htmlbody
 }
