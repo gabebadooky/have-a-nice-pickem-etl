@@ -1,19 +1,11 @@
 package types
 
-type GameDetails struct {
-	GameID        string
-	League        string
-	Week          int8
-	Year          uint16
-	ESPNCode      string
-	CBSCode       string
-	FoxCode       string
-	VegasCode     string
-	AwayTeamID    string
-	HomeTeamID    string
-	ZuluTimestamp string
-	Broadcast     string
-	Finished      bool
+type ESPNScheduleResponse struct {
+	Events []Event `json:"events"`
+}
+
+type Event struct {
+	ID string `json:"id"`
 }
 
 type ESPNGameDetailsResponse struct {

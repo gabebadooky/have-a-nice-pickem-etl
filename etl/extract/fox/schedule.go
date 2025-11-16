@@ -12,17 +12,18 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
-func Schedule(league string, weeknum uint8) *goquery.Selection {
-	var schedulePageLink string = fmt.Sprintf("https://www.foxsports.com/college-football/schedule?groupId=2&seasonType=reg&week=%d", weeknum)
+func GetSchedule(league string, week uint8) *goquery.Selection {
+	var foxSchedulePageLink string = fmt.Sprintf("https://www.foxsports.com/college-football/schedule?groupId=2&seasonType=reg&week=%d", week)
 
-	resp, err := http.Get(schedulePageLink)
+	log.Printf("\nRequesting Fox Schedule page for week %d: %s", week, foxSchedulePageLink)
+	resp, err := http.Get(foxSchedulePageLink)
 	if err != nil {
-		log.Panicf("Error occurred navigating to %s:\n%s", schedulePageLink, err)
+		log.Panicf("Error occurred navigating to %s:\n%s", foxSchedulePageLink, err)
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != 200 {
-		log.Panicf("Non 200 response code returned from %s:\n%d", schedulePageLink, resp.StatusCode)
+		log.Panicf("Non 200 response code returned from %s:\n%d", foxSchedulePageLink, resp.StatusCode)
 	}
 
 	doc, err := goquery.NewDocumentFromReader(resp.Body)
@@ -31,5 +32,6 @@ func Schedule(league string, weeknum uint8) *goquery.Selection {
 	}
 
 	var htmlbody *goquery.Selection = doc.Find("body").First()
+	log.Printf("htmlBody:\n%v\n", htmlbody)
 	return htmlbody
 }
