@@ -18,7 +18,7 @@ import (
 	"net/http"
 )
 
-func GetESPNGame(gameID string) types.ESPNGameDetailsResponse {
+func GetGame(gameID string) types.ESPNGameDetailsResponse {
 	const espnHiddenGameSummaryBaseURL string = "https://site.api.espn.com/apis/site/v2/sports/football/college-football/summary"
 	var espnGameEndpoint string = fmt.Sprintf("%s?event=%s", espnHiddenGameSummaryBaseURL, gameID)
 

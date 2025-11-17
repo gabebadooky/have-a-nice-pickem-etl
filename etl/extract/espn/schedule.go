@@ -19,7 +19,7 @@ import (
 )
 
 func GetSchedule(league string, week uint8) types.ESPNScheduleResponse {
-	const espnHiddenScoreboardBaseURL string = "https: //site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard"
+	const espnHiddenScoreboardBaseURL string = "https://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard"
 	var espnScoreboardEndpoint string = fmt.Sprintf("%s?week=%d", espnHiddenScoreboardBaseURL, week)
 
 	log.Printf("\nCalling Scoreboard endpoint for week %d: %s", week, espnScoreboardEndpoint)

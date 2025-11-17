@@ -2,13 +2,7 @@ package main
 
 import (
 	"fmt"
-	"have-a-nice-pickem-etl/etl/extract/cbs"
 	"have-a-nice-pickem-etl/etl/extract/espn"
-	"have-a-nice-pickem-etl/etl/extract/fox"
-	transform "have-a-nice-pickem-etl/etl/transform"
-	etltypes "have-a-nice-pickem-etl/etl/types"
-
-	"github.com/PuerkitoBio/goquery"
 )
 
 type boxScore struct {
@@ -43,8 +37,9 @@ type odds struct {
 }
 
 func main() {
-	var espnGameSummary etltypes.ESPNGameDetailsResponse = espn.GetESPNGame("401754528")
-	var cbsSchedulePage *goquery.Selection = cbs.GetCBSSchedule("CFB", 11, 2025)
-	var foxSchedulePage *goquery.Selection = fox.GetFOXSchedule("CFB", 11)
-	fmt.Println(transform.Game(espnGameSummary, cbsSchedulePage))
+	/*var espnGameSummary etltypes.ESPNGameDetailsResponse = espn.GetESPNGame("401754528")
+	var cbsSchedulePage *goquery.Selection = cbs.GetSchedule("CFB", 11, 2025)
+	var foxSchedulePage *goquery.Selection = fox.GetSchedule("CFB", 11)
+	fmt.Println(transform.Game(espnGameSummary, cbsSchedulePage, foxSchedulePage))*/
+	fmt.Printf("%s", espn.GetSchedule("CFB", 12).Events[0].ID)
 }
