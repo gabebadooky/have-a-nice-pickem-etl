@@ -12,13 +12,13 @@ package espn
 import (
 	"encoding/json"
 	"fmt"
-	"have-a-nice-pickem-etl/etl/types"
+	"have-a-nice-pickem-etl/etl/pickemstructs"
 	"io"
 	"log"
 	"net/http"
 )
 
-func GetSchedule(league string, week uint8) types.ESPNScheduleResponse {
+func GetSchedule(league string, week uint8) pickemstructs.ESPNScheduleResponse {
 	const espnHiddenScoreboardBaseURL string = "https://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard"
 	var espnScoreboardEndpoint string = fmt.Sprintf("%s?week=%d", espnHiddenScoreboardBaseURL, week)
 
@@ -38,7 +38,7 @@ func GetSchedule(league string, week uint8) types.ESPNScheduleResponse {
 		log.Panicf("Error occurred parsing ESPN Scoreboard Summary Hidden Endpoint Response for week %d:\n%s\n", week, err)
 	}
 
-	var scheduleDetails types.ESPNScheduleResponse
+	var scheduleDetails pickemstructs.ESPNScheduleResponse
 	jsonerr := json.Unmarshal([]byte(body), &scheduleDetails)
 	if jsonerr != nil {
 		log.Panicf("Error occurred decoding ESPN Scoreboard Summary JSON formatted schedule details for week %d:\n%s\n", week, jsonerr)

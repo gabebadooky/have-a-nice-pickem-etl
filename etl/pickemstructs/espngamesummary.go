@@ -1,12 +1,4 @@
-package types
-
-type ESPNScheduleResponse struct {
-	Events []Event `json:"events"`
-}
-
-type Event struct {
-	ID string `json:"id"`
-}
+package pickemstructs
 
 type ESPNGameDetailsResponse struct {
 	Header Header `json:"header"`
@@ -32,8 +24,14 @@ type Competitions struct {
 }
 
 type Competitors struct {
-	HomeAway string `json:"homeAway"`
-	Team     Team   `json:"team"`
+	HomeAway   string      `json:"homeAway"`
+	Linescores []Linescore `json:"linescores"`
+	Score      string      `json:"score"`
+	Team       Team        `json:"team"`
+}
+
+type Linescore struct {
+	DisplayValue string `json:"displayValue"`
 }
 
 type Team struct {

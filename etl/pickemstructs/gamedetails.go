@@ -1,4 +1,4 @@
-package types
+package pickemstructs
 
 type GameDetails struct {
 	GameID        string

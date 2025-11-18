@@ -12,13 +12,13 @@ package espn
 import (
 	"encoding/json"
 	"fmt"
-	"have-a-nice-pickem-etl/etl/types"
+	"have-a-nice-pickem-etl/etl/pickemstructs"
 	"io"
 	"log"
 	"net/http"
 )
 
-func GetGame(gameID string) types.ESPNGameDetailsResponse {
+func GetGame(gameID string) pickemstructs.ESPNGameDetailsResponse {
 	const espnHiddenGameSummaryBaseURL string = "https://site.api.espn.com/apis/site/v2/sports/football/college-football/summary"
 	var espnGameEndpoint string = fmt.Sprintf("%s?event=%s", espnHiddenGameSummaryBaseURL, gameID)
 
@@ -26,7 +26,7 @@ func GetGame(gameID string) types.ESPNGameDetailsResponse {
 	resp, err := http.Get(espnGameEndpoint)
 	if err != nil {
 		log.Printf("Error occurred calling ESPN Game Summary Hidden Endpoint for GameID %s:\n%s\n", gameID, err)
-		return types.ESPNGameDetailsResponse{}
+		return pickemstructs.ESPNGameDetailsResponse{}
 
 	}
 	defer resp.Body.Close()
@@ -34,15 +34,15 @@ func GetGame(gameID string) types.ESPNGameDetailsResponse {
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		log.Printf("Error occurred parsing ESPN Game Summary Hidden Endpoint Response for GameID %s: %s\n", gameID, err)
-		return types.ESPNGameDetailsResponse{}
+		return pickemstructs.ESPNGameDetailsResponse{}
 
 	}
 
-	var gameDetails types.ESPNGameDetailsResponse
+	var gameDetails pickemstructs.ESPNGameDetailsResponse
 	jsonerr := json.Unmarshal([]byte(body), &gameDetails)
 	if jsonerr != nil {
 		log.Printf("Error occurred decoding ESPN Game Summary JSON formatted game details for GameID %s: %s\n", gameID, jsonerr)
-		return types.ESPNGameDetailsResponse{}
+		return pickemstructs.ESPNGameDetailsResponse{}
 
 	}
 
