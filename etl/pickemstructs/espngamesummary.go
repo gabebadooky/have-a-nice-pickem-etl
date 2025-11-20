@@ -1,7 +1,9 @@
 package pickemstructs
 
 type ESPNGameDetailsResponse struct {
-	Header Header `json:"header"`
+	Header     Header       `json:"header"`
+	Pickcenter []Pickcenter `json:"pickcenter"`
+	Predictor  Predictor    `json:"predictor"`
 }
 
 type Header struct {
@@ -56,4 +58,24 @@ type Type struct {
 
 type League struct {
 	Abbreviation string `json:"abbreviation"`
+}
+
+type Pickcenter struct {
+	OverUnder    float32  `json:"overUnder"`
+	Spread       float32  `json:"spread"`
+	AwayTeamOdds TeamOdds `json:"awayTeamOdds"`
+	HomeTeamOdds TeamOdds `json:"homeTeamOdds"`
+}
+
+type TeamOdds struct {
+	Moneyline uint16 `json:"moneyline"`
+}
+
+type Predictor struct {
+	AwayTeam PredictorTeam `json:"awayTeam"`
+	HomeTeam PredictorTeam `json:"homeTeam"`
+}
+
+type PredictorTeam struct {
+	GameProjection string `json:"gameProjection"`
 }
