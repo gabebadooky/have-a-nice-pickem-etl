@@ -11,20 +11,21 @@ package espn
 import (
 	"encoding/json"
 	"fmt"
+	"have-a-nice-pickem-etl/etl/pickemstructs"
 	"io"
 	"log"
 	"net/http"
 )
 
-func Team(teamID string) map[string]any {
-	const espnHiddenTeamSummaryBaseURL string = "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/"
-	var espnTeamEndpoint string = fmt.Sprintf("%s%s", espnHiddenTeamSummaryBaseURL, teamID)
+func Team(teamID string) pickemstructs.TeamSummaryResponse {
+	const espnHiddenTeamSummaryBaseURL string = "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams"
+	var espnTeamEndpoint string = fmt.Sprintf("%s/%s", espnHiddenTeamSummaryBaseURL, teamID)
 
 	log.Printf("\nCalling Team %s endpoint: %s", teamID, espnTeamEndpoint)
 	resp, err := http.Get(espnTeamEndpoint)
 	if err != nil {
 		log.Printf("Error occurred calling ESPN Team Summary Hidden Endpoint for TeamID %s: %s\n", teamID, err)
-		return nil
+		return pickemstructs.TeamSummaryResponse{}
 
 	}
 	defer resp.Body.Close()
@@ -32,19 +33,19 @@ func Team(teamID string) map[string]any {
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		log.Printf("Error occurred parsing ESPN Team Summary Hidden Endpoint Response for TeamID %s: %s\n", teamID, err)
-		return nil
+		return pickemstructs.TeamSummaryResponse{}
 
 	}
 
-	var teamDetails map[string]any
+	var teamDetails pickemstructs.TeamSummaryResponse
 	jsonerr := json.Unmarshal(body, &teamDetails)
 	if jsonerr != nil {
 		log.Printf("Error occurred decoding ESPN Team Summary JSON formatted team details for TeamID %s: %s\n", teamID, jsonerr)
-		return nil
+		return pickemstructs.TeamSummaryResponse{}
 
 	}
 
-	log.Println()
+	log.Println(teamDetails)
 	return teamDetails
 
 }

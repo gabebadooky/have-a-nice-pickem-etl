@@ -27,17 +27,17 @@ type Competitions struct {
 }
 
 type Competitors struct {
-	HomeAway   string      `json:"homeAway"`
-	Linescores []Linescore `json:"linescores"`
-	Score      string      `json:"score"`
-	Team       Team        `json:"team"`
+	HomeAway   string         `json:"homeAway"`
+	Linescores []Linescore    `json:"linescores"`
+	Score      string         `json:"score"`
+	Team       CompetitorTeam `json:"team"`
 }
 
 type Linescore struct {
 	DisplayValue string `json:"displayValue"`
 }
 
-type Team struct {
+type CompetitorTeam struct {
 	DisplayName string `json:"displayName"`
 }
 
