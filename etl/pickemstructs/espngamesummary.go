@@ -1,6 +1,7 @@
 package pickemstructs
 
 type ESPNGameDetailsResponse struct {
+	GameInfo   GameInfo     `json:"gameInfo"`
 	Header     Header       `json:"header"`
 	Pickcenter []Pickcenter `json:"pickcenter"`
 	Predictor  Predictor    `json:"predictor"`
@@ -58,6 +59,22 @@ type Type struct {
 
 type League struct {
 	Abbreviation string `json:"abbreviation"`
+}
+
+type GameInfo struct {
+	Venue Venue `json:"venue"`
+}
+
+type Venue struct {
+	FullName string  `json:"fullName"`
+	Address  Address `json:"address"`
+}
+
+type Address struct {
+	City    string `json:"city"`
+	State   string `json:"state"`
+	Zipcode string `json:"zipCode"`
+	Country string `json:"country"`
 }
 
 type Pickcenter struct {
