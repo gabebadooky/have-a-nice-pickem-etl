@@ -2,11 +2,6 @@ package teamdetails
 
 import "have-a-nice-pickem-etl/etl/pickemstructs"
 
-func ParseTeamID(teamSummaryDetails pickemstructs.TeamSummaryResponse) string {
-	var teamID string = teamSummaryDetails.Team.ID
-	return teamID
-}
-
 func ParseESPNteamCode(teamSummaryDetails pickemstructs.TeamSummaryResponse) string {
 	var espnTeamCode string = teamSummaryDetails.Team.Code
 	return espnTeamCode

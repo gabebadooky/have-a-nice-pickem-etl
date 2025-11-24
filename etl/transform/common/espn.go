@@ -6,8 +6,13 @@ import (
 	"have-a-nice-pickem-etl/etl/utils"
 )
 
+func ParseTeamSummaryTeamID(teamSummaryDetails pickemstructs.TeamSummaryResponse) string {
+	var teamID string = teamSummaryDetails.Team.ID
+	return teamID
+}
+
 // Generates "TeamID" field for the Home or Away team from ESPN Game Summary API
-func ParseTeamID(homeAway string, espnGameDetails pickemstructs.ESPNGameDetailsResponse) string {
+func ParseGameSummaryTeamID(homeAway string, espnGameDetails pickemstructs.ESPNGameDetailsResponse) string {
 	var competitorHomeAway string = espnGameDetails.Header.Competitions[0].Competitors[0].HomeAway
 	if homeAway == competitorHomeAway {
 		var teamID string = espnGameDetails.Header.Competitions[0].Competitors[0].Team.DisplayName
@@ -23,8 +28,8 @@ func ParseTeamID(homeAway string, espnGameDetails pickemstructs.ESPNGameDetailsR
 
 // Generates "GameID" field from AwayTeamID and HomeTeamID from ESPN Game Summary API
 func ParseGameID(espnGameDetails pickemstructs.ESPNGameDetailsResponse) string {
-	var awayTeamID string = ParseTeamID("away", espnGameDetails)
-	var homeTeamID string = ParseTeamID("home", espnGameDetails)
+	var awayTeamID string = ParseGameSummaryTeamID("away", espnGameDetails)
+	var homeTeamID string = ParseGameSummaryTeamID("home", espnGameDetails)
 	var gameID string = fmt.Sprintf("%s-at-%s", awayTeamID, homeTeamID)
 	var formattedGameID string = utils.FormatStringID(gameID)
 	return formattedGameID

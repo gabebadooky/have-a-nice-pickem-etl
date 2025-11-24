@@ -11,7 +11,7 @@ func CreateBoxScoreRecord(espnGameDetails pickemstructs.ESPNGameDetailsResponse,
 	var newRecord pickemstructs.Boxscore
 
 	newRecord.GameID = common.ParseGameID(espnGameDetails)
-	newRecord.TeamID = common.ParseTeamID(homeAway, espnGameDetails)
+	newRecord.TeamID = common.ParseGameSummaryTeamID(homeAway, espnGameDetails)
 	newRecord.Q1Score = boxscore.ParseQuarterScore(espnGameDetails, homeAway, 1)
 	newRecord.Q2Score = boxscore.ParseQuarterScore(espnGameDetails, homeAway, 2)
 	newRecord.Q3Score = boxscore.ParseQuarterScore(espnGameDetails, homeAway, 3)

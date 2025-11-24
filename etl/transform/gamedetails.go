@@ -20,8 +20,8 @@ func CreateGameDetailsRecord(espnGameDetails pickemstructs.ESPNGameDetailsRespon
 	newRecord.CBSCode = gamedetails.ExtractCbsGameCode(cbsSchedulePage, newRecord.GameID)
 	newRecord.FoxCode = gamedetails.ExtractFoxGameCode(foxSchedulePage, newRecord.GameID)
 	newRecord.VegasCode = ""
-	newRecord.AwayTeamID = common.ParseTeamID("away", espnGameDetails)
-	newRecord.HomeTeamID = common.ParseTeamID("home", espnGameDetails)
+	newRecord.AwayTeamID = common.ParseGameSummaryTeamID("away", espnGameDetails)
+	newRecord.HomeTeamID = common.ParseGameSummaryTeamID("home", espnGameDetails)
 	newRecord.ZuluTimestamp = gamedetails.ParseGameZuluTimestamp(espnGameDetails)
 	newRecord.Broadcast = gamedetails.ParseBroadcast(espnGameDetails)
 	newRecord.Finished = gamedetails.ParseGameStatus(espnGameDetails)

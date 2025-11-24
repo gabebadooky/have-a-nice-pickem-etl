@@ -2,13 +2,14 @@ package transform
 
 import (
 	"have-a-nice-pickem-etl/etl/pickemstructs"
+	"have-a-nice-pickem-etl/etl/transform/common"
 	"have-a-nice-pickem-etl/etl/transform/teamdetails"
 )
 
 func CreateTeamDetailsRecord(espnTeamDetails pickemstructs.TeamSummaryResponse, league string) pickemstructs.TeamDetails {
 	var newRecord pickemstructs.TeamDetails
 
-	newRecord.TeamID = teamdetails.ParseTeamID(espnTeamDetails)
+	newRecord.TeamID = common.ParseTeamSummaryTeamID(espnTeamDetails)
 	newRecord.League = league
 	newRecord.ESPNCode = teamdetails.ParseESPNteamCode(espnTeamDetails)
 	newRecord.CBSCode = ""
