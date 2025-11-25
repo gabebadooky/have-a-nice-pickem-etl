@@ -13,13 +13,15 @@ import (
 	"encoding/json"
 	"fmt"
 	"have-a-nice-pickem-etl/etl/pickemstructs"
+	"have-a-nice-pickem-etl/etl/utils"
 	"io"
 	"log"
 	"net/http"
 )
 
+// Call ESPN Scoreboard Summary API Endpoint for a given league and week
 func GetSchedule(league string, week uint8) pickemstructs.ESPNScheduleResponse {
-	const espnHiddenScoreboardBaseURL string = "https://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard"
+	const espnHiddenScoreboardBaseURL string = utils.ESPN_CFB_SCHEDULE_ENDPOINT_URL
 	var espnScoreboardEndpoint string = fmt.Sprintf("%s?week=%d", espnHiddenScoreboardBaseURL, week)
 
 	log.Printf("\nCalling Scoreboard endpoint for week %d: %s", week, espnScoreboardEndpoint)

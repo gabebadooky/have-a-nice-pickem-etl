@@ -5,9 +5,17 @@ import (
 	"have-a-nice-pickem-etl/etl/transform/location"
 )
 
-// Transforms and consolidates Game properties from various sources
-func CreateLocationRecord(espnGameDetails pickemstructs.ESPNGameDetailsResponse, geocodeDetails pickemstructs.OpencageResponse) pickemstructs.Location {
-	var newRecord pickemstructs.Location
+type Location struct {
+	Stadium   string
+	City      string
+	State     string
+	Latitude  float64
+	Longitude float64
+}
+
+// Transforms and consolidates Location properties from various sources
+func CreateLocationRecord(espnGameDetails pickemstructs.ESPNGameDetailsResponse, geocodeDetails pickemstructs.OpencageResponse) Location {
+	var newRecord Location
 
 	newRecord.Stadium = location.ParseStadium(espnGameDetails)
 	newRecord.City = location.ParseCity(espnGameDetails)

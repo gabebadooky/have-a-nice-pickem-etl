@@ -13,13 +13,15 @@ import (
 	"encoding/json"
 	"fmt"
 	"have-a-nice-pickem-etl/etl/pickemstructs"
+	"have-a-nice-pickem-etl/etl/utils"
 	"io"
 	"log"
 	"net/http"
 )
 
+// Call ESPN Game Summary API Endpoint for a given ESPN Game code
 func GetGame(gameID string) pickemstructs.ESPNGameDetailsResponse {
-	const espnHiddenGameSummaryBaseURL string = "https://site.api.espn.com/apis/site/v2/sports/football/college-football/summary"
+	const espnHiddenGameSummaryBaseURL string = utils.ESPN_CFB_GAME_ENDPOINT_URL
 	var espnGameEndpoint string = fmt.Sprintf("%s?event=%s", espnHiddenGameSummaryBaseURL, gameID)
 
 	log.Printf("\nCalling Game %s endpoint: %s", gameID, espnGameEndpoint)

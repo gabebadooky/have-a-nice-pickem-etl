@@ -8,6 +8,15 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
+func setTeamID(cbsTeamCode string) string {
+	teamID, exists := utils.CbsTeamCodeToTeamIDmapping[cbsTeamCode]
+	if exists {
+		return teamID
+	} else {
+		return cbsTeamCode
+	}
+}
+
 // Extracts CBS team code of 'Home' or 'Away' team from a given CBS Game Code
 func ExtractCbsTeamCode(scorecard *goquery.Selection, homeAway string) string {
 	var scorecardProgressTable *goquery.Selection = scorecard.Find("div.in-progress-table").Find("table").Find("tbody")
@@ -61,17 +70,8 @@ func ExtractCbsGameCode(cbsSchedulePage *goquery.Selection, gameID string) strin
 		cbsAwayTeamCodeWithoutAbbr = awayTeamCBScode[strings.Index(awayTeamCBScode, "/")+1:]
 		cbsHomeTeamCodeWithoutAbbr = homeTeamCBScode[strings.Index(homeTeamCBScode, "/")+1:]
 
-		if _, exists := utils.CbsTeamCodeToTeamIDmapping[cbsAwayTeamCodeWithoutAbbr]; exists {
-			awayTeamID = utils.CbsTeamCodeToTeamIDmapping[cbsAwayTeamCodeWithoutAbbr]
-		} else {
-			awayTeamID = cbsAwayTeamCodeWithoutAbbr
-		}
-
-		if _, exists := utils.CbsTeamCodeToTeamIDmapping[cbsHomeTeamCodeWithoutAbbr]; exists {
-			homeTeamID = utils.CbsTeamCodeToTeamIDmapping[cbsHomeTeamCodeWithoutAbbr]
-		} else {
-			homeTeamID = cbsHomeTeamCodeWithoutAbbr
-		}
+		awayTeamID = setTeamID(cbsAwayTeamCodeWithoutAbbr)
+		homeTeamID = setTeamID(cbsHomeTeamCodeWithoutAbbr)
 
 		if strings.Contains(gameID, awayTeamID) && strings.Contains(gameID, homeTeamID) {
 			// Break out of loop

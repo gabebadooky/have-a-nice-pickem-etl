@@ -12,19 +12,21 @@ import (
 	"encoding/json"
 	"fmt"
 	"have-a-nice-pickem-etl/etl/pickemstructs"
+	"have-a-nice-pickem-etl/etl/utils"
 	"io"
 	"log"
 	"net/http"
 )
 
-func Team(teamID string) pickemstructs.TeamSummaryResponse {
-	const espnHiddenTeamSummaryBaseURL string = "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams"
-	var espnTeamEndpoint string = fmt.Sprintf("%s/%s", espnHiddenTeamSummaryBaseURL, teamID)
+// Call ESPN Team Summary API Endpoint for a given ESPN team code
+func Team(espnTeamCode string) pickemstructs.TeamSummaryResponse {
+	const espnHiddenTeamSummaryBaseURL string = utils.ESPN_CFB_TEAM_ENDPOINT_URL
+	var espnTeamEndpoint string = fmt.Sprintf("%s/%s", espnHiddenTeamSummaryBaseURL, espnTeamCode)
 
-	log.Printf("\nCalling Team %s endpoint: %s", teamID, espnTeamEndpoint)
+	log.Printf("\nCalling Team %s endpoint: %s", espnTeamCode, espnTeamEndpoint)
 	resp, err := http.Get(espnTeamEndpoint)
 	if err != nil {
-		log.Printf("Error occurred calling ESPN Team Summary Hidden Endpoint for TeamID %s: %s\n", teamID, err)
+		log.Printf("Error occurred calling ESPN Team Summary Hidden Endpoint for TeamID %s: %s\n", espnTeamCode, err)
 		return pickemstructs.TeamSummaryResponse{}
 
 	}
@@ -32,7 +34,7 @@ func Team(teamID string) pickemstructs.TeamSummaryResponse {
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		log.Printf("Error occurred parsing ESPN Team Summary Hidden Endpoint Response for TeamID %s: %s\n", teamID, err)
+		log.Printf("Error occurred parsing ESPN Team Summary Hidden Endpoint Response for TeamID %s: %s\n", espnTeamCode, err)
 		return pickemstructs.TeamSummaryResponse{}
 
 	}
@@ -40,7 +42,7 @@ func Team(teamID string) pickemstructs.TeamSummaryResponse {
 	var teamDetails pickemstructs.TeamSummaryResponse
 	jsonerr := json.Unmarshal(body, &teamDetails)
 	if jsonerr != nil {
-		log.Printf("Error occurred decoding ESPN Team Summary JSON formatted team details for TeamID %s: %s\n", teamID, jsonerr)
+		log.Printf("Error occurred decoding ESPN Team Summary JSON formatted team details for TeamID %s: %s\n", espnTeamCode, jsonerr)
 		return pickemstructs.TeamSummaryResponse{}
 
 	}

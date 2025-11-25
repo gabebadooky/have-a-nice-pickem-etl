@@ -68,7 +68,6 @@ func ParseOvertimeScore(espnGameDetails pickemstructs.ESPNGameDetailsResponse, h
 		return uint8(0)
 	} else {
 		return ParsePointsForGivenCompetitorAndPeriod(homeAway, team1HomeAway, team2HomeAway, team1Points, team2Points)
-
 	}
 
 }

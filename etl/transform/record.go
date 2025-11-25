@@ -6,8 +6,17 @@ import (
 	"have-a-nice-pickem-etl/etl/transform/record"
 )
 
-func CreateOverallRecordRow(espnTeamDetails pickemstructs.TeamSummaryResponse) pickemstructs.Record {
-	var newRecord pickemstructs.Record
+type Record struct {
+	TeamID     string
+	RecordType string
+	Wins       uint8
+	Losses     uint8
+	Ties       uint8
+}
+
+// Instantiates Team Overall Record from ESPN Team Summary
+func CreateOverallRecordRow(espnTeamDetails pickemstructs.TeamSummaryResponse) Record {
+	var newRecord Record
 
 	newRecord.TeamID = common.ParseTeamSummaryTeamID(espnTeamDetails)
 	newRecord.RecordType = "Overall"
@@ -17,3 +26,17 @@ func CreateOverallRecordRow(espnTeamDetails pickemstructs.TeamSummaryResponse) p
 
 	return newRecord
 }
+
+/* Instantiates Team Overall Record from ESPN Team Summary
+func CreateConferenceRecordRow(espnTeamDetails pickemstructs.TeamSummaryResponse) Record {
+	var newRecord Record
+
+	newRecord.TeamID = common.ParseTeamSummaryTeamID(espnTeamDetails)
+	newRecord.RecordType = "Conference"
+	newRecord.Wins = record.ParseOverallWins(espnTeamDetails)
+	newRecord.Losses = record.ParseOverallLosses(espnTeamDetails)
+	newRecord.Ties = record.ParseOverallTies(espnTeamDetails)
+
+	return newRecord
+}
+*/

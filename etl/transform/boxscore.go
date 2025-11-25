@@ -6,9 +6,20 @@ import (
 	"have-a-nice-pickem-etl/etl/transform/common"
 )
 
-// Instantiates GameDetails record from various extracted data sources
-func CreateBoxScoreRecord(espnGameDetails pickemstructs.ESPNGameDetailsResponse, homeAway string) pickemstructs.Boxscore {
-	var newRecord pickemstructs.Boxscore
+type Boxscore struct {
+	GameID        string
+	TeamID        string
+	Q1Score       uint8
+	Q2Score       uint8
+	Q3Score       uint8
+	Q4Score       uint8
+	OvertimeScore uint8
+	TotalScore    uint8
+}
+
+// Instantiates Box Score record from ESPN Game Summary
+func CreateBoxScoreRecord(espnGameDetails pickemstructs.ESPNGameDetailsResponse, homeAway string) Boxscore {
+	var newRecord Boxscore
 
 	newRecord.GameID = common.ParseGameID(espnGameDetails)
 	newRecord.TeamID = common.ParseGameSummaryTeamID(homeAway, espnGameDetails)

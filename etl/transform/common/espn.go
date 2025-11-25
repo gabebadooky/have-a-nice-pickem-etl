@@ -6,6 +6,7 @@ import (
 	"have-a-nice-pickem-etl/etl/utils"
 )
 
+// Generates "TeamID" field from ESPN Team Summary API
 func ParseTeamSummaryTeamID(teamSummaryDetails pickemstructs.TeamSummaryResponse) string {
 	var teamID string = teamSummaryDetails.Team.ID
 	return teamID

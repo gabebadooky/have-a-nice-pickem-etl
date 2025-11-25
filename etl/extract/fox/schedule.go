@@ -6,14 +6,16 @@ package fox
 
 import (
 	"fmt"
+	"have-a-nice-pickem-etl/etl/utils"
 	"log"
 	"net/http"
 
 	"github.com/PuerkitoBio/goquery"
 )
 
+// Scrape Fox Schedule for a given league and week
 func GetSchedule(league string, week uint8) *goquery.Selection {
-	var foxSchedulePageLink string = fmt.Sprintf("https://www.foxsports.com/college-football/schedule?groupId=2&seasonType=reg&week=%d", week)
+	var foxSchedulePageLink string = fmt.Sprintf("%s?groupId=2&seasonType=%s&week=%d", utils.FOX_CFB_SCHEDULE_URL, utils.FOX_SEASON_TYPE, week)
 
 	log.Printf("\nRequesting Fox Schedule page for week %d: %s", week, foxSchedulePageLink)
 	resp, err := http.Get(foxSchedulePageLink)

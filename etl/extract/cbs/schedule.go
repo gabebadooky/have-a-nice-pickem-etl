@@ -6,14 +6,16 @@ package cbs
 
 import (
 	"fmt"
+	"have-a-nice-pickem-etl/etl/utils"
 	"log"
 	"net/http"
 
 	"github.com/PuerkitoBio/goquery"
 )
 
+// Scrape CBS Schedule for a given league, week and year
 func GetSchedule(league string, week uint8, year uint16) *goquery.Selection {
-	var cbsSchedulePageLink string = fmt.Sprintf("https://www.cbssports.com/college-football/scoreboard/FBS/%d/regular/%d/?layout=compact", year, week)
+	var cbsSchedulePageLink string = fmt.Sprintf("%s/%d/%s/%d/?layout=compact", utils.CBS_CFB_SCHEDULE_URL, year, utils.CBS_CFB_SCHEDULE_TYPE, week)
 
 	log.Printf("\nRequesting CBS Schedule page for week %d: %s", week, cbsSchedulePageLink)
 	resp, err := http.Get(cbsSchedulePageLink)

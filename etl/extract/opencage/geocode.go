@@ -3,6 +3,7 @@ package opencage
 import (
 	"encoding/json"
 	"fmt"
+	"have-a-nice-pickem-etl/etl/utils"
 	"io"
 	"log"
 	"net/http"
@@ -11,10 +12,11 @@ import (
 	"github.com/joho/godotenv"
 )
 
+// Concatenate query string onto Opencage Forward Geocode Endpoint URL
 func formatURLwithQueryString(stadium string, city string, state string) string {
 	godotenv.Load()
 	var apikey string = os.Getenv("OPENCAGE_API_KEY")
-	var url string = fmt.Sprintf("https://api.opencagedata.com/geocode/v1/json?key=%s", apikey)
+	var url string = fmt.Sprintf("%s?key=%s", utils.OPENCAGE_GEOCODE_ENDPOINT_URL, apikey)
 
 	if state == "" {
 		return fmt.Sprintf("%s&q=%s+%s", url, stadium, city)
@@ -23,6 +25,7 @@ func formatURLwithQueryString(stadium string, city string, state string) string 
 	}
 }
 
+// Call Opencage Forward Geocode API for given stadium, city, state and country
 func GetGeocode(stadium string, city string, state string, country string) any {
 	var opencageEndpoint string = formatURLwithQueryString(stadium, city, state)
 	log.Printf("\nCalling Opencage API endpoint for %s %s, %s: %s", stadium, city, state, opencageEndpoint)
