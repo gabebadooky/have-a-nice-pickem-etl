@@ -23,7 +23,7 @@ func Team(espnTeamCode string) pickemstructs.TeamSummaryResponse {
 	const espnHiddenTeamSummaryBaseURL string = utils.ESPN_CFB_TEAM_ENDPOINT_URL
 	var espnTeamEndpoint string = fmt.Sprintf("%s/%s", espnHiddenTeamSummaryBaseURL, espnTeamCode)
 
-	log.Printf("\nCalling Team %s endpoint: %s", espnTeamCode, espnTeamEndpoint)
+	log.Printf("\nCalling Team %s endpoint: %s\n", espnTeamCode, espnTeamEndpoint)
 	resp, err := http.Get(espnTeamEndpoint)
 	if err != nil {
 		log.Printf("Error occurred calling ESPN Team Summary Hidden Endpoint for TeamID %s: %s\n", espnTeamCode, err)

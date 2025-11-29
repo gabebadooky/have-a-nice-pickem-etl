@@ -28,7 +28,7 @@ func formatURLwithQueryString(stadium string, city string, state string) string 
 // Call Opencage Forward Geocode API for given stadium, city, state and country
 func GetGeocode(stadium string, city string, state string, country string) any {
 	var opencageEndpoint string = formatURLwithQueryString(stadium, city, state)
-	log.Printf("\nCalling Opencage API endpoint for %s %s, %s: %s", stadium, city, state, opencageEndpoint)
+	log.Printf("\nCalling Opencage API endpoint for %s %s, %s: %s\n", stadium, city, state, opencageEndpoint)
 	resp, err := http.Get(opencageEndpoint)
 	if err != nil {
 		log.Panicf("Error occurred calling Opencage API Endpoint: %s: \n%s\n", opencageEndpoint, err)

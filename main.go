@@ -2,44 +2,32 @@ package main
 
 import (
 	"fmt"
+	"have-a-nice-pickem-etl/etl/extract/cbs"
 	"have-a-nice-pickem-etl/etl/extract/espn"
+	"have-a-nice-pickem-etl/etl/extract/fox"
+	"have-a-nice-pickem-etl/etl/pickemstructs"
+	"have-a-nice-pickem-etl/etl/transform"
+
+	"github.com/PuerkitoBio/goquery"
 )
 
-type boxScore struct {
-	awayQ1score       uint8
-	awayQ2score       uint8
-	awayQ3score       uint8
-	awayQ4score       uint8
-	awayOvertimeScore uint8
-	awayTotalscore    uint8
-	homeQ1score       uint8
-	homeQ2score       uint8
-	homeQ3score       uint8
-	homeQ4score       uint8
-	homeOvertimeScore uint8
-	homeTotalscore    uint8
-}
-
-type location struct {
-	stadium   string
-	city      string
-	state     string
-	latitude  float32
-	longitude float32
-}
-
-type odds struct {
-	awayMoneyline string
-	homeMoneyline string
-	awaySpread    string
-	homeSpread    string
-	overUnder     string
-}
-
 func main() {
-	/*var espnGameSummary etltypes.ESPNGameDetailsResponse = espn.GetESPNGame("401754528")
-	var cbsSchedulePage *goquery.Selection = cbs.GetSchedule("CFB", 11, 2025)
-	var foxSchedulePage *goquery.Selection = fox.GetSchedule("CFB", 11)
-	fmt.Println(transform.Game(espnGameSummary, cbsSchedulePage, foxSchedulePage))*/
-	fmt.Printf("%s", espn.GetSchedule("CFB", 12).Events[0].ID)
+	var espnSchedule pickemstructs.ESPNScheduleResponse = espn.GetSchedule("CFB", 14)
+	var cbsSchedule *goquery.Selection = cbs.GetSchedule("CFB", 14, 2025)
+	var foxSchedule *goquery.Selection = fox.GetSchedule("CFB", 14)
+
+	for i := 0; i < 2; /*len(espnSchedule.Events)*/ i++ {
+		var espnGameCode string = espnSchedule.Events[i].ID
+		var espnGameDetails pickemstructs.ESPNGameDetailsResponse = espn.GetGame(espnGameCode)
+
+		var gameDetails pickemstructs.GameDetails = transform.CreateGameDetailsRecord(espnGameDetails, cbsSchedule, foxSchedule)
+		var espnBettingOdds pickemstructs.BettingOdds = transform.CreateBettingOddsRecord(espnGameDetails, "ESPN")
+		var awayBoxScore pickemstructs.Boxscore = transform.CreateBoxScoreRecord(espnGameDetails, "AWAY")
+		var homeBoxScore pickemstructs.Boxscore = transform.CreateBoxScoreRecord(espnGameDetails, "HOME")
+
+		fmt.Printf("\ngameDetails: %v\n", gameDetails)
+		fmt.Printf("\nespnBettingOdds: %v\n", espnBettingOdds)
+		fmt.Printf("\nawayBoxScore: %v\n", awayBoxScore)
+		fmt.Printf("\nhomeBoxScore: %v\n", homeBoxScore)
+	}
 }

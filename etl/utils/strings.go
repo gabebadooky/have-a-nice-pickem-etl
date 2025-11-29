@@ -1,6 +1,8 @@
 package utils
 
-import "strings"
+import (
+	"strings"
+)
 
 // Replaces spaces with - and strips the following characters from a given string: .')(&é
 func FormatStringID(id string) string {
@@ -25,7 +27,7 @@ func StripDateAndBoxScoreIDFromFoxGameCode(foxGameCode string) string {
 	var monthAbbr string
 
 	for i := range 12 {
-		if strings.Contains(foxGameCode, monthAbbr) {
+		if strings.Contains(foxGameCode, seasonMonthAbbreviations[i]) {
 			monthAbbr = seasonMonthAbbreviations[i]
 			break
 		}

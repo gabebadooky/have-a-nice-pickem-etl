@@ -85,7 +85,7 @@ type Pickcenter struct {
 }
 
 type TeamOdds struct {
-	Moneyline uint16 `json:"moneyline"`
+	Moneyline int16 `json:"moneyline"`
 }
 
 type Predictor struct {

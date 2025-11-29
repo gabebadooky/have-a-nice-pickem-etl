@@ -24,7 +24,7 @@ func GetGame(gameID string) pickemstructs.ESPNGameDetailsResponse {
 	const espnHiddenGameSummaryBaseURL string = utils.ESPN_CFB_GAME_ENDPOINT_URL
 	var espnGameEndpoint string = fmt.Sprintf("%s?event=%s", espnHiddenGameSummaryBaseURL, gameID)
 
-	log.Printf("\nCalling Game %s endpoint: %s", gameID, espnGameEndpoint)
+	log.Printf("\nCalling Game %s endpoint: %s\n", gameID, espnGameEndpoint)
 	resp, err := http.Get(espnGameEndpoint)
 	if err != nil {
 		log.Printf("Error occurred calling ESPN Game Summary Hidden Endpoint for GameID %s:\n%s\n", gameID, err)

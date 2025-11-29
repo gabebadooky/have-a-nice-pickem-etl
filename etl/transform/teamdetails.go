@@ -7,21 +7,6 @@ import (
 	"have-a-nice-pickem-etl/etl/utils"
 )
 
-type TeamDetails struct {
-	TeamID         string
-	League         string
-	ESPNCode       string
-	CBSCode        string
-	FoxCode        string
-	VegasCode      string
-	ConferenceID   string
-	Name           string
-	Mascot         string
-	PrimaryColor   string
-	AlternateColor string
-	Ranking        uint8
-}
-
 func setCbsCode(teamID string) string {
 	cbsCode, cbsMappingExists := utils.TeamIDtoCbsTeamCode[teamID]
 	if cbsMappingExists {
@@ -41,22 +26,23 @@ func setFoxCode(teamID string) string {
 }
 
 // Instantiates Team Details Record from ESPN Team Summary
-func CreateTeamDetailsRecord(espnTeamDetails pickemstructs.TeamSummaryResponse, league string) TeamDetails {
-	var newRecord TeamDetails
+func CreateTeamDetailsRecord(espnTeamDetails pickemstructs.TeamSummaryResponse, league string) pickemstructs.TeamDetails {
 	var teamID string = common.ParseTeamSummaryTeamID(espnTeamDetails)
 
-	newRecord.TeamID = teamID
-	newRecord.League = league
-	newRecord.ESPNCode = teamdetails.ParseESPNteamCode(espnTeamDetails)
-	newRecord.CBSCode = setCbsCode(teamID)
-	newRecord.FoxCode = setFoxCode(teamID)
-	newRecord.VegasCode = ""
-	newRecord.ConferenceID = teamdetails.ParseConferenceID(espnTeamDetails)
-	newRecord.Name = teamdetails.ParseTeamName(espnTeamDetails)
-	newRecord.Mascot = teamdetails.ParseTeamMascot(espnTeamDetails)
-	newRecord.PrimaryColor = teamdetails.ParsePrimaryColor(espnTeamDetails)
-	newRecord.AlternateColor = teamdetails.ParseAlternateColor(espnTeamDetails)
-	newRecord.Ranking = teamdetails.ParseRanking(espnTeamDetails)
+	var newRecord pickemstructs.TeamDetails = pickemstructs.TeamDetails{
+		TeamID:         teamID,
+		League:         league,
+		ESPNCode:       teamdetails.ParseESPNteamCode(espnTeamDetails),
+		CBSCode:        setCbsCode(teamID),
+		FoxCode:        setFoxCode(teamID),
+		VegasCode:      "",
+		ConferenceID:   teamdetails.ParseConferenceID(espnTeamDetails),
+		Name:           teamdetails.ParseTeamName(espnTeamDetails),
+		Mascot:         teamdetails.ParseTeamMascot(espnTeamDetails),
+		PrimaryColor:   teamdetails.ParsePrimaryColor(espnTeamDetails),
+		AlternateColor: teamdetails.ParseAlternateColor(espnTeamDetails),
+		Ranking:        teamdetails.ParseRanking(espnTeamDetails),
+	}
 
 	return newRecord
 }

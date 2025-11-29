@@ -38,7 +38,6 @@ func ExtractCbsTeamCode(scorecard *goquery.Selection, homeAway string) string {
 	teamCBScode = teamHREF[teamCBScodeIndex+6:]
 	teamCBScode = strings.TrimRight(teamCBScode, "/")
 
-	log.Printf("teamCBScode: %s", teamCBScode)
 	return teamCBScode
 }
 
@@ -57,13 +56,13 @@ func ExtractCbsGameCode(cbsSchedulePage *goquery.Selection, gameID string) strin
 		var homeTeamID string
 
 		if cbsGameCode == "cbsGameCode" {
-			log.Printf("Failed to extract CBS Game Code from scorecard: %v", scorecard)
+			log.Printf("Failed to extract CBS Game Code from scorecard: %v\n", scorecard)
 		}
 		if awayTeamCBScode == "cbsTeamCode" {
-			log.Printf("Failed to extract CBS Away Team Code from scorecard: %v", scorecard)
+			log.Printf("Failed to extract CBS Away Team Code from scorecard: %v\n", scorecard)
 		}
 		if homeTeamCBScode == "cbsTeamCode" {
-			log.Printf("Failed to extract CBS Home Team Code from scorecard: %v", scorecard)
+			log.Printf("Failed to extract CBS Home Team Code from scorecard: %v\n", scorecard)
 		}
 
 		// Map CBS Team Code to global Team IDs

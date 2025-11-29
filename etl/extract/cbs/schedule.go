@@ -17,7 +17,7 @@ import (
 func GetSchedule(league string, week uint8, year uint16) *goquery.Selection {
 	var cbsSchedulePageLink string = fmt.Sprintf("%s/%d/%s/%d/?layout=compact", utils.CBS_CFB_SCHEDULE_URL, year, utils.CBS_CFB_SCHEDULE_TYPE, week)
 
-	log.Printf("\nRequesting CBS Schedule page for week %d: %s", week, cbsSchedulePageLink)
+	log.Printf("\nRequesting CBS Schedule page for week %d: %s\n", week, cbsSchedulePageLink)
 	resp, err := http.Get(cbsSchedulePageLink)
 	if err != nil {
 		log.Panicf("Error occurred navigating to %s:\n%s", cbsSchedulePageLink, err)

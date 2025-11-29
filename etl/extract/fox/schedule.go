@@ -17,7 +17,7 @@ import (
 func GetSchedule(league string, week uint8) *goquery.Selection {
 	var foxSchedulePageLink string = fmt.Sprintf("%s?groupId=2&seasonType=%s&week=%d", utils.FOX_CFB_SCHEDULE_URL, utils.FOX_SEASON_TYPE, week)
 
-	log.Printf("\nRequesting Fox Schedule page for week %d: %s", week, foxSchedulePageLink)
+	log.Printf("\nRequesting Fox Schedule page for week %d: %s\n", week, foxSchedulePageLink)
 	resp, err := http.Get(foxSchedulePageLink)
 	if err != nil {
 		log.Panicf("Error occurred navigating to %s:\n%s", foxSchedulePageLink, err)

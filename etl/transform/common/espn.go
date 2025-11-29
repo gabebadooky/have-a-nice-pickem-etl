@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"have-a-nice-pickem-etl/etl/pickemstructs"
 	"have-a-nice-pickem-etl/etl/utils"
+	"strings"
 )
 
 // Generates "TeamID" field from ESPN Team Summary API
@@ -15,7 +16,7 @@ func ParseTeamSummaryTeamID(teamSummaryDetails pickemstructs.TeamSummaryResponse
 // Generates "TeamID" field for the Home or Away team from ESPN Game Summary API
 func ParseGameSummaryTeamID(homeAway string, espnGameDetails pickemstructs.ESPNGameDetailsResponse) string {
 	var competitorHomeAway string = espnGameDetails.Header.Competitions[0].Competitors[0].HomeAway
-	if homeAway == competitorHomeAway {
+	if strings.EqualFold(homeAway, competitorHomeAway) {
 		var teamID string = espnGameDetails.Header.Competitions[0].Competitors[0].Team.DisplayName
 		var formattedTeamID string = utils.FormatStringID(teamID)
 		return formattedTeamID

@@ -24,7 +24,7 @@ func GetSchedule(league string, week uint8) pickemstructs.ESPNScheduleResponse {
 	const espnHiddenScoreboardBaseURL string = utils.ESPN_CFB_SCHEDULE_ENDPOINT_URL
 	var espnScoreboardEndpoint string = fmt.Sprintf("%s?week=%d", espnHiddenScoreboardBaseURL, week)
 
-	log.Printf("\nCalling Scoreboard endpoint for week %d: %s", week, espnScoreboardEndpoint)
+	log.Printf("\nCalling Scoreboard endpoint for week %d: %s\n", week, espnScoreboardEndpoint)
 	resp, err := http.Get(espnScoreboardEndpoint)
 	if err != nil {
 		log.Panicf("Error occurred calling ESPN Scoreboard Summary Hidden Endpoint for week %d:\n%s\n", week, err)

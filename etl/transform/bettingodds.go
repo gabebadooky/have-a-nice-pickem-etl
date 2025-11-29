@@ -7,18 +7,6 @@ import (
 	"strings"
 )
 
-type BettingOdds struct {
-	GameID            string
-	Source            string
-	OverUnder         float32
-	AwayMoneyline     uint16
-	HomeMoneyline     uint16
-	AwaySpread        float32
-	HomeSpread        float32
-	AwayWinPercentage string
-	HomeWinPercentage string
-}
-
 func setOverUnder(espnGameDetails pickemstructs.ESPNGameDetailsResponse, source string) float32 {
 	switch strings.ToUpper(source) {
 	case "ESPN":
@@ -28,7 +16,7 @@ func setOverUnder(espnGameDetails pickemstructs.ESPNGameDetailsResponse, source 
 	}
 }
 
-func setAwayMoneyline(espnGameDetails pickemstructs.ESPNGameDetailsResponse, source string) uint16 {
+func setAwayMoneyline(espnGameDetails pickemstructs.ESPNGameDetailsResponse, source string) int16 {
 	switch strings.ToUpper(source) {
 	case "ESPN":
 		return bettingodds.ParseAwayMoneyline(espnGameDetails)
@@ -37,7 +25,7 @@ func setAwayMoneyline(espnGameDetails pickemstructs.ESPNGameDetailsResponse, sou
 	}
 }
 
-func setHomeMoneyline(espnGameDetails pickemstructs.ESPNGameDetailsResponse, source string) uint16 {
+func setHomeMoneyline(espnGameDetails pickemstructs.ESPNGameDetailsResponse, source string) int16 {
 	switch strings.ToUpper(source) {
 	case "ESPN":
 		return bettingodds.ParseHomeMoneyline(espnGameDetails)
@@ -83,18 +71,18 @@ func setHomeWinPercentage(espnGameDetails pickemstructs.ESPNGameDetailsResponse,
 }
 
 // Instantiates Betting Odds record from various sources
-func CreateBettingOddsRecord(espnGameDetails pickemstructs.ESPNGameDetailsResponse, source string) BettingOdds {
-	var newRecord BettingOdds
-
-	newRecord.GameID = common.ParseGameID(espnGameDetails)
-	newRecord.Source = source
-	newRecord.OverUnder = setOverUnder(espnGameDetails, source)
-	newRecord.AwayMoneyline = setAwayMoneyline(espnGameDetails, source)
-	newRecord.HomeMoneyline = setHomeMoneyline(espnGameDetails, source)
-	newRecord.AwaySpread = setAwaySpread(espnGameDetails, source)
-	newRecord.HomeSpread = setHomeSpread(espnGameDetails, source)
-	newRecord.AwayWinPercentage = setAwayWinPercentage(espnGameDetails, source)
-	newRecord.HomeWinPercentage = setHomeWinPercentage(espnGameDetails, source)
+func CreateBettingOddsRecord(espnGameDetails pickemstructs.ESPNGameDetailsResponse, source string) pickemstructs.BettingOdds {
+	var newRecord pickemstructs.BettingOdds = pickemstructs.BettingOdds{
+		GameID:            common.ParseGameID(espnGameDetails),
+		Source:            source,
+		OverUnder:         setOverUnder(espnGameDetails, source),
+		AwayMoneyline:     setAwayMoneyline(espnGameDetails, source),
+		HomeMoneyline:     setHomeMoneyline(espnGameDetails, source),
+		AwaySpread:        setAwaySpread(espnGameDetails, source),
+		HomeSpread:        setHomeSpread(espnGameDetails, source),
+		AwayWinPercentage: setAwayWinPercentage(espnGameDetails, source),
+		HomeWinPercentage: setHomeWinPercentage(espnGameDetails, source),
+	}
 
 	return newRecord
 }

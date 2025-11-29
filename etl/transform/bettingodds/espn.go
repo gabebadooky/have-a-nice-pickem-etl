@@ -4,16 +4,17 @@ import "have-a-nice-pickem-etl/etl/pickemstructs"
 
 func ParseOverUnder(espnGameDetails pickemstructs.ESPNGameDetailsResponse) float32 {
 	var overUnder float32 = espnGameDetails.Pickcenter[0].OverUnder
+
 	return overUnder
 }
 
-func ParseAwayMoneyline(espnGameDetails pickemstructs.ESPNGameDetailsResponse) uint16 {
-	var awayMoneyline uint16 = espnGameDetails.Pickcenter[0].AwayTeamOdds.Moneyline
+func ParseAwayMoneyline(espnGameDetails pickemstructs.ESPNGameDetailsResponse) int16 {
+	var awayMoneyline int16 = espnGameDetails.Pickcenter[0].AwayTeamOdds.Moneyline
 	return awayMoneyline
 }
 
-func ParseHomeMoneyline(espnGameDetails pickemstructs.ESPNGameDetailsResponse) uint16 {
-	var homeMoneyline uint16 = espnGameDetails.Pickcenter[0].HomeTeamOdds.Moneyline
+func ParseHomeMoneyline(espnGameDetails pickemstructs.ESPNGameDetailsResponse) int16 {
+	var homeMoneyline int16 = espnGameDetails.Pickcenter[0].HomeTeamOdds.Moneyline
 	return homeMoneyline
 }
 

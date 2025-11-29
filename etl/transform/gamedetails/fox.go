@@ -1,6 +1,7 @@
 package gamedetails
 
 import (
+	"fmt"
 	"have-a-nice-pickem-etl/etl/utils"
 	"log"
 	"strings"
@@ -38,27 +39,41 @@ func ExtractFoxGameCode(foxSchedulePage *goquery.Selection, gameID string) strin
 		var foxGameCode string = gameHREF[lastSlashIndex+1:]
 		var awayTeamFoxCode string = ExtractFoxTeamCode(foxGameCode, "AWAY")
 		var homeTeamFoxCode string = ExtractFoxTeamCode(foxGameCode, "HOME")
+		var awayTeamID string
+		var homeTeamID string
 
 		if foxGameCode == "foxGameCode" {
-			log.Printf("Failed to extract Fox Game Code from Hyperlink: %v", hyperlink)
+			log.Printf("Failed to extract Fox Game Code from Hyperlink: %v\n", hyperlink)
 		}
 		if awayTeamFoxCode == "foxTeamCode" {
-			log.Printf("Failed to extract Fox Team Code from Hyperlink: %v", hyperlink)
+			log.Printf("Failed to extract Fox Team Code from Hyperlink: %v\n", hyperlink)
 		}
 		if homeTeamFoxCode == "foxTeamCode" {
-			log.Printf("Failed to extract Fox Team Code from Hyperlink: %v", hyperlink)
+			log.Printf("Failed to extract Fox Team Code from Hyperlink: %v\n", hyperlink)
 		}
 
 		// Map Fox Team Code to global Team IDs
-		var awayTeamID string = utils.FoxTeamCodeToTeamIDmapping[awayTeamFoxCode]
-		var homeTeamID string = utils.FoxTeamCodeToTeamIDmapping[homeTeamFoxCode]
+		mappedAwayTeamCodeValue, exists := utils.FoxTeamCodeToTeamIDmapping[awayTeamFoxCode]
+		if exists {
+			awayTeamID = mappedAwayTeamCodeValue
+		} else {
+			awayTeamID = awayTeamFoxCode
+		}
 
+		mappedHomeTeamCodeValue, exists := utils.FoxTeamCodeToTeamIDmapping[homeTeamFoxCode]
+		if exists {
+			homeTeamID = mappedHomeTeamCodeValue
+		} else {
+			homeTeamID = homeTeamFoxCode
+		}
+		fmt.Printf("foxGameCode: %s\n", foxGameCode)
+		fmt.Printf("awayTeamID: %s\n", awayTeamID)
+		fmt.Printf("homeTeamID: %s\n", homeTeamID)
 		if strings.Contains(gameID, awayTeamID) && strings.Contains(gameID, homeTeamID) {
 			// Break out of loop
 			return false
-		} else {
-			return true
 		}
+		return true
 
 	})
 
