@@ -4,84 +4,46 @@ import (
 	"have-a-nice-pickem-etl/etl/pickemstructs"
 	"have-a-nice-pickem-etl/etl/transform/bettingodds"
 	"have-a-nice-pickem-etl/etl/transform/common"
-	"strings"
+
+	"github.com/PuerkitoBio/goquery"
 )
 
-func setOverUnder(espnGameDetails pickemstructs.ESPNGameDetailsResponse, source string) float32 {
-	switch strings.ToUpper(source) {
-	case "ESPN":
-		return bettingodds.ParseOverUnder(espnGameDetails)
-	default:
-		return 0.00
-	}
+type FoxOdds struct {
+	pickemstructs.BettingOdds
 }
 
-func setAwayMoneyline(espnGameDetails pickemstructs.ESPNGameDetailsResponse, source string) int16 {
-	switch strings.ToUpper(source) {
-	case "ESPN":
-		return bettingodds.ParseAwayMoneyline(espnGameDetails)
-	default:
-		return 0
-	}
-}
+// Instantiates ESPN Betting Odds record from various sources
+func CreateESPNBettingOddsRecord(consolidatedGameProperties pickemstructs.ConsolidatedGameProperties) pickemstructs.BettingOdds {
+	var espnRecord bettingodds.EspnOdds = bettingodds.EspnOdds{}
 
-func setHomeMoneyline(espnGameDetails pickemstructs.ESPNGameDetailsResponse, source string) int16 {
-	switch strings.ToUpper(source) {
-	case "ESPN":
-		return bettingodds.ParseHomeMoneyline(espnGameDetails)
-	default:
-		return 0
-	}
-}
-
-func setAwaySpread(espnGameDetails pickemstructs.ESPNGameDetailsResponse, source string) float32 {
-	switch strings.ToUpper(source) {
-	case "ESPN":
-		return bettingodds.ParseOverUnder(espnGameDetails)
-	default:
-		return 0.00
-	}
-}
-
-func setHomeSpread(espnGameDetails pickemstructs.ESPNGameDetailsResponse, source string) float32 {
-	switch strings.ToUpper(source) {
-	case "ESPN":
-		return bettingodds.ParseOverUnder(espnGameDetails)
-	default:
-		return 0.00
-	}
-}
-
-func setAwayWinPercentage(espnGameDetails pickemstructs.ESPNGameDetailsResponse, source string) string {
-	switch strings.ToUpper(source) {
-	case "ESPN":
-		return bettingodds.ParseAwayWinPercentage(espnGameDetails)
-	default:
-		return ""
-	}
-}
-
-func setHomeWinPercentage(espnGameDetails pickemstructs.ESPNGameDetailsResponse, source string) string {
-	switch strings.ToUpper(source) {
-	case "ESPN":
-		return bettingodds.ParseHomeWinPercentage(espnGameDetails)
-	default:
-		return ""
-	}
-}
-
-// Instantiates Betting Odds record from various sources
-func CreateBettingOddsRecord(espnGameDetails pickemstructs.ESPNGameDetailsResponse, source string) pickemstructs.BettingOdds {
 	var newRecord pickemstructs.BettingOdds = pickemstructs.BettingOdds{
-		GameID:            common.ParseGameID(espnGameDetails),
-		Source:            source,
-		OverUnder:         setOverUnder(espnGameDetails, source),
-		AwayMoneyline:     setAwayMoneyline(espnGameDetails, source),
-		HomeMoneyline:     setHomeMoneyline(espnGameDetails, source),
-		AwaySpread:        setAwaySpread(espnGameDetails, source),
-		HomeSpread:        setHomeSpread(espnGameDetails, source),
-		AwayWinPercentage: setAwayWinPercentage(espnGameDetails, source),
-		HomeWinPercentage: setHomeWinPercentage(espnGameDetails, source),
+		GameID:        common.ParseGameID(consolidatedGameProperties),
+		Source:        "ESPN",
+		OverUnder:     espnRecord.ParseOverUnder(consolidatedGameProperties),
+		AwayMoneyline: espnRecord.ParseAwayMoneyline(consolidatedGameProperties),
+		HomeMoneyline: espnRecord.ParseHomeMoneyline(consolidatedGameProperties),
+		AwaySpread:    espnRecord.ParseAwaySpread(consolidatedGameProperties),
+		HomeSpread:    espnRecord.ParseHomeSpread(consolidatedGameProperties),
+	}
+
+	return newRecord
+}
+
+// Instantiates CBS Betting Odds record from various sources
+func CreateCBSBettingOddsRecord(consolidatedGameProperties pickemstructs.ConsolidatedGameProperties) pickemstructs.BettingOdds {
+	var cbsRecord bettingodds.CbsOdds = bettingodds.CbsOdds{}
+	var gameID string = common.ParseGameID(consolidatedGameProperties)
+	var cbsGameCode = common.ExtractCbsGameCode(consolidatedGameProperties.CbsPage, gameID)
+	var cbsGameTable *goquery.Selection = cbsRecord.ParseGameOddsTable(consolidatedGameProperties.CbsPage, cbsGameCode)
+
+	var newRecord pickemstructs.BettingOdds = pickemstructs.BettingOdds{
+		GameID:        gameID,
+		Source:        "CBS",
+		OverUnder:     cbsRecord.ParseOverUnder(cbsGameTable),
+		AwayMoneyline: cbsRecord.ParseAwayMoneyline(cbsGameTable),
+		HomeMoneyline: cbsRecord.ParseHomeMoneyline(cbsGameTable),
+		AwaySpread:    cbsRecord.ParseAwaySpread(cbsGameTable),
+		HomeSpread:    cbsRecord.ParseHomeSpread(cbsGameTable),
 	}
 
 	return newRecord

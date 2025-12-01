@@ -36,15 +36,17 @@ type GameDetails struct {
 	HomeTeamID    string
 	ZuluTimestamp string
 	Broadcast     string
+	Location      string
 	Finished      bool
 }
 
 type Location struct {
-	Stadium   string
-	City      string
-	State     string
-	Latitude  float64
-	Longitude float64
+	LocationID string
+	Stadium    string
+	City       string
+	State      string
+	Latitude   float64
+	Longitude  float64
 }
 
 type Record struct {

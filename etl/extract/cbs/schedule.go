@@ -15,7 +15,8 @@ import (
 
 // Scrape CBS Schedule for a given league, week and year
 func GetSchedule(league string, week uint8, year uint16) *goquery.Selection {
-	var cbsSchedulePageLink string = fmt.Sprintf("%s/%d/%s/%d/?layout=compact", utils.CBS_CFB_SCHEDULE_URL, year, utils.CBS_CFB_SCHEDULE_TYPE, week)
+	//var cbsSchedulePageLink string = fmt.Sprintf("%s/%d/%s/%d/?layout=compact", utils.CBS_CFB_SCHEDULE_URL, year, utils.CBS_CFB_SCHEDULE_TYPE, week)
+	var cbsSchedulePageLink string = fmt.Sprintf("%s/%d/regular/week-%d/", utils.CBS_CFB_SCHEDULE_URL, year, week)
 
 	log.Printf("\nRequesting CBS Schedule page for week %d: %s\n", week, cbsSchedulePageLink)
 	resp, err := http.Get(cbsSchedulePageLink)
@@ -34,6 +35,6 @@ func GetSchedule(league string, week uint8, year uint16) *goquery.Selection {
 	}
 
 	var htmlbody *goquery.Selection = doc.Find("body").First()
-	log.Printf("htmlBody:\n%v\n", htmlbody)
+	//log.Printf("htmlBody:\n%v\n", htmlbody)
 	return htmlbody
 }

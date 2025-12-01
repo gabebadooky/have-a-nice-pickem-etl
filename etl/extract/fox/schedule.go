@@ -34,6 +34,6 @@ func GetSchedule(league string, week uint8) *goquery.Selection {
 	}
 
 	var htmlbody *goquery.Selection = doc.Find("body").First()
-	log.Printf("htmlBody:\n%v\n", htmlbody)
+	//log.Printf("htmlBody:\n%v\n", htmlbody)
 	return htmlbody
 }

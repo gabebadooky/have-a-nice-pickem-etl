@@ -2,27 +2,27 @@ package location
 
 import "have-a-nice-pickem-etl/etl/pickemstructs"
 
-func ParseStadium(espnGameDetails pickemstructs.ESPNGameDetailsResponse) string {
-	var stadium string = espnGameDetails.GameInfo.Venue.FullName
+func ParseStadium(consolidatedGameProperties pickemstructs.ConsolidatedGameProperties) string {
+	var stadium string = consolidatedGameProperties.EspnDetails.GameInfo.Venue.FullName
 	return stadium
 }
 
-func ParseCity(espnGameDetails pickemstructs.ESPNGameDetailsResponse) string {
-	var city string = espnGameDetails.GameInfo.Venue.Address.City
+func ParseCity(consolidatedGameProperties pickemstructs.ConsolidatedGameProperties) string {
+	var city string = consolidatedGameProperties.EspnDetails.GameInfo.Venue.Address.City
 	return city
 }
 
-func ParseState(espnGameDetails pickemstructs.ESPNGameDetailsResponse) string {
-	var state = espnGameDetails.GameInfo.Venue.Address.State
+func ParseState(consolidatedGameProperties pickemstructs.ConsolidatedGameProperties) string {
+	var state = consolidatedGameProperties.EspnDetails.GameInfo.Venue.Address.State
 	return state
 }
 
-func ParseZipcode(espnGameDetails pickemstructs.ESPNGameDetailsResponse) string {
-	var zipcode = espnGameDetails.GameInfo.Venue.Address.Zipcode
+func ParseZipcode(consolidatedGameProperties pickemstructs.ConsolidatedGameProperties) string {
+	var zipcode = consolidatedGameProperties.EspnDetails.GameInfo.Venue.Address.Zipcode
 	return zipcode
 }
 
-func ParseCountry(espnGameDetails pickemstructs.ESPNGameDetailsResponse) string {
-	var country = espnGameDetails.GameInfo.Venue.Address.Country
+func ParseCountry(consolidatedGameProperties pickemstructs.ConsolidatedGameProperties) string {
+	var country = consolidatedGameProperties.EspnDetails.GameInfo.Venue.Address.Country
 	return country
 }

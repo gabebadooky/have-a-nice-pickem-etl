@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"strconv"
 	"strings"
 )
 
@@ -37,4 +38,22 @@ func StripDateAndBoxScoreIDFromFoxGameCode(foxGameCode string) string {
 	formattedGameCode = foxGameCode[:idx-1]
 
 	return formattedGameCode
+}
+
+func ConvertStringToFloat32(bettingOddString string) float32 {
+	f64, err := strconv.ParseFloat(bettingOddString, 32)
+	if err != nil {
+		f64 = 0.00
+	}
+
+	return float32(f64)
+}
+
+func ConvertStringToInt16(bettingOddString string) int16 {
+	bettingOddInt, err := strconv.Atoi(bettingOddString)
+	if err != nil {
+		bettingOddInt = 0.00
+	}
+
+	return int16(bettingOddInt)
 }

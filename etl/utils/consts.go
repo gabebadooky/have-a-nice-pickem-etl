@@ -9,5 +9,5 @@ const ESPN_CFB_SCHEDULE_ENDPOINT_URL string = "https://site.api.espn.com/apis/si
 const ESPN_CFB_GAME_ENDPOINT_URL string = "https://site.api.espn.com/apis/site/v2/sports/football/college-football/summary"
 const ESPN_CFB_TEAM_ENDPOINT_URL string = "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams"
 
-const CBS_CFB_SCHEDULE_URL string = "https://www.cbssports.com/college-football/scoreboard/FBS"
+const CBS_CFB_SCHEDULE_URL string = "https://www.cbssports.com/college-football/odds/FBS"
 const CBS_CFB_SCHEDULE_TYPE string = "regular"

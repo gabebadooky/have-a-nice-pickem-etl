@@ -46,6 +46,6 @@ func GetSchedule(league string, week uint8) pickemstructs.ESPNScheduleResponse {
 		log.Panicf("Error occurred decoding ESPN Scoreboard Summary JSON formatted schedule details for week %d:\n%s\n", week, jsonerr)
 	}
 
-	log.Printf("scheduleDetails:\n%v\n", scheduleDetails)
+	//log.Printf("scheduleDetails:\n%v\n", scheduleDetails)
 	return scheduleDetails
 }

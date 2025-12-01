@@ -14,14 +14,14 @@ func ParseTeamSummaryTeamID(teamSummaryDetails pickemstructs.TeamSummaryResponse
 }
 
 // Generates "TeamID" field for the Home or Away team from ESPN Game Summary API
-func ParseGameSummaryTeamID(homeAway string, espnGameDetails pickemstructs.ESPNGameDetailsResponse) string {
-	var competitorHomeAway string = espnGameDetails.Header.Competitions[0].Competitors[0].HomeAway
+func ParseGameSummaryTeamID(homeAway string, consolidatedGameProps pickemstructs.ConsolidatedGameProperties) string {
+	var competitorHomeAway string = consolidatedGameProps.EspnDetails.Header.Competitions[0].Competitors[0].HomeAway
 	if strings.EqualFold(homeAway, competitorHomeAway) {
-		var teamID string = espnGameDetails.Header.Competitions[0].Competitors[0].Team.DisplayName
+		var teamID string = consolidatedGameProps.EspnDetails.Header.Competitions[0].Competitors[0].Team.DisplayName
 		var formattedTeamID string = utils.FormatStringID(teamID)
 		return formattedTeamID
 	} else {
-		var teamID string = espnGameDetails.Header.Competitions[0].Competitors[1].Team.DisplayName
+		var teamID string = consolidatedGameProps.EspnDetails.Header.Competitions[0].Competitors[1].Team.DisplayName
 		var formattedTeamID string = utils.FormatStringID(teamID)
 		return formattedTeamID
 	}
@@ -29,9 +29,9 @@ func ParseGameSummaryTeamID(homeAway string, espnGameDetails pickemstructs.ESPNG
 }
 
 // Generates "GameID" field from AwayTeamID and HomeTeamID from ESPN Game Summary API
-func ParseGameID(espnGameDetails pickemstructs.ESPNGameDetailsResponse) string {
-	var awayTeamID string = ParseGameSummaryTeamID("away", espnGameDetails)
-	var homeTeamID string = ParseGameSummaryTeamID("home", espnGameDetails)
+func ParseGameID(consolidatedGameProps pickemstructs.ConsolidatedGameProperties) string {
+	var awayTeamID string = ParseGameSummaryTeamID("away", consolidatedGameProps)
+	var homeTeamID string = ParseGameSummaryTeamID("home", consolidatedGameProps)
 	var gameID string = fmt.Sprintf("%s-at-%s", awayTeamID, homeTeamID)
 	var formattedGameID string = utils.FormatStringID(gameID)
 	return formattedGameID

@@ -47,7 +47,7 @@ func Team(espnTeamCode string) pickemstructs.TeamSummaryResponse {
 
 	}
 
-	log.Println(teamDetails)
+	//log.Println(teamDetails)
 	return teamDetails
 
 }

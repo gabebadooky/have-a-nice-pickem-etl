@@ -33,26 +33,26 @@ func ParsePointsForGivenCompetitorAndPeriod(homeAway string, team1homeAway strin
 }
 
 // Parses "Linescore" field for a given competitor and quarter from the ESPN Game Summary API
-func ParseQuarterScore(espnGameDetails pickemstructs.ESPNGameDetailsResponse, homeAway string, quarterNumber uint8) uint8 {
+func ParseQuarterScore(consolidatedGameProperties pickemstructs.ConsolidatedGameProperties, homeAway string, quarterNumber uint8) uint8 {
 	var linescoreArraryIndex uint8 = quarterNumber - 1
 
-	if len(espnGameDetails.Header.Competitions[0].Competitors[0].Linescores) == 0 || len(espnGameDetails.Header.Competitions[0].Competitors[1].Linescores) == 0 {
+	if len(consolidatedGameProperties.EspnDetails.Header.Competitions[0].Competitors[0].Linescores) == 0 || len(consolidatedGameProperties.EspnDetails.Header.Competitions[0].Competitors[1].Linescores) == 0 {
 		return 0
 	} else {
-		var team1HomeAway string = espnGameDetails.Header.Competitions[0].Competitors[0].HomeAway
-		var team2HomeAway string = espnGameDetails.Header.Competitions[0].Competitors[1].HomeAway
-		var team1Points string = espnGameDetails.Header.Competitions[0].Competitors[0].Linescores[linescoreArraryIndex].DisplayValue
-		var team2Points string = espnGameDetails.Header.Competitions[0].Competitors[1].Linescores[linescoreArraryIndex].DisplayValue
+		var team1HomeAway string = consolidatedGameProperties.EspnDetails.Header.Competitions[0].Competitors[0].HomeAway
+		var team2HomeAway string = consolidatedGameProperties.EspnDetails.Header.Competitions[0].Competitors[1].HomeAway
+		var team1Points string = consolidatedGameProperties.EspnDetails.Header.Competitions[0].Competitors[0].Linescores[linescoreArraryIndex].DisplayValue
+		var team2Points string = consolidatedGameProperties.EspnDetails.Header.Competitions[0].Competitors[1].Linescores[linescoreArraryIndex].DisplayValue
 		return ParsePointsForGivenCompetitorAndPeriod(homeAway, team1HomeAway, team2HomeAway, team1Points, team2Points)
 	}
 }
 
 // Parses "score" field for a given competitor from the ESPN Game Summary API
-func ParseTotalScore(espnGameDetails pickemstructs.ESPNGameDetailsResponse, homeAway string) uint8 {
-	var team1HomeAway string = espnGameDetails.Header.Competitions[0].Competitors[0].HomeAway
-	var team2HomeAway string = espnGameDetails.Header.Competitions[0].Competitors[1].HomeAway
-	var team1Points string = espnGameDetails.Header.Competitions[0].Competitors[0].Score
-	var team2Points string = espnGameDetails.Header.Competitions[0].Competitors[1].Score
+func ParseTotalScore(consolidatedGameProperties pickemstructs.ConsolidatedGameProperties, homeAway string) uint8 {
+	var team1HomeAway string = consolidatedGameProperties.EspnDetails.Header.Competitions[0].Competitors[0].HomeAway
+	var team2HomeAway string = consolidatedGameProperties.EspnDetails.Header.Competitions[0].Competitors[1].HomeAway
+	var team1Points string = consolidatedGameProperties.EspnDetails.Header.Competitions[0].Competitors[0].Score
+	var team2Points string = consolidatedGameProperties.EspnDetails.Header.Competitions[0].Competitors[1].Score
 
 	if team1Points == "" || team2Points == "" {
 		return 0
@@ -63,11 +63,11 @@ func ParseTotalScore(espnGameDetails pickemstructs.ESPNGameDetailsResponse, home
 }
 
 // Parses "Linescore" field for a given competitor and quarter from the ESPN Game Summary API
-func ParseOvertimeScore(espnGameDetails pickemstructs.ESPNGameDetailsResponse, homeAway string) uint8 {
-	var team1HomeAway string = espnGameDetails.Header.Competitions[0].Competitors[0].HomeAway
-	var team2HomeAway string = espnGameDetails.Header.Competitions[0].Competitors[1].HomeAway
-	var team1PointsSlice []pickemstructs.Linescore = espnGameDetails.Header.Competitions[0].Competitors[0].Linescores
-	var team2PointsSlice []pickemstructs.Linescore = espnGameDetails.Header.Competitions[0].Competitors[1].Linescores
+func ParseOvertimeScore(consolidatedGameProperties pickemstructs.ConsolidatedGameProperties, homeAway string) uint8 {
+	var team1HomeAway string = consolidatedGameProperties.EspnDetails.Header.Competitions[0].Competitors[0].HomeAway
+	var team2HomeAway string = consolidatedGameProperties.EspnDetails.Header.Competitions[0].Competitors[1].HomeAway
+	var team1PointsSlice []pickemstructs.Linescore = consolidatedGameProperties.EspnDetails.Header.Competitions[0].Competitors[0].Linescores
+	var team2PointsSlice []pickemstructs.Linescore = consolidatedGameProperties.EspnDetails.Header.Competitions[0].Competitors[1].Linescores
 
 	if len(team1PointsSlice) <= 4 {
 		return uint8(0)

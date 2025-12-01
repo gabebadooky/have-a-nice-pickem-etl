@@ -1,7 +1,6 @@
 package gamedetails
 
 import (
-	"fmt"
 	"have-a-nice-pickem-etl/etl/utils"
 	"log"
 	"strings"
@@ -66,9 +65,7 @@ func ExtractFoxGameCode(foxSchedulePage *goquery.Selection, gameID string) strin
 		} else {
 			homeTeamID = homeTeamFoxCode
 		}
-		fmt.Printf("foxGameCode: %s\n", foxGameCode)
-		fmt.Printf("awayTeamID: %s\n", awayTeamID)
-		fmt.Printf("homeTeamID: %s\n", homeTeamID)
+
 		if strings.Contains(gameID, awayTeamID) && strings.Contains(gameID, homeTeamID) {
 			// Break out of loop
 			return false

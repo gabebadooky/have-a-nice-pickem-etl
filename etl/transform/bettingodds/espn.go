@@ -1,25 +1,30 @@
 package bettingodds
 
-import "have-a-nice-pickem-etl/etl/pickemstructs"
+import (
+	"have-a-nice-pickem-etl/etl/pickemstructs"
+)
 
-func ParseOverUnder(espnGameDetails pickemstructs.ESPNGameDetailsResponse) float32 {
-	var overUnder float32 = espnGameDetails.Pickcenter[0].OverUnder
+type EspnOdds struct {
+	pickemstructs.BettingOdds
+}
 
+func (e EspnOdds) ParseOverUnder(consolidatedGameProperties pickemstructs.ConsolidatedGameProperties) float32 {
+	var overUnder float32 = consolidatedGameProperties.EspnDetails.Pickcenter[0].OverUnder
 	return overUnder
 }
 
-func ParseAwayMoneyline(espnGameDetails pickemstructs.ESPNGameDetailsResponse) int16 {
-	var awayMoneyline int16 = espnGameDetails.Pickcenter[0].AwayTeamOdds.Moneyline
+func (e EspnOdds) ParseAwayMoneyline(consolidatedGameProperties pickemstructs.ConsolidatedGameProperties) int16 {
+	var awayMoneyline int16 = consolidatedGameProperties.EspnDetails.Pickcenter[0].AwayTeamOdds.Moneyline
 	return awayMoneyline
 }
 
-func ParseHomeMoneyline(espnGameDetails pickemstructs.ESPNGameDetailsResponse) int16 {
-	var homeMoneyline int16 = espnGameDetails.Pickcenter[0].HomeTeamOdds.Moneyline
+func (e EspnOdds) ParseHomeMoneyline(consolidatedGameProperties pickemstructs.ConsolidatedGameProperties) int16 {
+	var homeMoneyline int16 = consolidatedGameProperties.EspnDetails.Pickcenter[0].HomeTeamOdds.Moneyline
 	return homeMoneyline
 }
 
-func ParseAwaySpread(espnGameDetails pickemstructs.ESPNGameDetailsResponse) float32 {
-	var awaySpread float32 = espnGameDetails.Pickcenter[0].Spread
+func (e EspnOdds) ParseAwaySpread(consolidatedGameProperties pickemstructs.ConsolidatedGameProperties) float32 {
+	var awaySpread float32 = consolidatedGameProperties.EspnDetails.Pickcenter[0].Spread
 	if awaySpread > 0 {
 		awaySpread -= (awaySpread * 2)
 	} else {
@@ -28,17 +33,17 @@ func ParseAwaySpread(espnGameDetails pickemstructs.ESPNGameDetailsResponse) floa
 	return awaySpread
 }
 
-func ParseHomeSpread(espnGameDetails pickemstructs.ESPNGameDetailsResponse) float32 {
-	var homeSpread float32 = espnGameDetails.Pickcenter[0].Spread
+func (e EspnOdds) ParseHomeSpread(consolidatedGameProperties pickemstructs.ConsolidatedGameProperties) float32 {
+	var homeSpread float32 = consolidatedGameProperties.EspnDetails.Pickcenter[0].Spread
 	return homeSpread
 }
 
-func ParseAwayWinPercentage(espnGameDetails pickemstructs.ESPNGameDetailsResponse) string {
-	var awayWinPercentage string = espnGameDetails.Predictor.AwayTeam.GameProjection
+func (e EspnOdds) ParseAwayWinPercentage(consolidatedGameProperties pickemstructs.ConsolidatedGameProperties) string {
+	var awayWinPercentage string = consolidatedGameProperties.EspnDetails.Predictor.AwayTeam.GameProjection
 	return awayWinPercentage
 }
 
-func ParseHomeWinPercentage(espnGameDetails pickemstructs.ESPNGameDetailsResponse) string {
-	var homeWinPercentage string = espnGameDetails.Predictor.HomeTeam.GameProjection
+func (e EspnOdds) ParseHomeWinPercentage(consolidatedGameProperties pickemstructs.ConsolidatedGameProperties) string {
+	var homeWinPercentage string = consolidatedGameProperties.EspnDetails.Predictor.HomeTeam.GameProjection
 	return homeWinPercentage
 }

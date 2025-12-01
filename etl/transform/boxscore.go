@@ -7,16 +7,16 @@ import (
 )
 
 // Instantiates Box Score record from ESPN Game Summary
-func CreateBoxScoreRecord(espnGameDetails pickemstructs.ESPNGameDetailsResponse, homeAway string) pickemstructs.Boxscore {
+func CreateBoxScoreRecord(consolidatedGameProperties pickemstructs.ConsolidatedGameProperties, homeAway string) pickemstructs.Boxscore {
 	var newRecord pickemstructs.Boxscore = pickemstructs.Boxscore{
-		GameID:        common.ParseGameID(espnGameDetails),
-		TeamID:        common.ParseGameSummaryTeamID(homeAway, espnGameDetails),
-		Q1Score:       boxscore.ParseQuarterScore(espnGameDetails, homeAway, 1),
-		Q2Score:       boxscore.ParseQuarterScore(espnGameDetails, homeAway, 2),
-		Q3Score:       boxscore.ParseQuarterScore(espnGameDetails, homeAway, 3),
-		Q4Score:       boxscore.ParseQuarterScore(espnGameDetails, homeAway, 4),
-		OvertimeScore: boxscore.ParseOvertimeScore(espnGameDetails, homeAway),
-		TotalScore:    boxscore.ParseTotalScore(espnGameDetails, homeAway),
+		GameID:        common.ParseGameID(consolidatedGameProperties),
+		TeamID:        common.ParseGameSummaryTeamID(homeAway, consolidatedGameProperties),
+		Q1Score:       boxscore.ParseQuarterScore(consolidatedGameProperties, homeAway, 1),
+		Q2Score:       boxscore.ParseQuarterScore(consolidatedGameProperties, homeAway, 2),
+		Q3Score:       boxscore.ParseQuarterScore(consolidatedGameProperties, homeAway, 3),
+		Q4Score:       boxscore.ParseQuarterScore(consolidatedGameProperties, homeAway, 4),
+		OvertimeScore: boxscore.ParseOvertimeScore(consolidatedGameProperties, homeAway),
+		TotalScore:    boxscore.ParseTotalScore(consolidatedGameProperties, homeAway),
 	}
 
 	return newRecord

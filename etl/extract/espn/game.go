@@ -48,6 +48,6 @@ func GetGame(gameID string) pickemstructs.ESPNGameDetailsResponse {
 
 	}
 
-	log.Printf("gameDetails:\n%v\n", gameDetails)
+	//log.Printf("gameDetails:\n%v\n", gameDetails)
 	return gameDetails
 }
