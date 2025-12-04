@@ -12,40 +12,84 @@ package espn
 import (
 	"encoding/json"
 	"fmt"
-	"have-a-nice-pickem-etl/etl/pickemstructs"
+	"have-a-nice-pickem-etl/etl/extract"
 	"have-a-nice-pickem-etl/etl/utils"
-	"io"
 	"log"
-	"net/http"
 )
 
-// Call ESPN Scoreboard Summary API Endpoint for a given league and week
-func GetSchedule(league string, week uint8) pickemstructs.ESPNScheduleResponse {
-	const espnHiddenScoreboardBaseURL string = utils.ESPN_CFB_SCHEDULE_ENDPOINT_URL
-	var espnScoreboardEndpoint string = fmt.Sprintf("%s?week=%d", espnHiddenScoreboardBaseURL, week)
+type EspnCFBSchedule struct {
+	week uint8
+}
 
-	log.Printf("\nCalling Scoreboard endpoint for week %d: %s\n", week, espnScoreboardEndpoint)
-	resp, err := http.Get(espnScoreboardEndpoint)
+type EspnNFLSchedule struct {
+	week uint8
+}
+
+type ESPNScheduleResponse struct {
+	Events []Event `json:"events"`
+}
+
+type Event struct {
+	ID string `json:"id"`
+}
+
+func decodeEspnScoreboardResponse(body []byte) (ESPNScheduleResponse, error) {
+	var scheduleDetails ESPNScheduleResponse
+
+	err := json.Unmarshal([]byte(body), &scheduleDetails)
 	if err != nil {
-		log.Panicf("Error occurred calling ESPN Scoreboard Summary Hidden Endpoint for week %d:\n%s\n", week, err)
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode != 200 {
-		log.Panicf("Non 200 response code returned from %s:\n%d", espnScoreboardEndpoint, resp.StatusCode)
+		return ESPNScheduleResponse{}, fmt.Errorf("error occurred decoding espn scoreboard summary api endpoint response:\n%s", err)
 	}
 
-	body, err := io.ReadAll(resp.Body)
+	return scheduleDetails, nil
+}
+
+// Call CFB ESPN Scoreboard Summary API Endpoint
+func (e EspnCFBSchedule) GetScheduleForWeek() ESPNScheduleResponse {
+	var espnScoreboardEndpoint string
+
+	if e.week > utils.CFB_REG_SEASON_WEEKS {
+		espnScoreboardEndpoint = fmt.Sprintf("%s%d", utils.ESPN_CFB_REGULAR_SEASON_SCHEDULE_URL, e.week)
+		log.Printf("\nCalling Scoreboard endpoint for week %d: %s\n", e.week, espnScoreboardEndpoint)
+	} else {
+		espnScoreboardEndpoint = fmt.Sprintf("%s%d", utils.ESPN_CFB_POST_SEASON_SCHEDULE_URL, e.week)
+		log.Printf("\nCalling Scoreboard endpoint for week %d: %s\n", e.week, espnScoreboardEndpoint)
+	}
+
+	body, err := extract.CallEndpoint(espnScoreboardEndpoint)
 	if err != nil {
-		log.Panicf("Error occurred parsing ESPN Scoreboard Summary Hidden Endpoint Response for week %d:\n%s\n", week, err)
+		log.Panicf("%s", err.Error())
 	}
 
-	var scheduleDetails pickemstructs.ESPNScheduleResponse
-	jsonerr := json.Unmarshal([]byte(body), &scheduleDetails)
-	if jsonerr != nil {
-		log.Panicf("Error occurred decoding ESPN Scoreboard Summary JSON formatted schedule details for week %d:\n%s\n", week, jsonerr)
+	scheduleDetails, err := decodeEspnScoreboardResponse(body)
+	if err != nil {
+		log.Panicf("%s", err.Error())
 	}
 
-	//log.Printf("scheduleDetails:\n%v\n", scheduleDetails)
+	return scheduleDetails
+}
+
+// Call NFL ESPN Scoreboard Summary API Endpoint
+func (e EspnNFLSchedule) GetScheduleForWeek() ESPNScheduleResponse {
+	var espnScoreboardEndpoint string
+
+	if e.week > utils.NFL_REG_SEASON_WEEKS {
+		espnScoreboardEndpoint = fmt.Sprintf("%s%d", utils.ESPN_NFL_REGULAR_SEASON_SCHEDULE_URL, e.week)
+		log.Printf("\nCalling Scoreboard endpoint for week %d: %s\n", e.week, espnScoreboardEndpoint)
+	} else {
+		espnScoreboardEndpoint = fmt.Sprintf("%s%d", utils.ESPN_NFL_POST_SEASON_SCHEDULE_URL, e.week)
+		log.Printf("\nCalling Scoreboard endpoint for week %d: %s\n", e.week, espnScoreboardEndpoint)
+	}
+
+	body, err := extract.CallEndpoint(espnScoreboardEndpoint)
+	if err != nil {
+		log.Panicf("%s", err.Error())
+	}
+
+	scheduleDetails, err := decodeEspnScoreboardResponse(body)
+	if err != nil {
+		log.Panicf("%s", err.Error())
+	}
+
 	return scheduleDetails
 }

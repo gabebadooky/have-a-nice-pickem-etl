@@ -6,35 +6,73 @@ package cbs
 
 import (
 	"fmt"
+	"have-a-nice-pickem-etl/etl/extract"
 	"have-a-nice-pickem-etl/etl/utils"
 	"log"
-	"net/http"
 
 	"github.com/PuerkitoBio/goquery"
 )
 
-// Scrape CBS Schedule for a given league, week and year
-func GetSchedule(league string, week uint8, year uint16) *goquery.Selection {
-	//var cbsSchedulePageLink string = fmt.Sprintf("%s/%d/%s/%d/?layout=compact", utils.CBS_CFB_SCHEDULE_URL, year, utils.CBS_CFB_SCHEDULE_TYPE, week)
-	var cbsSchedulePageLink string = fmt.Sprintf("%s/%d/regular/week-%d/", utils.CBS_CFB_SCHEDULE_URL, year, week)
+type CbsCFBSchedule struct {
+	Week uint8
+}
 
-	log.Printf("\nRequesting CBS Schedule page for week %d: %s\n", week, cbsSchedulePageLink)
-	resp, err := http.Get(cbsSchedulePageLink)
+type CbsNFLSchedule struct {
+	Week uint8
+}
+
+func setNflPostseasonWeek(week uint8) string {
+	switch week - utils.NFL_REG_SEASON_WEEKS {
+	case 1:
+		return "wild-card"
+	case 2:
+		return "divisional"
+	case 3:
+		return "championship"
+	case 4:
+		return "pro-bowl"
+	default:
+		return "super-bowl"
+	}
+}
+
+// Scrape Cbs CFB Schedule for a given week
+func (x CbsCFBSchedule) GetScheduleForWeek() *goquery.Selection {
+	var cbsCfbSchedulePageLink string
+
+	if x.Week > utils.CFB_REG_SEASON_WEEKS {
+		cbsCfbSchedulePageLink = fmt.Sprintf("%s%d", utils.CBS_CFB_POST_SEASON_SCHEDULE_URL, x.Week)
+		log.Printf("\nRequesting Fox Schedule page for post season week %d: %s\n", x.Week, cbsCfbSchedulePageLink)
+	} else {
+		cbsCfbSchedulePageLink = fmt.Sprintf("%s%d", utils.CBS_CFB_REGULAR_SEASON_SCHEDULE_URL, x.Week)
+		log.Printf("\nRequesting Fox Schedule page for regular season week %d: %s\n", x.Week, cbsCfbSchedulePageLink)
+	}
+
+	page, err := extract.GetSchedulePageBody(cbsCfbSchedulePageLink)
 	if err != nil {
-		log.Panicf("Error occurred navigating to %s:\n%s", cbsSchedulePageLink, err)
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode != 200 {
-		log.Panicf("Non 200 response code returned from %s:\n%d", cbsSchedulePageLink, resp.StatusCode)
+		log.Panicf("%s", err.Error())
 	}
 
-	doc, err := goquery.NewDocumentFromReader(resp.Body)
+	return page
+}
+
+// Scrape Cbs CFB Schedule for a given week
+func (y CbsNFLSchedule) GetScheduleForWeek() *goquery.Selection {
+	var cbsNflSchedulePageLink string
+
+	if y.Week > utils.NFL_REG_SEASON_WEEKS {
+		var week string = setNflPostseasonWeek(y.Week)
+		cbsNflSchedulePageLink = fmt.Sprintf("%s%s", utils.CBS_NFL_POST_SEASON_SCHEDULE_URL, week)
+		log.Printf("\nRequesting Fox Schedule page for post season week %d: %s\n", y.Week, cbsNflSchedulePageLink)
+	} else {
+		cbsNflSchedulePageLink = fmt.Sprintf("%s%d", utils.CBS_NFL_REGULAR_SEASON_SCHEDULE_URL, y.Week)
+		log.Printf("\nRequesting Fox Schedule page for regular season week %d: %s\n", y.Week, cbsNflSchedulePageLink)
+	}
+
+	page, err := extract.GetSchedulePageBody(cbsNflSchedulePageLink)
 	if err != nil {
-		log.Panicf("Error occurred instantiating goquery document:\n%s", err)
+		log.Panicf("%s", err.Error())
 	}
 
-	var htmlbody *goquery.Selection = doc.Find("body").First()
-	//log.Printf("htmlBody:\n%v\n", htmlbody)
-	return htmlbody
+	return page
 }

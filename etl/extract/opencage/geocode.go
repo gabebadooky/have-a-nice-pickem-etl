@@ -3,14 +3,19 @@ package opencage
 import (
 	"encoding/json"
 	"fmt"
+	"have-a-nice-pickem-etl/etl/extract"
 	"have-a-nice-pickem-etl/etl/utils"
-	"io"
 	"log"
-	"net/http"
 	"os"
 
 	"github.com/joho/godotenv"
 )
+
+type Geocode struct {
+	stadium string
+	city    string
+	state   string
+}
 
 type OpencageResponse struct {
 	Results []result `json:"results"`
@@ -41,27 +46,7 @@ func formatURLwithQueryString(stadium string, city string, state string) string 
 	}
 }
 
-// Call Opencage Forward Geocode API and read endpoint response
-func callEndpoint(opencageEndpoint string) ([]byte, error) {
-	resp, err := http.Get(opencageEndpoint)
-	if err != nil {
-		return nil, fmt.Errorf("Error occurred calling Opencage API Endpoint: %s: \n%s\n", opencageEndpoint, err)
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode != 200 {
-		return nil, fmt.Errorf("non 200 response code returned from %s:\n%d", opencageEndpoint, resp.StatusCode)
-	}
-
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return nil, fmt.Errorf("error occurred parsing Opencage API Endpoint Response for %s: \n%s", opencageEndpoint, err)
-	}
-
-	return body, nil
-}
-
-func decodeResponse(body []byte) (OpencageResponse, error) {
+func decodeOpencageResponse(body []byte) (OpencageResponse, error) {
 	var geocodeDetails OpencageResponse
 
 	err := json.Unmarshal([]byte(body), &geocodeDetails)
@@ -73,16 +58,16 @@ func decodeResponse(body []byte) (OpencageResponse, error) {
 }
 
 // Retreive Opencage Forward Geocode API Response for given stadium, city, state and country
-func GetGeocode(stadium string, city string, state string, country string) OpencageResponse {
-	var opencageEndpoint string = formatURLwithQueryString(stadium, city, state)
-	log.Printf("\nCalling Opencage API endpoint for %s %s, %s: %s\n", stadium, city, state, opencageEndpoint)
+func (g Geocode) Get() OpencageResponse {
+	var opencageEndpoint string = formatURLwithQueryString(g.stadium, g.city, g.state)
+	log.Printf("\nCalling Opencage API endpoint for %s %s, %s: %s\n", g.stadium, g.city, g.state, opencageEndpoint)
 
-	body, err := callEndpoint(opencageEndpoint)
+	body, err := extract.CallEndpoint(opencageEndpoint)
 	if err != nil {
 		log.Panicf("%s", err.Error())
 	}
 
-	geocodeDetails, err := decodeResponse(body)
+	geocodeDetails, err := decodeOpencageResponse(body)
 	if err != nil {
 		log.Panicf("%s", err.Error())
 	}

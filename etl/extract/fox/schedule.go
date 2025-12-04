@@ -6,43 +6,34 @@ package fox
 
 import (
 	"fmt"
+	"have-a-nice-pickem-etl/etl/extract"
 	"have-a-nice-pickem-etl/etl/utils"
 	"log"
 
 	"github.com/PuerkitoBio/goquery"
 )
 
-type FoxCFB struct {
+type FoxCFBSchedule struct {
+	Week uint8
 }
 
-type FoxNFL struct {
-}
-
-// Scrape Fox Schedule for a given week
-func getSchedule(schedulePageLink string) (*goquery.Selection, error) {
-	doc, err := utils.ScrapePage(schedulePageLink)
-	if err != nil {
-		return nil, fmt.Errorf("%s", err.Error())
-	}
-
-	var htmlbody *goquery.Selection = doc.Find("body").First()
-	//log.Printf("htmlBody:\n%v\n", htmlbody)
-	return htmlbody, nil
+type FoxNFLSchedule struct {
+	Week uint8
 }
 
 // Scrape Fox CFB Schedule for a given week
-func (FoxCFB) GetScheduleForWeek(week uint8) *goquery.Selection {
+func (x FoxCFBSchedule) GetScheduleForWeek() *goquery.Selection {
 	var foxCfbSchedulePageLink string
 
-	if week > utils.CFB_REG_SEASON_WEEKS {
-		foxCfbSchedulePageLink = fmt.Sprintf("%s%d", utils.FOX_CFB_POST_SEASON_SCHEDULE_URL, week)
-		log.Printf("\nRequesting Fox Schedule page for post season week %d: %s\n", week, foxCfbSchedulePageLink)
+	if x.Week > utils.CFB_REG_SEASON_WEEKS {
+		foxCfbSchedulePageLink = fmt.Sprintf("%s%d", utils.FOX_CFB_POST_SEASON_SCHEDULE_URL, x.Week)
+		log.Printf("\nRequesting Fox Schedule page for post season week %d: %s\n", x.Week, foxCfbSchedulePageLink)
 	} else {
-		foxCfbSchedulePageLink = fmt.Sprintf("%s%d", utils.FOX_CFB_REGULER_SEASON_SCHEDULE_URL, week)
-		log.Printf("\nRequesting Fox Schedule page for regular season week %d: %s\n", week, foxCfbSchedulePageLink)
+		foxCfbSchedulePageLink = fmt.Sprintf("%s%d", utils.FOX_CFB_REGULER_SEASON_SCHEDULE_URL, x.Week)
+		log.Printf("\nRequesting Fox Schedule page for regular season week %d: %s\n", x.Week, foxCfbSchedulePageLink)
 	}
 
-	page, err := getSchedule(foxCfbSchedulePageLink)
+	page, err := extract.GetSchedulePageBody(foxCfbSchedulePageLink)
 	if err != nil {
 		log.Panicf("%s", err.Error())
 	}
@@ -51,18 +42,19 @@ func (FoxCFB) GetScheduleForWeek(week uint8) *goquery.Selection {
 }
 
 // Scrape Fox CFB Schedule for a given week
-func (FoxNFL) GetScheduleForWeek(week uint8) *goquery.Selection {
+func (y FoxNFLSchedule) GetScheduleForWeek() *goquery.Selection {
 	var foxNflSchedulePageLink string
 
-	if week > utils.CFB_REG_SEASON_WEEKS {
-		foxNflSchedulePageLink = fmt.Sprintf("%s%d", utils.FOX_CFB_POST_SEASON_SCHEDULE_URL, week)
-		log.Printf("\nRequesting Fox Schedule page for post season week %d: %s\n", week, foxNflSchedulePageLink)
+	if y.Week > utils.NFL_REG_SEASON_WEEKS {
+		var week uint8 = y.Week - utils.NFL_REG_SEASON_WEEKS
+		foxNflSchedulePageLink = fmt.Sprintf("%s%d", utils.FOX_NFL_POST_SEASON_SCHEDULE_URL, week)
+		log.Printf("\nRequesting Fox Schedule page for post season week %d: %s\n", y.Week, foxNflSchedulePageLink)
 	} else {
-		foxNflSchedulePageLink = fmt.Sprintf("%s%d", utils.FOX_CFB_REGULER_SEASON_SCHEDULE_URL, week)
-		log.Printf("\nRequesting Fox Schedule page for regular season week %d: %s\n", week, foxNflSchedulePageLink)
+		foxNflSchedulePageLink = fmt.Sprintf("%s%d", utils.FOX_NFL_REGULAR_SEASON_SCHEDULE_URL, y.Week)
+		log.Printf("\nRequesting Fox Schedule page for regular season week %d: %s\n", y.Week, foxNflSchedulePageLink)
 	}
 
-	page, err := getSchedule(foxNflSchedulePageLink)
+	page, err := extract.GetSchedulePageBody(foxNflSchedulePageLink)
 	if err != nil {
 		log.Panicf("%s", err.Error())
 	}
