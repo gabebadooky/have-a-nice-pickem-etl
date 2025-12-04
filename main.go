@@ -12,6 +12,12 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
+type ScheduleExtracts struct {
+	espnSchedule pickemstructs.ESPNScheduleResponse
+	cbsSchedule  *goquery.Selection
+	foxSchedule  *goquery.Selection
+}
+
 type DistinctRecords struct {
 	Teams       []string
 	GameDetails []pickemstructs.GameDetails
