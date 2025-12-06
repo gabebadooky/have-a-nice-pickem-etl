@@ -10,19 +10,17 @@ Package that:
 package espn
 
 import (
-	"encoding/json"
 	"fmt"
-	"have-a-nice-pickem-etl/etl/extract"
 	"have-a-nice-pickem-etl/etl/utils"
 	"log"
 )
 
 type EspnCFBSchedule struct {
-	week uint8
+	Week uint8
 }
 
 type EspnNFLSchedule struct {
-	week uint8
+	Week uint8
 }
 
 type ESPNScheduleResponse struct {
@@ -34,29 +32,22 @@ type Event struct {
 }
 
 func decodeEspnScoreboardResponse(body []byte) (ESPNScheduleResponse, error) {
-	var scheduleDetails ESPNScheduleResponse
-
-	err := json.Unmarshal([]byte(body), &scheduleDetails)
-	if err != nil {
-		return ESPNScheduleResponse{}, fmt.Errorf("error occurred decoding espn scoreboard summary api endpoint response:\n%s", err)
-	}
-
-	return scheduleDetails, nil
+	return utils.DecodeJSON[ESPNScheduleResponse](body)
 }
 
 // Call CFB ESPN Scoreboard Summary API Endpoint
 func (e EspnCFBSchedule) GetScheduleForWeek() ESPNScheduleResponse {
 	var espnScoreboardEndpoint string
 
-	if e.week > utils.CFB_REG_SEASON_WEEKS {
-		espnScoreboardEndpoint = fmt.Sprintf("%s%d", utils.ESPN_CFB_REGULAR_SEASON_SCHEDULE_URL, e.week)
-		log.Printf("\nCalling Scoreboard endpoint for week %d: %s\n", e.week, espnScoreboardEndpoint)
+	if e.Week > utils.CFB_REG_SEASON_WEEKS {
+		espnScoreboardEndpoint = fmt.Sprintf("%s%d", utils.ESPN_CFB_REGULAR_SEASON_SCHEDULE_URL, e.Week)
+		log.Printf("\nCalling Scoreboard endpoint for week %d: %s\n", e.Week, espnScoreboardEndpoint)
 	} else {
-		espnScoreboardEndpoint = fmt.Sprintf("%s%d", utils.ESPN_CFB_POST_SEASON_SCHEDULE_URL, e.week)
-		log.Printf("\nCalling Scoreboard endpoint for week %d: %s\n", e.week, espnScoreboardEndpoint)
+		espnScoreboardEndpoint = fmt.Sprintf("%s%d", utils.ESPN_CFB_POST_SEASON_SCHEDULE_URL, e.Week)
+		log.Printf("\nCalling Scoreboard endpoint for week %d: %s\n", e.Week, espnScoreboardEndpoint)
 	}
 
-	body, err := extract.CallEndpoint(espnScoreboardEndpoint)
+	body, err := utils.CallEndpoint(espnScoreboardEndpoint)
 	if err != nil {
 		log.Panicf("%s", err.Error())
 	}
@@ -73,15 +64,15 @@ func (e EspnCFBSchedule) GetScheduleForWeek() ESPNScheduleResponse {
 func (e EspnNFLSchedule) GetScheduleForWeek() ESPNScheduleResponse {
 	var espnScoreboardEndpoint string
 
-	if e.week > utils.NFL_REG_SEASON_WEEKS {
-		espnScoreboardEndpoint = fmt.Sprintf("%s%d", utils.ESPN_NFL_REGULAR_SEASON_SCHEDULE_URL, e.week)
-		log.Printf("\nCalling Scoreboard endpoint for week %d: %s\n", e.week, espnScoreboardEndpoint)
+	if e.Week > utils.NFL_REG_SEASON_WEEKS {
+		espnScoreboardEndpoint = fmt.Sprintf("%s%d", utils.ESPN_NFL_REGULAR_SEASON_SCHEDULE_URL, e.Week)
+		log.Printf("\nCalling Scoreboard endpoint for week %d: %s\n", e.Week, espnScoreboardEndpoint)
 	} else {
-		espnScoreboardEndpoint = fmt.Sprintf("%s%d", utils.ESPN_NFL_POST_SEASON_SCHEDULE_URL, e.week)
-		log.Printf("\nCalling Scoreboard endpoint for week %d: %s\n", e.week, espnScoreboardEndpoint)
+		espnScoreboardEndpoint = fmt.Sprintf("%s%d", utils.ESPN_NFL_POST_SEASON_SCHEDULE_URL, e.Week)
+		log.Printf("\nCalling Scoreboard endpoint for week %d: %s\n", e.Week, espnScoreboardEndpoint)
 	}
 
-	body, err := extract.CallEndpoint(espnScoreboardEndpoint)
+	body, err := utils.CallEndpoint(espnScoreboardEndpoint)
 	if err != nil {
 		log.Panicf("%s", err.Error())
 	}

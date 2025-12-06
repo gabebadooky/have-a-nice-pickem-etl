@@ -11,13 +11,14 @@ const FOX_CFB_POST_SEASON_SCHEDULE_URL string = "https://www.foxsports.com/colle
 const FOX_NFL_REGULAR_SEASON_SCHEDULE_URL string = "https://www.foxsports.com/nfl/schedule?groupId=2&seasonType=reg&week="
 const FOX_NFL_POST_SEASON_SCHEDULE_URL string = "https://www.foxsports.com/nfl/schedule?groupId=2&seasonType=post&week="
 
-// https://www.espn.com/college-football/schedule/_/week/1/year/2024/seasontype/3
 const ESPN_CFB_REGULAR_SEASON_SCHEDULE_URL string = "https://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard?seasonType=2&week="
 const ESPN_CFB_POST_SEASON_SCHEDULE_URL string = "https://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard?week="
 const ESPN_NFL_REGULAR_SEASON_SCHEDULE_URL string = "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?seasontype=2&dates=" + SEASON_YEAR + "&week="
 const ESPN_NFL_POST_SEASON_SCHEDULE_URL string = "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?seasontype=2&dates=" + SEASON_YEAR + "&week="
 
-const ESPN_CFB_GAME_ENDPOINT_URL string = "https://site.api.espn.com/apis/site/v2/sports/football/college-football/summary"
+const ESPN_CFB_GAME_ENDPOINT_URL string = "https://site.api.espn.com/apis/site/v2/sports/football/college-football/summary?event="
+const ESPN_NFL_GAME_ENDPOINT_URL string = "https://site.api.espn.com/apis/site/v2/sports/football/nfl/summary?event="
+
 const ESPN_CFB_TEAM_ENDPOINT_URL string = "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams"
 
 const CBS_CFB_SCHEDULE_URL string = "https://www.cbssports.com/college-football/odds/FBS"

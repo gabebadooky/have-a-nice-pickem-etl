@@ -1,9 +1,7 @@
 package opencage
 
 import (
-	"encoding/json"
 	"fmt"
-	"have-a-nice-pickem-etl/etl/extract"
 	"have-a-nice-pickem-etl/etl/utils"
 	"log"
 	"os"
@@ -18,14 +16,14 @@ type Geocode struct {
 }
 
 type OpencageResponse struct {
-	Results []result `json:"results"`
+	Results []Result `json:"results"`
 }
 
-type result struct {
-	Geometry geometry `json:"geometry"`
+type Result struct {
+	Geometry Geometry `json:"geometry"`
 }
 
-type geometry struct {
+type Geometry struct {
 	Lat float64 `json:"lat"`
 	Lon float64 `json:"lng"`
 }
@@ -47,22 +45,15 @@ func formatURLwithQueryString(stadium string, city string, state string) string 
 }
 
 func decodeOpencageResponse(body []byte) (OpencageResponse, error) {
-	var geocodeDetails OpencageResponse
-
-	err := json.Unmarshal([]byte(body), &geocodeDetails)
-	if err != nil {
-		return OpencageResponse{}, fmt.Errorf("error occurred decoding Opencage API Endpoint Response: \n%s", err)
-	}
-
-	return geocodeDetails, nil
+	return utils.DecodeJSON[OpencageResponse](body)
 }
 
 // Retreive Opencage Forward Geocode API Response for given stadium, city, state and country
-func (g Geocode) Get() OpencageResponse {
+func (g Geocode) GetOpencageLocation() OpencageResponse {
 	var opencageEndpoint string = formatURLwithQueryString(g.stadium, g.city, g.state)
 	log.Printf("\nCalling Opencage API endpoint for %s %s, %s: %s\n", g.stadium, g.city, g.state, opencageEndpoint)
 
-	body, err := extract.CallEndpoint(opencageEndpoint)
+	body, err := utils.CallEndpoint(opencageEndpoint)
 	if err != nil {
 		log.Panicf("%s", err.Error())
 	}
