@@ -13,11 +13,11 @@ import (
 )
 
 type CbsCFBSchedule struct {
-	week uint8
+	Week uint8
 }
 
 type CbsNFLSchedule struct {
-	week uint8
+	Week uint8
 }
 
 func setNflPostseasonWeek(week uint8) string {
@@ -39,12 +39,12 @@ func setNflPostseasonWeek(week uint8) string {
 func (x CbsCFBSchedule) GetScheduleForWeek() *goquery.Selection {
 	var cbsCfbSchedulePageLink string
 
-	if x.week > utils.CFB_REG_SEASON_WEEKS {
-		cbsCfbSchedulePageLink = fmt.Sprintf("%s%d", utils.CBS_CFB_POST_SEASON_SCHEDULE_URL, x.week)
-		log.Printf("\nRequesting Fox Schedule page for post season week %d: %s\n", x.week, cbsCfbSchedulePageLink)
+	if x.Week > utils.CFB_REG_SEASON_WEEKS {
+		cbsCfbSchedulePageLink = fmt.Sprintf("%s%d", utils.CBS_CFB_POST_SEASON_SCHEDULE_URL, x.Week)
+		log.Printf("\nRequesting Fox Schedule page for post season week %d: %s\n", x.Week, cbsCfbSchedulePageLink)
 	} else {
-		cbsCfbSchedulePageLink = fmt.Sprintf("%s%d", utils.CBS_CFB_REGULAR_SEASON_SCHEDULE_URL, x.week)
-		log.Printf("\nRequesting Fox Schedule page for regular season week %d: %s\n", x.week, cbsCfbSchedulePageLink)
+		cbsCfbSchedulePageLink = fmt.Sprintf("%s%d", utils.CBS_CFB_REGULAR_SEASON_SCHEDULE_URL, x.Week)
+		log.Printf("\nRequesting Fox Schedule page for regular season week %d: %s\n", x.Week, cbsCfbSchedulePageLink)
 	}
 
 	page, err := utils.GetGoQuerySelectionBody(cbsCfbSchedulePageLink)
@@ -59,13 +59,13 @@ func (x CbsCFBSchedule) GetScheduleForWeek() *goquery.Selection {
 func (y CbsNFLSchedule) GetScheduleForWeek() *goquery.Selection {
 	var cbsNflSchedulePageLink string
 
-	if y.week > utils.NFL_REG_SEASON_WEEKS {
-		var week string = setNflPostseasonWeek(y.week)
+	if y.Week > utils.NFL_REG_SEASON_WEEKS {
+		var week string = setNflPostseasonWeek(y.Week)
 		cbsNflSchedulePageLink = fmt.Sprintf("%s%s", utils.CBS_NFL_POST_SEASON_SCHEDULE_URL, week)
-		log.Printf("\nRequesting Fox Schedule page for post season week %d: %s\n", y.week, cbsNflSchedulePageLink)
+		log.Printf("\nRequesting Fox Schedule page for post season week %d: %s\n", y.Week, cbsNflSchedulePageLink)
 	} else {
-		cbsNflSchedulePageLink = fmt.Sprintf("%s%d", utils.CBS_NFL_REGULAR_SEASON_SCHEDULE_URL, y.week)
-		log.Printf("\nRequesting Fox Schedule page for regular season week %d: %s\n", y.week, cbsNflSchedulePageLink)
+		cbsNflSchedulePageLink = fmt.Sprintf("%s%d", utils.CBS_NFL_REGULAR_SEASON_SCHEDULE_URL, y.Week)
+		log.Printf("\nRequesting Fox Schedule page for regular season week %d: %s\n", y.Week, cbsNflSchedulePageLink)
 	}
 
 	page, err := utils.GetGoQuerySelectionBody(cbsNflSchedulePageLink)

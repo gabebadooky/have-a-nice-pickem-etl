@@ -1,6 +1,6 @@
-package pickemstructs
+package sharedtypes
 
-type TeamSummaryResponse struct {
+type ESPNTeamSummaryResponse struct {
 	Team Team `json:"team"`
 }
 

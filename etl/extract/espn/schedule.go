@@ -11,6 +11,7 @@ package espn
 
 import (
 	"fmt"
+	"have-a-nice-pickem-etl/etl/sharedtypes"
 	"have-a-nice-pickem-etl/etl/utils"
 	"log"
 )
@@ -23,20 +24,12 @@ type EspnNFLSchedule struct {
 	Week uint8
 }
 
-type ESPNScheduleResponse struct {
-	Events []Event `json:"events"`
-}
-
-type Event struct {
-	ID string `json:"id"`
-}
-
-func decodeEspnScoreboardResponse(body []byte) (ESPNScheduleResponse, error) {
-	return utils.DecodeJSON[ESPNScheduleResponse](body)
+func decodeEspnScoreboardResponse(body []byte) (sharedtypes.ESPNScheduleResponse, error) {
+	return utils.DecodeJSON[sharedtypes.ESPNScheduleResponse](body)
 }
 
 // Call CFB ESPN Scoreboard Summary API Endpoint
-func (e EspnCFBSchedule) GetScheduleForWeek() ESPNScheduleResponse {
+func (e EspnCFBSchedule) GetScheduleForWeek() sharedtypes.ESPNScheduleResponse {
 	var espnScoreboardEndpoint string
 
 	if e.Week > utils.CFB_REG_SEASON_WEEKS {
@@ -61,7 +54,7 @@ func (e EspnCFBSchedule) GetScheduleForWeek() ESPNScheduleResponse {
 }
 
 // Call NFL ESPN Scoreboard Summary API Endpoint
-func (e EspnNFLSchedule) GetScheduleForWeek() ESPNScheduleResponse {
+func (e EspnNFLSchedule) GetScheduleForWeek() sharedtypes.ESPNScheduleResponse {
 	var espnScoreboardEndpoint string
 
 	if e.Week > utils.NFL_REG_SEASON_WEEKS {

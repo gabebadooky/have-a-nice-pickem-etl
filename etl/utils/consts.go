@@ -19,7 +19,8 @@ const ESPN_NFL_POST_SEASON_SCHEDULE_URL string = "https://site.api.espn.com/apis
 const ESPN_CFB_GAME_ENDPOINT_URL string = "https://site.api.espn.com/apis/site/v2/sports/football/college-football/summary?event="
 const ESPN_NFL_GAME_ENDPOINT_URL string = "https://site.api.espn.com/apis/site/v2/sports/football/nfl/summary?event="
 
-const ESPN_CFB_TEAM_ENDPOINT_URL string = "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams"
+const ESPN_CFB_TEAM_ENDPOINT_URL string = "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/"
+const ESPN_NFL_TEAM_ENDPOINT_URL string = "https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams/"
 
 const CBS_CFB_SCHEDULE_URL string = "https://www.cbssports.com/college-football/odds/FBS"
 const CBS_CFB_REGULAR_SEASON_SCHEDULE_URL string = "https://www.cbssports.com/college-football/odds/FBS/" + SEASON_YEAR + "/regular/week-"

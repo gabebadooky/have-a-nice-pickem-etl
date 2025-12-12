@@ -9,45 +9,56 @@ Package that:
 package espn
 
 import (
-	"encoding/json"
 	"fmt"
-	"have-a-nice-pickem-etl/etl/pickemstructs"
+	"have-a-nice-pickem-etl/etl/sharedtypes"
 	"have-a-nice-pickem-etl/etl/utils"
-	"io"
 	"log"
-	"net/http"
 )
 
-// Call ESPN Team Summary API Endpoint for a given ESPN team code
-func Team(espnTeamCode string) pickemstructs.TeamSummaryResponse {
-	const espnHiddenTeamSummaryBaseURL string = utils.ESPN_CFB_TEAM_ENDPOINT_URL
-	var espnTeamEndpoint string = fmt.Sprintf("%s/%s", espnHiddenTeamSummaryBaseURL, espnTeamCode)
+type EspnCfbTeam struct {
+	TeamID string
+}
 
-	log.Printf("\nCalling Team %s endpoint: %s\n", espnTeamCode, espnTeamEndpoint)
-	resp, err := http.Get(espnTeamEndpoint)
+type EspnNflTeam struct {
+	TeamID string
+}
+
+func decodeEspnTeamResponse(body []byte) (sharedtypes.ESPNTeamSummaryResponse, error) {
+	return utils.DecodeJSON[sharedtypes.ESPNTeamSummaryResponse](body)
+}
+
+// Call ESPN CFB Team Summary API Endpoint for a given team ID
+func (cfb EspnCfbTeam) GetTeamSummary() sharedtypes.ESPNTeamSummaryResponse {
+	var espnTeamEndpoint string = fmt.Sprintf("%s%s", utils.ESPN_CFB_TEAM_ENDPOINT_URL, cfb.TeamID)
+	log.Printf("\nCalling ESPN endpoint for CFB Team: %s\n", espnTeamEndpoint)
+
+	body, err := utils.CallEndpoint(espnTeamEndpoint)
 	if err != nil {
-		log.Printf("Error occurred calling ESPN Team Summary Hidden Endpoint for TeamID %s: %s\n", espnTeamCode, err)
-		return pickemstructs.TeamSummaryResponse{}
-
+		log.Panicf("%s", err.Error())
 	}
-	defer resp.Body.Close()
 
-	body, err := io.ReadAll(resp.Body)
+	teamDetails, err := decodeEspnTeamResponse(body)
 	if err != nil {
-		log.Printf("Error occurred parsing ESPN Team Summary Hidden Endpoint Response for TeamID %s: %s\n", espnTeamCode, err)
-		return pickemstructs.TeamSummaryResponse{}
-
+		log.Panicf("%s", err.Error())
 	}
 
-	var teamDetails pickemstructs.TeamSummaryResponse
-	jsonerr := json.Unmarshal(body, &teamDetails)
-	if jsonerr != nil {
-		log.Printf("Error occurred decoding ESPN Team Summary JSON formatted team details for TeamID %s: %s\n", espnTeamCode, jsonerr)
-		return pickemstructs.TeamSummaryResponse{}
-
-	}
-
-	//log.Println(teamDetails)
 	return teamDetails
+}
 
+// Call ESPN CFB Team Summary API Endpoint for a given team ID
+func (nfl EspnNflTeam) GetTeamSummary() sharedtypes.ESPNTeamSummaryResponse {
+	var espnTeamEndpoint string = fmt.Sprintf("%s%s", utils.ESPN_NFL_TEAM_ENDPOINT_URL, nfl.TeamID)
+	log.Printf("\nCalling ESPN endpoint for NFL Team: %s\n", espnTeamEndpoint)
+
+	body, err := utils.CallEndpoint(espnTeamEndpoint)
+	if err != nil {
+		log.Panicf("%s", err.Error())
+	}
+
+	teamDetails, err := decodeEspnTeamResponse(body)
+	if err != nil {
+		log.Panicf("%s", err.Error())
+	}
+
+	return teamDetails
 }

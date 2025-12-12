@@ -1,4 +1,4 @@
-package pickemstructs
+package sharedtypes
 
 type BettingOdds struct {
 	GameID            string
