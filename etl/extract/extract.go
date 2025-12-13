@@ -19,10 +19,14 @@ type NFLSchedule struct {
 
 type CFBGame struct {
 	EspnCode string
+	CBS      *goquery.Selection
+	FOX      *goquery.Selection
 }
 
 type NFLGame struct {
 	EspnCode string
+	CBS      *goquery.Selection
+	FOX      *goquery.Selection
 }
 
 type CFBTeam struct {
@@ -35,6 +39,12 @@ type NFLTeam struct {
 
 type ConsolidatedSchedule struct {
 	ESPN sharedtypes.ESPNScheduleResponse
+	CBS  *goquery.Selection
+	FOX  *goquery.Selection
+}
+
+type ConsolidatedGame struct {
+	ESPN sharedtypes.ESPNGameDetailsResponse
 	CBS  *goquery.Selection
 	FOX  *goquery.Selection
 }
@@ -55,18 +65,26 @@ func (nfl NFLSchedule) ExtractSchedule() ConsolidatedSchedule {
 	}
 }
 
-func (cfb CFBGame) ExtractESPNGameSummary() sharedtypes.ESPNGameDetailsResponse {
-	return espn.EspnCFBGame{GameCode: cfb.EspnCode}.GetGameSummary()
+func (cfb CFBGame) ExtractGame() ConsolidatedGame {
+	return ConsolidatedGame{
+		ESPN: espn.EspnCFBGame{GameCode: cfb.EspnCode}.GetGameSummary(),
+	}
 }
 
-func (nfl NFLGame) ExtractESPNGameSummary() sharedtypes.ESPNGameDetailsResponse {
-	return espn.EspnCFBGame{GameCode: nfl.EspnCode}.GetGameSummary()
+func (nfl NFLGame) ExtractGame() ConsolidatedGame {
+	return ConsolidatedGame{
+		ESPN: espn.EspnCFBGame{GameCode: nfl.EspnCode}.GetGameSummary(),
+	}
 }
 
-func (cfb CFBTeam) ExtractESPNTeamSummary() sharedtypes.ESPNTeamSummaryResponse {
-	return espn.EspnCfbTeam{TeamID: cfb.EspnCode}.GetTeamSummary()
+func (cfb CFBTeam) ExtractGame() ConsolidatedGame {
+	return ConsolidatedGame{
+		ESPN: espn.EspnCFBGame{GameCode: cfb.EspnCode}.GetGameSummary(),
+	}
 }
 
-func (nfl NFLTeam) ExtractESPNTeamSummary() sharedtypes.ESPNTeamSummaryResponse {
-	return espn.EspnCfbTeam{TeamID: nfl.EspnCode}.GetTeamSummary()
+func (nfl NFLTeam) ExtractGame() ConsolidatedGame {
+	return ConsolidatedGame{
+		ESPN: espn.EspnCFBGame{GameCode: nfl.EspnCode}.GetGameSummary(),
+	}
 }

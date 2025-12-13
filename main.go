@@ -16,13 +16,21 @@ func main() {
 	}
 
 	for i := 0; i < 2; i++ {
-		var espnGameCode string
-		espnGameCode = consolidatedSchedule.ESPN.Events[i].ID
+		var consolidatedGame extract.ConsolidatedGame
+		var espnGameCode string = consolidatedSchedule.ESPN.Events[i].ID
 
 		if league == "CFB" {
-			game := extract.CFBGame{EspnCode: espnGameCode}
+			consolidatedGame = extract.CFBGame{
+				EspnCode: espnGameCode,
+				CBS:      consolidatedSchedule.CBS,
+				FOX:      consolidatedGame.FOX,
+			}.ExtractGame()
 		} else {
-			game := extract.NFLGame{EspnCode: espnGameCode}
+			consolidatedGame = extract.NFLGame{
+				EspnCode: espnGameCode,
+				CBS:      consolidatedSchedule.CBS,
+				FOX:      consolidatedGame.FOX,
+			}.ExtractGame()
 		}
 	}
 

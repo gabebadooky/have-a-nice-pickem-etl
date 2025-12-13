@@ -1,4 +1,4 @@
-package gamedetails
+package common
 
 import (
 	"have-a-nice-pickem-etl/etl/utils"
@@ -41,14 +41,8 @@ func ExtractFoxGameCode(foxSchedulePage *goquery.Selection, gameID string) strin
 		var awayTeamID string
 		var homeTeamID string
 
-		if foxGameCode == "foxGameCode" {
-			log.Printf("Failed to extract Fox Game Code from Hyperlink: %v\n", hyperlink)
-		}
-		if awayTeamFoxCode == "foxTeamCode" {
-			log.Printf("Failed to extract Fox Team Code from Hyperlink: %v\n", hyperlink)
-		}
-		if homeTeamFoxCode == "foxTeamCode" {
-			log.Printf("Failed to extract Fox Team Code from Hyperlink: %v\n", hyperlink)
+		if foxGameCode == "foxGameCode" || awayTeamFoxCode == "foxTeamCode" || homeTeamFoxCode == "foxTeamCode" {
+			log.Printf("Failed to extract Fox Game and/or Team Code from Hyperlink: %v\n", hyperlink)
 		}
 
 		// Map Fox Team Code to global Team IDs
