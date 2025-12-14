@@ -22,20 +22,19 @@ func ExtractCbsTeamCode(oddsTable *goquery.Selection, homeAway string) string {
 	//var scorecardProgressTable *goquery.Selection = oddsTable.Find("div.in-progress-table").Find("table").Find("tbody")
 	var teamHREF string
 	var teamCBScode string
+	var teamCBScodeIndex int
 
 	switch strings.ToUpper(homeAway) {
 	case "HOME":
-		//teamHREF = scorecardProgressTable.Find("td.team").Eq(1).Find("div.team-details-wrapper").Find("a").First().AttrOr("href", "cbsTeamHREF")
 		teamHREF = oddsTable.Find("tbody").Find("tr").Eq(1).Find("span.OddsBlock-teamText").Find("a").AttrOr("href", "cbsTeamHREF")
 	case "AWAY":
-		//teamHREF = scorecardProgressTable.Find("td.team").Eq(0).Find("div.team-details-wrapper").Find("a").First().AttrOr("href", "cbsTeamHREF")
 		teamHREF = oddsTable.Find("tbody").Find("tr").Eq(0).Find("span.OddsBlock-teamText").Find("a").AttrOr("href", "cbsTeamHREF")
 	default:
 		log.Panicf("Invalid input supplied for 'homeAway': %s", homeAway)
 		teamHREF = "cbsTeamHREF"
 	}
 
-	var teamCBScodeIndex int = strings.Index(teamHREF, "teams/")
+	teamCBScodeIndex = strings.Index(teamHREF, "teams/")
 	teamCBScode = teamHREF[teamCBScodeIndex+6:]
 	teamCBScode = strings.TrimRight(teamCBScode, "/")
 
@@ -50,7 +49,7 @@ func ExtractCbsGameCode(cbsOddsPage *goquery.Selection, gameID string) string {
 
 	gameOddsTables.EachWithBreak(func(i int, oddsTable *goquery.Selection) bool {
 		cbsGameCode = oddsTable.AttrOr("data-game-abbrev", "cbsGameCode")
-		var awayTeamCBScode string = ExtractCbsTeamCode(oddsTable, "AWAY")
+		var awayTeamCBScode string = ExtractCbsGameCode(oddsTable, "AWAY")
 		var homeTeamCBScode string = ExtractCbsTeamCode(oddsTable, "HOME")
 
 		if cbsGameCode == "cbsGameCode" {

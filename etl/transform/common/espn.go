@@ -8,10 +8,6 @@ import (
 	"strings"
 )
 
-type HomeAwayTeam struct {
-	HomeAway string
-}
-
 // Generates "TeamID" field from ESPN Team Summary API
 func ParseTeamSummaryTeamID(teamSummaryDetails sharedtypes.ESPNTeamSummaryResponse) string {
 	var teamID string = teamSummaryDetails.Team.ID
@@ -19,9 +15,9 @@ func ParseTeamSummaryTeamID(teamSummaryDetails sharedtypes.ESPNTeamSummaryRespon
 }
 
 // Generates "TeamID" field for the Home or Away team from ESPN Game Summary API
-func (t HomeAwayTeam) ParseGameSummaryTeamID(consolidatedGame extract.ConsolidatedGame) string {
+func ParseGameSummaryTeamID(consolidatedGame extract.ConsolidatedGame, homeAway string) string {
 	var competitorHomeAway string = consolidatedGame.ESPN.Header.Competitions[0].Competitors[0].HomeAway
-	if strings.EqualFold(t.HomeAway, competitorHomeAway) {
+	if strings.EqualFold(homeAway, competitorHomeAway) {
 		var teamID string = consolidatedGame.ESPN.Header.Competitions[0].Competitors[0].Team.DisplayName
 		var formattedTeamID string = utils.FormatStringID(teamID)
 		return formattedTeamID
@@ -35,8 +31,8 @@ func (t HomeAwayTeam) ParseGameSummaryTeamID(consolidatedGame extract.Consolidat
 
 // Generates "GameID" field from AwayTeamID and HomeTeamID from ESPN Game Summary API
 func ParseGameID(consolidatedGame extract.ConsolidatedGame) string {
-	var awayTeamID string = HomeAwayTeam{HomeAway: "away"}.ParseGameSummaryTeamID(consolidatedGame)
-	var homeTeamID string = HomeAwayTeam{HomeAway: "home"}.ParseGameSummaryTeamID(consolidatedGame)
+	var awayTeamID string = ParseGameSummaryTeamID(consolidatedGame, "away")
+	var homeTeamID string = ParseGameSummaryTeamID(consolidatedGame, "home")
 	var gameID string = fmt.Sprintf("%s-at-%s", awayTeamID, homeTeamID)
 	var formattedGameID string = utils.FormatStringID(gameID)
 	return formattedGameID
