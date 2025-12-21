@@ -9,23 +9,14 @@ import (
 	"github.com/joho/godotenv"
 )
 
-type Geocode struct {
+type Location interface {
+	GetLocationDetails() OpencageEndpoint
+}
+
+type OpencageLocation struct {
 	stadium string
 	city    string
 	state   string
-}
-
-type OpencageResponse struct {
-	Results []Result `json:"results"`
-}
-
-type Result struct {
-	Geometry Geometry `json:"geometry"`
-}
-
-type Geometry struct {
-	Lat float64 `json:"lat"`
-	Lon float64 `json:"lng"`
 }
 
 // Concatenate query string onto Opencage Forward Geocode Endpoint URL
@@ -44,12 +35,12 @@ func formatURLwithQueryString(stadium string, city string, state string) string 
 	}
 }
 
-func decodeOpencageResponse(body []byte) (OpencageResponse, error) {
-	return utils.DecodeJSON[OpencageResponse](body)
+func decodeOpencageResponse(body []byte) (OpencageEndpoint, error) {
+	return utils.DecodeJSON[OpencageEndpoint](body)
 }
 
 // Retreive Opencage Forward Geocode API Response for given stadium, city, state and country
-func (g Geocode) GetOpencageLocation() OpencageResponse {
+func (g OpencageLocation) GetLocationDetails() OpencageEndpoint {
 	var opencageEndpoint string = formatURLwithQueryString(g.stadium, g.city, g.state)
 	log.Printf("\nCalling Opencage API endpoint for %s %s, %s: %s\n", g.stadium, g.city, g.state, opencageEndpoint)
 

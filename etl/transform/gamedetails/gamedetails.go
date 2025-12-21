@@ -5,7 +5,7 @@ import (
 	"have-a-nice-pickem-etl/etl/transform/common"
 )
 
-type GameDetails struct {
+type GameRow struct {
 	GameID        string
 	League        string
 	Week          int8
@@ -23,10 +23,10 @@ type GameDetails struct {
 }
 
 // Transforms and consolidates Game Details properties from various sources
-func (g GameDetails) Instantiate(consolidatedGame extract.ConsolidatedGame) GameDetails {
+func (g GameRow) Instantiate(consolidatedGame extract.ConsolidatedGame) GameDetails {
 	var gameID string = common.ParseGameID(consolidatedGame)
 
-	return GameDetails{
+	return GameRow{
 		GameID:        gameID,
 		League:        ParseLeague(consolidatedGame),
 		Week:          ParseWeek(consolidatedGame),

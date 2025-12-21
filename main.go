@@ -2,6 +2,7 @@ package main
 
 import (
 	"have-a-nice-pickem-etl/etl/extract"
+	"have-a-nice-pickem-etl/etl/extract/espn"
 )
 
 func main() {
@@ -10,14 +11,18 @@ func main() {
 	var consolidatedSchedule extract.ConsolidatedSchedule
 
 	if league == "CFB" {
-		consolidatedSchedule = extract.CFBSchedule{Week: week}.ExtractSchedule()
+		var espnGame espn.EspnSchedule = espn.CfbEspnSchedule{Week: week}
+		espnSchedule := espnGame.GetScheduleForWeek()
 	} else {
+		z := espn.NflEspnSchedule{Week: week}
 		consolidatedSchedule = extract.NFLSchedule{Week: week}.ExtractSchedule()
 	}
+	consolidatedSchedule = z.ExtractSchedule()
 
 	for i := 0; i < 2; i++ {
 		var consolidatedGame extract.ConsolidatedGame
 		var espnGameCode string = consolidatedSchedule.ESPN.Events[i].ID
+		x := espn.CfbGame{EspnGame: espn.EspnGame{GameCode: espnGameCode}}.GetGameSummary()
 
 		if league == "CFB" {
 			consolidatedGame = extract.CFBGame{
