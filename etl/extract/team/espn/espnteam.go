@@ -7,7 +7,7 @@ Package that:
 
   - Parses and returns the JSON encoded response
 */
-package team
+package espn
 
 import (
 	"fmt"
@@ -20,11 +20,11 @@ type EspnTeam interface {
 }
 
 type EspnCfbTeam struct {
-	TeamID string
+	TeamCode string
 }
 
 type EspnNflTeam struct {
-	TeamID string
+	TeamCode string
 }
 
 func makeAndHandleTeamEndpointCall(espnTeamEndpoint string) TeamSummaryEndpoint {
@@ -45,12 +45,12 @@ func makeAndHandleTeamEndpointCall(espnTeamEndpoint string) TeamSummaryEndpoint 
 
 // Call ESPN CFB Team Summary API Endpoint for a given team ID
 func (cfb EspnCfbTeam) GetTeamSummary() TeamSummaryEndpoint {
-	var espnTeamEndpoint string = fmt.Sprintf("%s%s", utils.ESPN_CFB_TEAM_ENDPOINT_URL, cfb.TeamID)
+	var espnTeamEndpoint string = fmt.Sprintf("%s%s", utils.ESPN_CFB_TEAM_ENDPOINT_URL, cfb.TeamCode)
 	return makeAndHandleTeamEndpointCall(espnTeamEndpoint)
 }
 
 // Call ESPN CFB Team Summary API Endpoint for a given team ID
 func (nfl EspnNflTeam) GetTeamSummary() TeamSummaryEndpoint {
-	var espnTeamEndpoint string = fmt.Sprintf("%s%s", utils.ESPN_NFL_TEAM_ENDPOINT_URL, nfl.TeamID)
+	var espnTeamEndpoint string = fmt.Sprintf("%s%s", utils.ESPN_NFL_TEAM_ENDPOINT_URL, nfl.TeamCode)
 	return makeAndHandleTeamEndpointCall(espnTeamEndpoint)
 }

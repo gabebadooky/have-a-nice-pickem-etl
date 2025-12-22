@@ -1,4 +1,4 @@
-package team
+package espn
 
 type TeamSummaryEndpoint struct {
 	Team TeamProperty `json:"team"`

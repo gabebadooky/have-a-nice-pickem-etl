@@ -1,4 +1,4 @@
-package opencage
+package location
 
 type OpencageEndpoint struct {
 	Results []ResultProperty `json:"results"`

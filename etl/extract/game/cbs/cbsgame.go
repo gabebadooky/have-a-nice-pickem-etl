@@ -1,4 +1,4 @@
-package common
+package cbs
 
 import (
 	"have-a-nice-pickem-etl/etl/extract/team/cbs"

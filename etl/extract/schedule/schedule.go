@@ -1,4 +1,4 @@
-package extract
+package schedule
 
 import (
 	"have-a-nice-pickem-etl/etl/extract/schedule/cbs"
@@ -9,7 +9,7 @@ import (
 )
 
 type AllScheduleInfo interface {
-	ConsolidateSchedules()
+	ConsolidateScheduleInfo() Schedule
 }
 
 type AllCfbScheduleInfo struct {
@@ -26,7 +26,7 @@ type Schedule struct {
 	FOX  *goquery.Selection
 }
 
-func (c AllCfbScheduleInfo) ConsolidateSchedules() Schedule {
+func (c AllCfbScheduleInfo) ConsolidateScheduleInfo() Schedule {
 	var EspnSchedule espn.ScoreboardEndpoint = espn.CfbEspnSchedule{Week: c.Week}.GetScheduleForWeek()
 	var CbsSchedule *goquery.Selection = cbs.CbsCfbSchedule{Week: c.Week}.GetScheduleForWeek()
 	var FoxSchedule *goquery.Selection = fox.FoxCfbSchedule{Week: c.Week}.GetScheduleForWeek()
@@ -38,7 +38,7 @@ func (c AllCfbScheduleInfo) ConsolidateSchedules() Schedule {
 	}
 }
 
-func (n AllNflScheduleInfo) ConsolidateSchedules() Schedule {
+func (n AllNflScheduleInfo) ConsolidateScheduleInfo() Schedule {
 	var EspnSchedule espn.ScoreboardEndpoint = espn.NflEspnSchedule{Week: n.Week}.GetScheduleForWeek()
 	var CbsSchedule *goquery.Selection = cbs.CbsNflSchedule{Week: n.Week}.GetScheduleForWeek()
 	var FoxSchedule *goquery.Selection = fox.FoxNflSchedule{Week: n.Week}.GetScheduleForWeek()

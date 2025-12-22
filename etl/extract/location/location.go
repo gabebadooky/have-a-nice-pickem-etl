@@ -1,4 +1,4 @@
-package opencage
+package location
 
 import (
 	"fmt"
@@ -14,9 +14,9 @@ type Location interface {
 }
 
 type OpencageLocation struct {
-	stadium string
-	city    string
-	state   string
+	Stadium string
+	City    string
+	State   string
 }
 
 // Concatenate query string onto Opencage Forward Geocode Endpoint URL
@@ -41,8 +41,8 @@ func decodeOpencageResponse(body []byte) (OpencageEndpoint, error) {
 
 // Retreive Opencage Forward Geocode API Response for given stadium, city, state and country
 func (g OpencageLocation) GetLocationDetails() OpencageEndpoint {
-	var opencageEndpoint string = formatURLwithQueryString(g.stadium, g.city, g.state)
-	log.Printf("\nCalling Opencage API endpoint for %s %s, %s: %s\n", g.stadium, g.city, g.state, opencageEndpoint)
+	var opencageEndpoint string = formatURLwithQueryString(g.Stadium, g.City, g.State)
+	log.Printf("\nCalling Opencage API endpoint for %s %s, %s: %s\n", g.Stadium, g.City, g.State, opencageEndpoint)
 
 	body, err := utils.CallEndpoint(opencageEndpoint)
 	if err != nil {
