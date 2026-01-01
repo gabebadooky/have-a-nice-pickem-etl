@@ -1,4 +1,4 @@
-package espn
+package espngame
 
 type GameSummaryEndpoint struct {
 	GameInfo   GameInfoProperty     `json:"gameInfo"`
@@ -16,7 +16,7 @@ type HeaderProperty struct {
 }
 
 type SeasonProperty struct {
-	Year uint16 `json:"year"`
+	Year uint `json:"year"`
 }
 
 type CompetitionsProperty struct {

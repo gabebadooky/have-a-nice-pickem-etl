@@ -1,4 +1,4 @@
-package espn
+package espnteam
 
 type TeamSummaryEndpoint struct {
 	Team TeamProperty `json:"team"`
@@ -14,7 +14,7 @@ type TeamProperty struct {
 	Logos          []LogoProperty        `json:"logos"`
 	OverallRecord  OverallRecordProperty `json:"record"`
 	Groups         GroupsProperty        `json:"groups"`
-	Ranking        uint8                 `json:"rank"`
+	Ranking        uint                  `json:"rank"`
 }
 
 type GroupsProperty struct {

@@ -9,7 +9,7 @@ type GameRow struct {
 	GameID        string
 	League        string
 	Week          int8
-	Year          uint16
+	Year          uint
 	ESPNCode      string
 	CBSCode       string
 	FoxCode       string

@@ -15,19 +15,19 @@ type BettingOdds struct {
 type Boxscore struct {
 	GameID        string
 	TeamID        string
-	Q1Score       uint8
-	Q2Score       uint8
-	Q3Score       uint8
-	Q4Score       uint8
-	OvertimeScore uint8
-	TotalScore    uint8
+	Q1Score       uint
+	Q2Score       uint
+	Q3Score       uint
+	Q4Score       uint
+	OvertimeScore uint
+	TotalScore    uint
 }
 
 type GameDetails struct {
 	GameID        string
 	League        string
 	Week          int8
-	Year          uint16
+	Year          uint
 	ESPNCode      string
 	CBSCode       string
 	FoxCode       string
@@ -52,9 +52,9 @@ type Location struct {
 type Record struct {
 	TeamID     string
 	RecordType string
-	Wins       uint8
-	Losses     uint8
-	Ties       uint8
+	Wins       uint
+	Losses     uint
+	Ties       uint
 }
 
 type TeamDetails struct {
@@ -69,5 +69,5 @@ type TeamDetails struct {
 	Mascot         string
 	PrimaryColor   string
 	AlternateColor string
-	Ranking        uint8
+	Ranking        uint
 }

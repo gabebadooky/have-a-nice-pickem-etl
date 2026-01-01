@@ -2,7 +2,7 @@
 Package that:
   - Scrapes the FOX Schedule page HTML for a given week number
 */
-package fox
+package foxschedule
 
 import (
 	"fmt"
@@ -13,15 +13,19 @@ import (
 )
 
 type FoxSchedule interface {
-	GetScheduleForWeek() *goquery.Selection
+	scheduleForWeek() *goquery.Selection
 }
 
 type FoxCfbSchedule struct {
-	Week uint8
+	Week uint
 }
 
 type FoxNflSchedule struct {
-	Week uint8
+	Week uint
+}
+
+func GetScheduleForWeek(s FoxSchedule) *goquery.Selection {
+	return s.scheduleForWeek()
 }
 
 func scrapeFoxSchedule(foxSchedulePageLink string) *goquery.Selection {
@@ -36,29 +40,31 @@ func scrapeFoxSchedule(foxSchedulePageLink string) *goquery.Selection {
 }
 
 // Scrape Fox CFB Schedule for a given week
-func (x FoxCfbSchedule) GetScheduleForWeek() *goquery.Selection {
+func (x FoxCfbSchedule) scheduleForWeek() *goquery.Selection {
 	var foxCfbSchedulePageLink string
 
 	if x.Week > utils.CFB_REG_SEASON_WEEKS {
-		var postSeasonweek uint8 = x.Week - utils.CFB_REG_SEASON_WEEKS
+		postSeasonweek := x.Week - utils.CFB_REG_SEASON_WEEKS
 		foxCfbSchedulePageLink = fmt.Sprintf("%s%d", utils.FOX_CFB_POST_SEASON_SCHEDULE_URL, postSeasonweek)
 	} else {
 		foxCfbSchedulePageLink = fmt.Sprintf("%s%d", utils.FOX_CFB_REGULER_SEASON_SCHEDULE_URL, x.Week)
 	}
 
-	return scrapeFoxSchedule(foxCfbSchedulePageLink)
+	foxSchedule := scrapeFoxSchedule(foxCfbSchedulePageLink)
+	return foxSchedule
 }
 
 // Scrape Fox CFB Schedule for a given week
-func (y FoxNflSchedule) GetScheduleForWeek() *goquery.Selection {
+func (y FoxNflSchedule) scheduleForWeek() *goquery.Selection {
 	var foxNflSchedulePageLink string
 
 	if y.Week > utils.NFL_REG_SEASON_WEEKS {
-		var week uint8 = y.Week - utils.NFL_REG_SEASON_WEEKS
+		week := y.Week - utils.NFL_REG_SEASON_WEEKS
 		foxNflSchedulePageLink = fmt.Sprintf("%s%d", utils.FOX_NFL_POST_SEASON_SCHEDULE_URL, week)
 	} else {
 		foxNflSchedulePageLink = fmt.Sprintf("%s%d", utils.FOX_NFL_REGULAR_SEASON_SCHEDULE_URL, y.Week)
 	}
 
-	return scrapeFoxSchedule(foxNflSchedulePageLink)
+	foxSchedule := scrapeFoxSchedule(foxNflSchedulePageLink)
+	return foxSchedule
 }

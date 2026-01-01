@@ -1,8 +1,9 @@
-package fox
+package foxgame
 
 import (
-	"have-a-nice-pickem-etl/etl/extract/team/fox"
+	foxteam "have-a-nice-pickem-etl/etl/extract/team/fox"
 	"have-a-nice-pickem-etl/etl/utils"
+	"log"
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
@@ -23,26 +24,42 @@ func setTeamID(foxTeamCode string) string {
 	}
 }
 
-// Extracts FOX game code where AwayTeamID and HomeTeamID match with FOX team codes
-func (g FoxGame) ExtractFoxGameHTML() *goquery.Selection {
-	var gameAnchorTags *goquery.Selection = g.FoxSchedulePage.Find("div.scores-app-root").Find("td.broadcast").Find("div").Find("a")
-	var foxGameHTML *goquery.Selection
+func parseGameCodeFromGameHREF(gameHyperlink string) string {
+	lastSlashIndex := strings.LastIndex(gameHyperlink, "/")
+	foxGameCode := gameHyperlink[lastSlashIndex+1:]
+	return foxGameCode
+}
 
-	gameAnchorTags.EachWithBreak(func(i int, hyperlink *goquery.Selection) bool {
+func scrapeFoxGame(foxGameHyperlink string) *goquery.Selection {
+	log.Printf("\nRequesting Fox Game page: %s\n", foxGameHyperlink)
+
+	page, err := utils.GetGoQuerySelectionBody(foxGameHyperlink)
+	if err != nil {
+		log.Panicf("%s", err.Error())
+	}
+
+	return page
+}
+
+// Extracts FOX game code where AwayTeamID and HomeTeamID match with corresponding FOX team codes
+func extractGameHyperlink(gameID string, schedulePage *goquery.Selection) string {
+	var foxGameHyperlink string
+	gameAnchorTags := schedulePage.Find("div.scores-app-root").Find("td.broadcast").Find("div").Find("a")
+
+	gameAnchorTags.EachWithBreak(func(i int, gameHyperlink *goquery.Selection) bool {
 		// Sample Fox Game HREF:
 		// https://www.foxsports.com/college-football/bowling-green-falcons-vs-umass-minutemen-nov-25-2025-game-boxscore-42675
-		// foxGameCode = strings.SplitAfter(hyperlink.AttrOr("href", "gamehref"), "/")[2]
-		var gameHREF string = hyperlink.AttrOr("href", "gamehref")
-		var lastSlashIndex int = strings.LastIndex(gameHREF, "/")
-		var foxGameCode string = gameHREF[lastSlashIndex+1:]
-		//var awayTeamFoxCode string = ExtractFoxTeamCode(foxGameCode, "AWAY")
-		//var homeTeamFoxCode string = ExtractFoxTeamCode(foxGameCode, "HOME")
-		var foxAwayTeamCode string = fox.FoxAwayTeam{FoxGameCode: foxGameCode}.ExtractFoxTeamCode()
-		var foxHomeTeamCode string = fox.FoxHomeTeam{FoxGameCode: foxGameCode}.ExtractFoxTeamCode()
-		var awayTeamID string = setTeamID(foxAwayTeamCode)
-		var homeTeamID string = setTeamID(foxHomeTeamCode)
+		var foxAwayTeamCode string
+		var foxHomeTeamCode string
 
-		if strings.Contains(g.GameID, awayTeamID) && strings.Contains(g.GameID, homeTeamID) {
+		foxGameHyperlink = gameHyperlink.AttrOr("href", "gamehref")
+		foxGameCode := parseGameCodeFromGameHREF(foxGameHyperlink)
+		foxAwayTeamCode = foxteam.ExtractFoxTeamCode(foxteam.FoxAwayTeam{FoxGameCode: foxGameCode})
+		foxHomeTeamCode = foxteam.ExtractFoxTeamCode(foxteam.FoxAwayTeam{FoxGameCode: foxGameCode})
+		awayTeamID := setTeamID(foxAwayTeamCode)
+		homeTeamID := setTeamID(foxHomeTeamCode)
+
+		if strings.Contains(gameID, awayTeamID) && strings.Contains(gameID, homeTeamID) {
 			// Break out of loop
 			return false
 		}
@@ -50,5 +67,11 @@ func (g FoxGame) ExtractFoxGameHTML() *goquery.Selection {
 
 	})
 
-	return foxGameHTML
+	return foxGameHyperlink
+}
+
+func (g FoxGame) ExtractFoxGameHTML() *goquery.Selection {
+	foxGameHyperlink := extractGameHyperlink(g.GameID, g.FoxSchedulePage)
+	foxGame := scrapeFoxGame(foxGameHyperlink)
+	return foxGame
 }

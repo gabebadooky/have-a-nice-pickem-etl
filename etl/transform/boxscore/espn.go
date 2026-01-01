@@ -8,33 +8,33 @@ import (
 )
 
 // Extract Points for given boxscore period
-func ParsePointsForGivenCompetitorAndPeriod(homeAway string, team1homeAway string, team2homeAway string, team1points string, team2points string) uint8 {
+func ParsePointsForGivenCompetitorAndPeriod(homeAway string, team1homeAway string, team2homeAway string, team1points string, team2points string) uint {
 	switch strings.ToUpper(homeAway) {
 	case strings.ToUpper(team1homeAway):
 		points64, err := strconv.ParseInt(team1points, 10, 8)
 		if err != nil {
-			log.Printf("Error occurred converting string property to uint8 type: %s\n", err)
+			log.Printf("Error occurred converting string property to uint type: %s\n", err)
 			points64 = 0
 		}
-		return uint8(points64)
+		return uint(points64)
 
 	case strings.ToUpper(team2homeAway):
 		points64, err := strconv.ParseInt(team2points, 10, 8)
 		if err != nil {
-			log.Printf("Error occurred converting string property to uint8 type: %s\n", err)
+			log.Printf("Error occurred converting string property to uint type: %s\n", err)
 			points64 = 0
 		}
-		return uint8(points64)
+		return uint(points64)
 
 	default:
 		log.Printf("Invalid homeAway value supplied: %s\n", homeAway)
-		return uint8(0)
+		return uint(0)
 	}
 }
 
 // Parses "Linescore" field for a given competitor and quarter from the ESPN Game Summary API
-func ParseQuarterScore(consolidatedGameProperties pickemstructs.ConsolidatedGameProperties, homeAway string, quarterNumber uint8) uint8 {
-	var linescoreArraryIndex uint8 = quarterNumber - 1
+func ParseQuarterScore(consolidatedGameProperties pickemstructs.ConsolidatedGameProperties, homeAway string, quarterNumber uint) uint {
+	var linescoreArraryIndex uint = quarterNumber - 1
 
 	if len(consolidatedGameProperties.EspnDetails.Header.Competitions[0].Competitors[0].Linescores) == 0 || len(consolidatedGameProperties.EspnDetails.Header.Competitions[0].Competitors[1].Linescores) == 0 {
 		return 0
@@ -48,7 +48,7 @@ func ParseQuarterScore(consolidatedGameProperties pickemstructs.ConsolidatedGame
 }
 
 // Parses "score" field for a given competitor from the ESPN Game Summary API
-func ParseTotalScore(consolidatedGameProperties pickemstructs.ConsolidatedGameProperties, homeAway string) uint8 {
+func ParseTotalScore(consolidatedGameProperties pickemstructs.ConsolidatedGameProperties, homeAway string) uint {
 	var team1HomeAway string = consolidatedGameProperties.EspnDetails.Header.Competitions[0].Competitors[0].HomeAway
 	var team2HomeAway string = consolidatedGameProperties.EspnDetails.Header.Competitions[0].Competitors[1].HomeAway
 	var team1Points string = consolidatedGameProperties.EspnDetails.Header.Competitions[0].Competitors[0].Score
@@ -63,14 +63,14 @@ func ParseTotalScore(consolidatedGameProperties pickemstructs.ConsolidatedGamePr
 }
 
 // Parses "Linescore" field for a given competitor and quarter from the ESPN Game Summary API
-func ParseOvertimeScore(consolidatedGameProperties pickemstructs.ConsolidatedGameProperties, homeAway string) uint8 {
+func ParseOvertimeScore(consolidatedGameProperties pickemstructs.ConsolidatedGameProperties, homeAway string) uint {
 	var team1HomeAway string = consolidatedGameProperties.EspnDetails.Header.Competitions[0].Competitors[0].HomeAway
 	var team2HomeAway string = consolidatedGameProperties.EspnDetails.Header.Competitions[0].Competitors[1].HomeAway
 	var team1PointsSlice []pickemstructs.Linescore = consolidatedGameProperties.EspnDetails.Header.Competitions[0].Competitors[0].Linescores
 	var team2PointsSlice []pickemstructs.Linescore = consolidatedGameProperties.EspnDetails.Header.Competitions[0].Competitors[1].Linescores
 
 	if len(team1PointsSlice) <= 4 {
-		return uint8(0)
+		return uint(0)
 	} else {
 		var team1Points string = team1PointsSlice[4].DisplayValue
 		var team2Points string = team2PointsSlice[4].DisplayValue

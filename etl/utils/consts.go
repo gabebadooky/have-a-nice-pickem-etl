@@ -3,8 +3,8 @@ package utils
 const OPENCAGE_GEOCODE_ENDPOINT_URL string = "https://api.opencagedata.com/geocode/v1/json"
 
 const SEASON_YEAR string = "2025"
-const CFB_REG_SEASON_WEEKS uint8 = 14
-const NFL_REG_SEASON_WEEKS uint8 = 18
+const CFB_REG_SEASON_WEEKS uint = 14
+const NFL_REG_SEASON_WEEKS uint = 18
 
 const FOX_CFB_REGULER_SEASON_SCHEDULE_URL string = "https://www.foxsports.com/college-football/schedule?groupId=2&seasonType=reg&week="
 const FOX_CFB_POST_SEASON_SCHEDULE_URL string = "https://www.foxsports.com/college-football/schedule?groupId=2&seasonType=post&week="

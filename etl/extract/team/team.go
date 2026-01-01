@@ -1,10 +1,12 @@
 package team
 
 import (
-	"have-a-nice-pickem-etl/etl/extract/team/espn"
+	foxschedule "have-a-nice-pickem-etl/etl/extract/schedule/fox"
+	espnteam "have-a-nice-pickem-etl/etl/extract/team/espn"
 )
 
 type AllTeamInfo interface {
+	allTeamInfo() Team
 }
 
 type AllCfbTeamInfo struct {
@@ -16,21 +18,26 @@ type AllNflTeamInfo struct {
 }
 
 type Team struct {
-	ESPN espn.TeamSummaryEndpoint
+	ESPN espnteam.TeamSummaryEndpoint
+	Fox  foxschedule.FoxSchedule
 }
 
-func (t AllCfbTeamInfo) ConsolidateTeamInfo() Team {
-	var EspnTeam espn.TeamSummaryEndpoint = espn.EspnCfbTeam{TeamCode: t.TeamCode}.GetTeamSummary()
+func ConsolidateTeamInfo(t AllTeamInfo) Team {
+	return t.allTeamInfo()
+}
+
+func (t AllCfbTeamInfo) allTeamInfo() Team {
+	var espnTeam espnteam.TeamSummaryEndpoint = espnteam.GetTeamSummary(espnteam.EspnCfbTeam{TeamCode: t.TeamCode})
 
 	return Team{
-		ESPN: EspnTeam,
+		ESPN: espnTeam,
 	}
 }
 
-func (t AllNflTeamInfo) ConsolidateTeamInfo() Team {
-	var EspnTeam espn.TeamSummaryEndpoint = espn.EspnNflTeam{TeamCode: t.TeamCode}.GetTeamSummary()
+func (t AllNflTeamInfo) allTeamInfo() Team {
+	var espnTeam espnteam.TeamSummaryEndpoint = espnteam.GetTeamSummary(espnteam.EspnNflTeam{TeamCode: t.TeamCode})
 
 	return Team{
-		ESPN: EspnTeam,
+		ESPN: espnTeam,
 	}
 }

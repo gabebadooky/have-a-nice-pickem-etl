@@ -1,9 +1,16 @@
 package main
 
-import "have-a-nice-pickem-etl/etl/extract"
+import (
+	"have-a-nice-pickem-etl/etl/extract"
+)
 
 func main() {
-	var week uint8 = 7
-	games := extract.CfbGamesExtract{Week: week}.ExtractGames()
-	teams := extract.CfbTeamsExtract{Week: week}.ExtractTeams()
+	var week uint = 7
+	var league string = "CFB"
+
+	if league == "CFB" {
+		games := extract.ExtractGames(extract.CfbGamesExtract{Week: week})
+		teams := extract.ExtractTeams(extract.CfbTeamsExtract{Week: week})
+		locations := extract.ExtractLocations(extract.CfbLocationsExtract{Week: week})
+	}
 }

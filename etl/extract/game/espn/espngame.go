@@ -1,13 +1,4 @@
-/*
-Package that:
-
-  - Calls the Game Summary endpoint (espnHiddenGameSummaryBaseURL),
-    for a given ESPN GameID, from the ESPN Hidden API:
-    https://gist.github.com/akeaswaran/b48b02f1c94f873c6655e7129910fc3b
-
-  - Parses and returns the JSON encoded response
-*/
-package espn
+package espngame
 
 import (
 	"have-a-nice-pickem-etl/etl/utils"
@@ -15,7 +6,7 @@ import (
 )
 
 type EspnGame interface {
-	GetGameSummary() GameSummaryEndpoint
+	gameSummary() GameSummaryEndpoint
 }
 
 type EspnNflGame struct {
@@ -24,6 +15,10 @@ type EspnNflGame struct {
 
 type EspnCfbGame struct {
 	GameCode string
+}
+
+func GetGameSummary(g EspnGame) GameSummaryEndpoint {
+	return g.gameSummary()
 }
 
 func makeAndHandleGameEndpointCall(gameCode string, espnGameEndpoint string) GameSummaryEndpoint {
@@ -44,13 +39,15 @@ func makeAndHandleGameEndpointCall(gameCode string, espnGameEndpoint string) Gam
 }
 
 // Call ESPN CFB Game Summary API Endpoint for a given ESPN Game code
-func (e EspnCfbGame) GetGameSummary() GameSummaryEndpoint {
+func (g EspnCfbGame) gameSummary() GameSummaryEndpoint {
 	const espnGameEndpoint string = utils.ESPN_CFB_GAME_ENDPOINT_URL
-	return makeAndHandleGameEndpointCall(e.GameCode, espnGameEndpoint)
+	gameSummary := makeAndHandleGameEndpointCall(g.GameCode, espnGameEndpoint)
+	return gameSummary
 }
 
 // Call ESPN NFL Game Summary API Endpoint for a given ESPN Game code
-func (e EspnNflGame) GetGameSummary() GameSummaryEndpoint {
+func (g EspnNflGame) gameSummary() GameSummaryEndpoint {
 	const espnGameEndpoint string = utils.ESPN_NFL_GAME_ENDPOINT_URL
-	return makeAndHandleGameEndpointCall(e.GameCode, espnGameEndpoint)
+	gameSummary := makeAndHandleGameEndpointCall(g.GameCode, espnGameEndpoint)
+	return gameSummary
 }

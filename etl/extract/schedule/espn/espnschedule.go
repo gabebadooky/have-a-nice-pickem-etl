@@ -7,7 +7,7 @@ Package that:
 
   - Parses and returns the JSON encoded response
 */
-package espn
+package espnschedule
 
 import (
 	"fmt"
@@ -16,18 +16,22 @@ import (
 )
 
 type EspnSchedule interface {
-	GetScheduleForWeek() ScoreboardEndpoint
+	scheduleForWeek() ScoreboardEndpoint
 }
 
 type CfbEspnSchedule struct {
-	Week uint8
+	Week uint
 }
 
 type NflEspnSchedule struct {
-	Week uint8
+	Week uint
 }
 
-func makeAndHandleScoreboardEndpointCall(week uint8, espnScoreboardEndpoint string) ScoreboardEndpoint {
+func GetScheduleForWeek(s EspnSchedule) ScoreboardEndpoint {
+	return s.scheduleForWeek()
+}
+
+func makeAndHandleScoreboardEndpointCall(week uint, espnScoreboardEndpoint string) ScoreboardEndpoint {
 	log.Printf("\nCalling Scoreboard endpoint for week %d: %s\n", week, espnScoreboardEndpoint)
 
 	body, err := utils.CallEndpoint(espnScoreboardEndpoint)
@@ -44,7 +48,7 @@ func makeAndHandleScoreboardEndpointCall(week uint8, espnScoreboardEndpoint stri
 }
 
 // Call CFB ESPN Scoreboard Summary API Endpoint
-func (e CfbEspnSchedule) GetScheduleForWeek() ScoreboardEndpoint {
+func (e CfbEspnSchedule) scheduleForWeek() ScoreboardEndpoint {
 	var espnScoreboardEndpoint string
 
 	if e.Week <= utils.CFB_REG_SEASON_WEEKS {
@@ -54,20 +58,22 @@ func (e CfbEspnSchedule) GetScheduleForWeek() ScoreboardEndpoint {
 		espnScoreboardEndpoint = fmt.Sprintf("%s%d", utils.ESPN_CFB_POST_SEASON_SCHEDULE_URL, 1)
 	}
 
-	return makeAndHandleScoreboardEndpointCall(e.Week, espnScoreboardEndpoint)
+	espnScoreboard := makeAndHandleScoreboardEndpointCall(e.Week, espnScoreboardEndpoint)
+	return espnScoreboard
 }
 
 // Call NFL ESPN Scoreboard Summary API Endpoint
-func (e NflEspnSchedule) GetScheduleForWeek() ScoreboardEndpoint {
+func (e NflEspnSchedule) scheduleForWeek() ScoreboardEndpoint {
 	var espnScoreboardEndpoint string
 
 	if e.Week <= utils.NFL_REG_SEASON_WEEKS {
 		espnScoreboardEndpoint = fmt.Sprintf("%s%d", utils.ESPN_NFL_REGULAR_SEASON_SCHEDULE_URL, e.Week)
 	} else {
 		// SeasonType 3 weeks begin at 1
-		var postSeasonWeek uint8 = e.Week - utils.NFL_REG_SEASON_WEEKS
+		var postSeasonWeek uint = e.Week - utils.NFL_REG_SEASON_WEEKS
 		espnScoreboardEndpoint = fmt.Sprintf("%s%d", utils.ESPN_NFL_POST_SEASON_SCHEDULE_URL, postSeasonWeek)
 	}
 
-	return makeAndHandleScoreboardEndpointCall(e.Week, espnScoreboardEndpoint)
+	espnScoreboard := makeAndHandleScoreboardEndpointCall(e.Week, espnScoreboardEndpoint)
+	return espnScoreboard
 }

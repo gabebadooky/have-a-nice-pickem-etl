@@ -32,7 +32,7 @@ func ParseAlternateColor(teamSummaryDetails pickemstructs.TeamSummaryResponse) s
 	return alternateColor
 }
 
-func ParseRanking(teamSummaryDetails pickemstructs.TeamSummaryResponse) uint8 {
-	var ranking uint8 = teamSummaryDetails.Team.Ranking
+func ParseRanking(teamSummaryDetails pickemstructs.TeamSummaryResponse) uint {
+	var ranking uint = teamSummaryDetails.Team.Ranking
 	return ranking
 }

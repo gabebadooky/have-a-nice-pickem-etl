@@ -1,59 +1,35 @@
 package location
 
-import (
-	"fmt"
-	"have-a-nice-pickem-etl/etl/utils"
-	"log"
-	"os"
+import opencagelocation "have-a-nice-pickem-etl/etl/extract/location/opencage"
 
-	"github.com/joho/godotenv"
-)
-
-type Location interface {
-	GetLocationDetails() OpencageEndpoint
+type AllLocationInfo interface {
+	locationInfo() Location
 }
 
-type OpencageLocation struct {
+type OpencageLocationInfo struct {
 	Stadium string
 	City    string
 	State   string
 }
 
-// Concatenate query string onto Opencage Forward Geocode Endpoint URL
-func formatURLwithQueryString(stadium string, city string, state string) string {
-	godotenv.Load()
-	var apikey string = os.Getenv("OPENCAGE_API_KEY")
-	var url string = fmt.Sprintf("%s?key=%s", utils.OPENCAGE_GEOCODE_ENDPOINT_URL, apikey)
-	var formattedStadium string = utils.FormatStringID(stadium)
-	var formattedCity string = utils.FormatStringID(city)
-	var formattedState string = utils.FormatStringID(state)
-
-	if state == "" {
-		return fmt.Sprintf("%s&q=%s+%s", url, formattedStadium, formattedCity)
-	} else {
-		return fmt.Sprintf("%s&q=%s+%s+%s", url, formattedStadium, formattedCity, formattedState)
-	}
+type Location struct {
+	Opencage opencagelocation.OpencageEndpoint
 }
 
-func decodeOpencageResponse(body []byte) (OpencageEndpoint, error) {
-	return utils.DecodeJSON[OpencageEndpoint](body)
+func ConsolidateLocationInfo(l AllLocationInfo) Location {
+	return l.locationInfo()
 }
 
-// Retreive Opencage Forward Geocode API Response for given stadium, city, state and country
-func (g OpencageLocation) GetLocationDetails() OpencageEndpoint {
-	var opencageEndpoint string = formatURLwithQueryString(g.Stadium, g.City, g.State)
-	log.Printf("\nCalling Opencage API endpoint for %s %s, %s: %s\n", g.Stadium, g.City, g.State, opencageEndpoint)
+func (l OpencageLocationInfo) locationInfo() Location {
+	opencageLocation := opencagelocation.GetLocationDetails(
+		opencagelocation.OpencageForwardGeocode{
+			Stadium: l.Stadium,
+			City:    l.City,
+			State:   l.State,
+		},
+	)
 
-	body, err := utils.CallEndpoint(opencageEndpoint)
-	if err != nil {
-		log.Panicf("%s", err.Error())
+	return Location{
+		Opencage: opencageLocation,
 	}
-
-	geocodeDetails, err := decodeOpencageResponse(body)
-	if err != nil {
-		log.Panicf("%s", err.Error())
-	}
-
-	//log.Printf("scheduleDetails:\n%v\n", geocodeDetails)
-	return geocodeDetails
 }

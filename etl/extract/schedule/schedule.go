@@ -1,35 +1,39 @@
 package schedule
 
 import (
-	"have-a-nice-pickem-etl/etl/extract/schedule/cbs"
-	"have-a-nice-pickem-etl/etl/extract/schedule/espn"
-	"have-a-nice-pickem-etl/etl/extract/schedule/fox"
+	cbsschedule "have-a-nice-pickem-etl/etl/extract/schedule/cbs"
+	espnschedule "have-a-nice-pickem-etl/etl/extract/schedule/espn"
+	foxschedule "have-a-nice-pickem-etl/etl/extract/schedule/fox"
 
 	"github.com/PuerkitoBio/goquery"
 )
 
 type AllScheduleInfo interface {
-	ConsolidateScheduleInfo() Schedule
+	scheduleInfo() Schedule
 }
 
 type AllCfbScheduleInfo struct {
-	Week uint8
+	Week uint
 }
 
 type AllNflScheduleInfo struct {
-	Week uint8
+	Week uint
 }
 
 type Schedule struct {
-	ESPN espn.ScoreboardEndpoint
+	ESPN espnschedule.ScoreboardEndpoint
 	CBS  *goquery.Selection
 	FOX  *goquery.Selection
 }
 
-func (c AllCfbScheduleInfo) ConsolidateScheduleInfo() Schedule {
-	var EspnSchedule espn.ScoreboardEndpoint = espn.CfbEspnSchedule{Week: c.Week}.GetScheduleForWeek()
-	var CbsSchedule *goquery.Selection = cbs.CbsCfbSchedule{Week: c.Week}.GetScheduleForWeek()
-	var FoxSchedule *goquery.Selection = fox.FoxCfbSchedule{Week: c.Week}.GetScheduleForWeek()
+func ConsolidateScheduleInfo(s AllScheduleInfo) Schedule {
+	return s.scheduleInfo()
+}
+
+func (c AllCfbScheduleInfo) scheduleInfo() Schedule {
+	var EspnSchedule espnschedule.ScoreboardEndpoint = espnschedule.GetScheduleForWeek(espnschedule.CfbEspnSchedule{Week: c.Week})
+	var CbsSchedule *goquery.Selection = cbsschedule.GetScheduleForWeek(cbsschedule.CbsCfbSchedule{Week: c.Week})
+	var FoxSchedule *goquery.Selection = foxschedule.GetScheduleForWeek(foxschedule.FoxCfbSchedule{Week: c.Week})
 
 	return Schedule{
 		ESPN: EspnSchedule,
@@ -38,10 +42,10 @@ func (c AllCfbScheduleInfo) ConsolidateScheduleInfo() Schedule {
 	}
 }
 
-func (n AllNflScheduleInfo) ConsolidateScheduleInfo() Schedule {
-	var EspnSchedule espn.ScoreboardEndpoint = espn.NflEspnSchedule{Week: n.Week}.GetScheduleForWeek()
-	var CbsSchedule *goquery.Selection = cbs.CbsNflSchedule{Week: n.Week}.GetScheduleForWeek()
-	var FoxSchedule *goquery.Selection = fox.FoxNflSchedule{Week: n.Week}.GetScheduleForWeek()
+func (n AllNflScheduleInfo) scheduleInfo() Schedule {
+	var EspnSchedule espnschedule.ScoreboardEndpoint = espnschedule.GetScheduleForWeek(espnschedule.NflEspnSchedule{Week: n.Week})
+	var CbsSchedule *goquery.Selection = cbsschedule.GetScheduleForWeek(cbsschedule.CbsNflSchedule{Week: n.Week})
+	var FoxSchedule *goquery.Selection = foxschedule.GetScheduleForWeek(foxschedule.FoxNflSchedule{Week: n.Week})
 
 	return Schedule{
 		ESPN: EspnSchedule,

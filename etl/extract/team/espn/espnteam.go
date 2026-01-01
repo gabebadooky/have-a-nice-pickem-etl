@@ -1,13 +1,4 @@
-/*
-Package that:
-
-  - Calls the Team Summary endpoint (espnHiddenTeamSummaryBaseURL),
-    for a given ESPN TeamID, from the ESPN Hidden API:
-    https://gist.github.com/akeaswaran/b48b02f1c94f873c6655e7129910fc3b
-
-  - Parses and returns the JSON encoded response
-*/
-package espn
+package espnteam
 
 import (
 	"fmt"
@@ -16,7 +7,7 @@ import (
 )
 
 type EspnTeam interface {
-	GetTeamSummary() TeamSummaryEndpoint
+	teamSummary() TeamSummaryEndpoint
 }
 
 type EspnCfbTeam struct {
@@ -25,6 +16,10 @@ type EspnCfbTeam struct {
 
 type EspnNflTeam struct {
 	TeamCode string
+}
+
+func GetTeamSummary(t EspnTeam) TeamSummaryEndpoint {
+	return t.teamSummary()
 }
 
 func makeAndHandleTeamEndpointCall(espnTeamEndpoint string) TeamSummaryEndpoint {
@@ -44,13 +39,15 @@ func makeAndHandleTeamEndpointCall(espnTeamEndpoint string) TeamSummaryEndpoint 
 }
 
 // Call ESPN CFB Team Summary API Endpoint for a given team ID
-func (cfb EspnCfbTeam) GetTeamSummary() TeamSummaryEndpoint {
-	var espnTeamEndpoint string = fmt.Sprintf("%s%s", utils.ESPN_CFB_TEAM_ENDPOINT_URL, cfb.TeamCode)
-	return makeAndHandleTeamEndpointCall(espnTeamEndpoint)
+func (cfb EspnCfbTeam) teamSummary() TeamSummaryEndpoint {
+	espnTeamEndpoint := fmt.Sprintf("%s%s", utils.ESPN_CFB_TEAM_ENDPOINT_URL, cfb.TeamCode)
+	espnTeamSummary := makeAndHandleTeamEndpointCall(espnTeamEndpoint)
+	return espnTeamSummary
 }
 
 // Call ESPN CFB Team Summary API Endpoint for a given team ID
-func (nfl EspnNflTeam) GetTeamSummary() TeamSummaryEndpoint {
-	var espnTeamEndpoint string = fmt.Sprintf("%s%s", utils.ESPN_NFL_TEAM_ENDPOINT_URL, nfl.TeamCode)
-	return makeAndHandleTeamEndpointCall(espnTeamEndpoint)
+func (nfl EspnNflTeam) teamSummary() TeamSummaryEndpoint {
+	espnTeamEndpoint := fmt.Sprintf("%s%s", utils.ESPN_NFL_TEAM_ENDPOINT_URL, nfl.TeamCode)
+	espnTeamSummary := makeAndHandleTeamEndpointCall(espnTeamEndpoint)
+	return espnTeamSummary
 }

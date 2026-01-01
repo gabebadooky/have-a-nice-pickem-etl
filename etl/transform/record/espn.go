@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-func parseOverallRecordElements(espnTeamDetails pickemstructs.TeamSummaryResponse) [3]uint8 {
+func parseOverallRecordElements(espnTeamDetails pickemstructs.TeamSummaryResponse) [3]uint {
 	var overallRecord string = espnTeamDetails.Team.OverallRecord.RecordItems[0].Summary
 	var recordElements []string = strings.Split(overallRecord, "-")
 
@@ -29,20 +29,20 @@ func parseOverallRecordElements(espnTeamDetails pickemstructs.TeamSummaryRespons
 		ties = 0
 	}
 
-	return [3]uint8{uint8(wins), uint8(losses), uint8(ties)}
+	return [3]uint{uint(wins), uint(losses), uint(ties)}
 }
 
-func ParseOverallWins(espnTeamDetails pickemstructs.TeamSummaryResponse) uint8 {
-	var overallWins uint8 = parseOverallRecordElements(espnTeamDetails)[0]
+func ParseOverallWins(espnTeamDetails pickemstructs.TeamSummaryResponse) uint {
+	var overallWins uint = parseOverallRecordElements(espnTeamDetails)[0]
 	return overallWins
 }
 
-func ParseOverallLosses(espnTeamDetails pickemstructs.TeamSummaryResponse) uint8 {
-	var overallLosses uint8 = parseOverallRecordElements(espnTeamDetails)[1]
+func ParseOverallLosses(espnTeamDetails pickemstructs.TeamSummaryResponse) uint {
+	var overallLosses uint = parseOverallRecordElements(espnTeamDetails)[1]
 	return overallLosses
 }
 
-func ParseOverallTies(espnTeamDetails pickemstructs.TeamSummaryResponse) uint8 {
-	var overallTies uint8 = parseOverallRecordElements(espnTeamDetails)[2]
+func ParseOverallTies(espnTeamDetails pickemstructs.TeamSummaryResponse) uint {
+	var overallTies uint = parseOverallRecordElements(espnTeamDetails)[2]
 	return overallTies
 }

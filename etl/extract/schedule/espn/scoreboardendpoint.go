@@ -1,4 +1,4 @@
-package espn
+package espnschedule
 
 type ScoreboardEndpoint struct {
 	Events []EventProperty `json:"events"`

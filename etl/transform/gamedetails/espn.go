@@ -25,8 +25,8 @@ func ParseWeek(consolidatedGameProps extract.ConsolidatedGame) int8 {
 }
 
 // Parses "Year" field from ESPN Game Summary API
-func ParseYear(consolidatedGameProps extract.ConsolidatedGame) uint16 {
-	var year uint16 = consolidatedGameProps.ESPN.Header.Season.Year
+func ParseYear(consolidatedGameProps extract.ConsolidatedGame) uint {
+	var year uint = consolidatedGameProps.ESPN.Header.Season.Year
 	return year
 
 }

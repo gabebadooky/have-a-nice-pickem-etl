@@ -1,4 +1,4 @@
-package fox
+package foxteam
 
 import (
 	"have-a-nice-pickem-etl/etl/utils"
@@ -6,7 +6,7 @@ import (
 )
 
 type FoxTeam interface {
-	ExtractFoxTeamCode() string
+	teamCode() string
 }
 
 type FoxAwayTeam struct {
@@ -17,16 +17,22 @@ type FoxHomeTeam struct {
 	FoxGameCode string
 }
 
-// Extracts Fox team code of 'Away' team from a given Fox Game Code
-func (a FoxAwayTeam) ExtractFoxTeamCode() string {
-	var formattedGameCode string = utils.StripDateAndBoxScoreIDFromFoxGameCode(a.FoxGameCode)
-	var teamCode string = strings.Split(formattedGameCode, "-vs-")[1]
+func ExtractFoxTeamCode(t FoxTeam) string {
+	return t.teamCode()
+}
+
+// Extracts team string BEFORE "-vs-" substring in a given Fox Game Code
+func (t FoxAwayTeam) teamCode() string {
+	formattedGameCode := utils.StripDateAndBoxScoreIDFromFoxGameCode(t.FoxGameCode)
+	// teamCode := strings.Split(formattedGameCode, "-vs-")[0]
+	teamCode, _, _ := strings.Cut(formattedGameCode, "-vs-")
 	return teamCode
 }
 
-// Extracts Fox team code of 'Home' or 'Away' team from a given Fox Game Code
-func (a FoxHomeTeam) ExtractFoxTeamCode() string {
-	var formattedGameCode string = utils.StripDateAndBoxScoreIDFromFoxGameCode(a.FoxGameCode)
-	var teamCode string = strings.Split(formattedGameCode, "-vs-")[0]
+// Extracts team string AFTER "-vs-" substring in a given Fox Game Code
+func (t FoxHomeTeam) teamCode() string {
+	formattedGameCode := utils.StripDateAndBoxScoreIDFromFoxGameCode(t.FoxGameCode)
+	// teamCode := strings.Split(formattedGameCode, "-vs-")[1]
+	_, teamCode, _ := strings.Cut(formattedGameCode, "-vs-")
 	return teamCode
 }

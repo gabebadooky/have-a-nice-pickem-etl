@@ -1,9 +1,9 @@
 package game
 
 import (
-	"have-a-nice-pickem-etl/etl/extract/game/cbs"
-	"have-a-nice-pickem-etl/etl/extract/game/espn"
-	"have-a-nice-pickem-etl/etl/extract/game/fox"
+	cbsgame "have-a-nice-pickem-etl/etl/extract/game/cbs"
+	espngame "have-a-nice-pickem-etl/etl/extract/game/espn"
+	foxgame "have-a-nice-pickem-etl/etl/extract/game/fox"
 	espnsched "have-a-nice-pickem-etl/etl/extract/schedule/espn"
 	"have-a-nice-pickem-etl/etl/utils"
 
@@ -11,7 +11,7 @@ import (
 )
 
 type AllGameInfo interface {
-	ConsolidateGameInfo() Game
+	gameInfo() Game
 }
 
 type AllCfbGameInfo struct {
@@ -27,29 +27,33 @@ type AllNflGameInfo struct {
 }
 
 type Game struct {
-	ESPN espn.GameSummaryEndpoint
+	ESPN espngame.GameSummaryEndpoint
 	CBS  *goquery.Selection
 	FOX  *goquery.Selection
 }
 
-func (c AllCfbGameInfo) ConsolidateGameInfo() Game {
+func ConsolidateGameInfo(g AllGameInfo) Game {
+	return g.gameInfo()
+}
+
+func (c AllCfbGameInfo) gameInfo() Game {
 	var gameID string = utils.FormatStringID(c.EspnEvent.Name)
-	var EspnGame espn.GameSummaryEndpoint = espn.EspnCfbGame{GameCode: c.EspnEvent.ID}.GetGameSummary()
-	var CbsGame *goquery.Selection = cbs.CbsGame{CbsOddsPage: c.CbsSchedulePage, GameId: gameID}.ExtractCbsGameHTML()
-	var FoxGame *goquery.Selection = fox.FoxGame{FoxSchedulePage: c.FoxSchedulePage, GameID: gameID}.ExtractFoxGameHTML()
+	var espnGame espngame.GameSummaryEndpoint = espngame.GetGameSummary(espngame.EspnCfbGame{GameCode: gameID})
+	var cbsGame *goquery.Selection = cbsgame.CbsGame{CbsOddsPage: c.CbsSchedulePage, GameId: gameID}.ExtractCbsGameHTML()
+	var foxGame *goquery.Selection = foxgame.FoxGame{FoxSchedulePage: c.FoxSchedulePage, GameID: gameID}.ExtractFoxGameHTML()
 
 	return Game{
-		ESPN: EspnGame,
-		CBS:  CbsGame,
-		FOX:  FoxGame,
+		ESPN: espnGame,
+		CBS:  cbsGame,
+		FOX:  foxGame,
 	}
 }
 
-func (n AllNflGameInfo) ConsolidateGameInfo() Game {
+func (n AllNflGameInfo) gameInfo() Game {
 	var gameID string = utils.FormatStringID(n.EspnEvent.Name)
-	var EspnGame espn.GameSummaryEndpoint = espn.EspnNflGame{GameCode: n.EspnEvent.ID}.GetGameSummary()
-	var CbsGame *goquery.Selection = cbs.CbsGame{CbsOddsPage: n.CbsSchedulePage, GameId: gameID}.ExtractCbsGameHTML()
-	var FoxGame *goquery.Selection = fox.FoxGame{FoxSchedulePage: n.FoxSchedulePage, GameID: gameID}.ExtractFoxGameHTML()
+	var EspnGame espngame.GameSummaryEndpoint = espngame.GetGameSummary(espngame.EspnNflGame{GameCode: gameID})
+	var CbsGame *goquery.Selection = cbsgame.CbsGame{CbsOddsPage: n.CbsSchedulePage, GameId: gameID}.ExtractCbsGameHTML()
+	var FoxGame *goquery.Selection = foxgame.FoxGame{FoxSchedulePage: n.FoxSchedulePage, GameID: gameID}.ExtractFoxGameHTML()
 
 	return Game{
 		ESPN: EspnGame,
