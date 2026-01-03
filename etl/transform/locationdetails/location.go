@@ -1,16 +1,16 @@
-package location
+package locationdetails
 
 import "have-a-nice-pickem-etl/etl/extract/location"
 
 type Instantiator interface {
-	instantiate() Location
+	instantiate() LocationDetails
 }
 
 type NewLocation struct {
 	LocationExtract location.Location
 }
 
-type Location struct {
+type LocationDetails struct {
 	LocationID string
 	Stadium    string
 	City       string
@@ -19,7 +19,7 @@ type Location struct {
 	Longitude  float64
 }
 
-func InstantiateLocation(i Instantiator) Location {
+func InstantiateLocationDetails(i Instantiator) LocationDetails {
 	return i.instantiate()
 }
 
@@ -53,8 +53,8 @@ func (l NewLocation) parseLongitude() float64 {
 	return longitude
 }
 
-func (l NewLocation) instantiate() Location {
-	return Location{
+func (l NewLocation) instantiate() LocationDetails {
+	return LocationDetails{
 		LocationID: l.parseLocationID(),
 		Stadium:    l.parseStadium(),
 		City:       l.parseCity(),

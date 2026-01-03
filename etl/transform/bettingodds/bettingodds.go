@@ -20,6 +20,10 @@ type FoxBettingOdds struct {
 	GameExtract game.Game
 }
 
+type VegasBettingOdds struct {
+	GameExtract game.Game
+}
+
 type BettingOdds struct {
 	GameID            string
 	Source            string
