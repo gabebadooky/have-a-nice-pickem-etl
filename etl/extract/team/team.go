@@ -1,8 +1,9 @@
 package team
 
 import (
-	foxschedule "have-a-nice-pickem-etl/etl/extract/schedule/fox"
+	"fmt"
 	espnteam "have-a-nice-pickem-etl/etl/extract/team/espn"
+	"have-a-nice-pickem-etl/etl/utils"
 )
 
 type AllTeamInfo interface {
@@ -18,8 +19,9 @@ type AllNflTeamInfo struct {
 }
 
 type Team struct {
-	ESPN espnteam.TeamSummaryEndpoint
-	Fox  foxschedule.FoxSchedule
+	TeamID string
+	League string
+	ESPN   espnteam.TeamSummaryEndpoint
 }
 
 func ConsolidateTeamInfo(t AllTeamInfo) Team {
@@ -28,16 +30,24 @@ func ConsolidateTeamInfo(t AllTeamInfo) Team {
 
 func (t AllCfbTeamInfo) allTeamInfo() Team {
 	var espnTeam espnteam.TeamSummaryEndpoint = espnteam.GetTeamSummary(espnteam.EspnCfbTeam{TeamCode: t.TeamCode})
+	var teamLocationName string = fmt.Sprintf("%s %s", espnTeam.Team.Location, espnTeam.Team.Name)
+	var teamID string = utils.FormatStringID(teamLocationName)
 
 	return Team{
-		ESPN: espnTeam,
+		TeamID: teamID,
+		League: "CFB",
+		ESPN:   espnTeam,
 	}
 }
 
 func (t AllNflTeamInfo) allTeamInfo() Team {
 	var espnTeam espnteam.TeamSummaryEndpoint = espnteam.GetTeamSummary(espnteam.EspnNflTeam{TeamCode: t.TeamCode})
+	var teamLocationName string = fmt.Sprintf("%s %s", espnTeam.Team.Location, espnTeam.Team.Name)
+	var teamID string = utils.FormatStringID(teamLocationName)
 
 	return Team{
-		ESPN: espnTeam,
+		TeamID: teamID,
+		League: "NFL",
+		ESPN:   espnTeam,
 	}
 }

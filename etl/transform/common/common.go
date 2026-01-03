@@ -2,6 +2,8 @@ package common
 
 import (
 	"have-a-nice-pickem-etl/etl/extract/game"
+	"have-a-nice-pickem-etl/etl/extract/team"
+	"have-a-nice-pickem-etl/etl/utils"
 	"log"
 	"strings"
 )
@@ -15,7 +17,7 @@ func ParseEspnGameCode(gameExtract game.Game) string {
 func ScrapeCbsGameCode(gameExtract game.Game) string {
 	gameCode, exists := gameExtract.CBS.Attr("data-game-abbrev")
 	if !exists {
-		log.Panicf("Could not locate CBS Game Code for %s", gameExtract.CBS)
+		log.Panicf("Could not locate CBS Game Code for %v", gameExtract.CBS)
 	}
 
 	return gameCode
@@ -25,7 +27,7 @@ func ScrapeFoxGameCode(gameExtract game.Game) string {
 	broadcastCell := gameExtract.FOX.Find("td.broadcast")
 	gameCode, exists := broadcastCell.Attr("")
 	if !exists {
-		log.Panicf("Could not locate CBS Game Code for %s", gameExtract.FOX)
+		log.Panicf("Could not locate CBS Game Code for %v", gameExtract.FOX)
 	}
 
 	return gameCode
@@ -41,4 +43,26 @@ func ParseHomeTeamID(gameExtract game.Game) string {
 	endIndex := strings.LastIndex(gameExtract.GameID, "-week-")
 	homeTeamID := gameExtract.GameID[startIndex:endIndex]
 	return homeTeamID
+}
+
+func ParseEspnTeamCode(teamExtract team.Team) string {
+	var espnTeamCode string = teamExtract.ESPN.Team.Code
+	return espnTeamCode
+}
+
+func GetCbsTeamCode(teamID string) string {
+	cbsCode, cbsMappingExists := utils.TeamIDtoCbsTeamCode[teamID]
+	if cbsMappingExists {
+		return cbsCode
+	}
+	return teamID
+
+}
+
+func GetFoxTeamCode(teamID string) string {
+	foxCode, foxMappingExists := utils.TeamIDtoFoxTeamCode[teamID]
+	if foxMappingExists {
+		return foxCode
+	}
+	return teamID
 }
