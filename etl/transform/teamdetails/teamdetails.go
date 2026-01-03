@@ -6,7 +6,7 @@ import (
 )
 
 type Instantiator interface {
-	instantiate()
+	instantiate() TeamDetails
 }
 
 type NewTeamDetails struct {
@@ -26,6 +26,10 @@ type TeamDetails struct {
 	PrimaryColor   string
 	AlternateColor string
 	Ranking        uint
+}
+
+func InstantiateTeamDetails(i Instantiator) TeamDetails {
+	return i.instantiate()
 }
 
 func (t NewTeamDetails) parseConferenceID() string {
