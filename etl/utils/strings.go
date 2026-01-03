@@ -48,12 +48,3 @@ func ConvertStringToFloat32(bettingOddString string) float32 {
 
 	return float32(f64)
 }
-
-func ConvertStringToInt16(bettingOddString string) int16 {
-	bettingOddInt, err := strconv.Atoi(bettingOddString)
-	if err != nil {
-		bettingOddInt = 0.00
-	}
-
-	return int16(bettingOddInt)
-}

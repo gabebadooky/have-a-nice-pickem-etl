@@ -27,9 +27,10 @@ type AllNflGameInfo struct {
 }
 
 type Game struct {
-	ESPN espngame.GameSummaryEndpoint
-	CBS  *goquery.Selection
-	FOX  *goquery.Selection
+	GameID string
+	ESPN   espngame.GameSummaryEndpoint
+	CBS    *goquery.Selection
+	FOX    *goquery.Selection
 }
 
 func ConsolidateGameInfo(g AllGameInfo) Game {
@@ -43,9 +44,10 @@ func (c AllCfbGameInfo) gameInfo() Game {
 	var foxGame *goquery.Selection = foxgame.FoxGame{FoxSchedulePage: c.FoxSchedulePage, GameID: gameID}.ExtractFoxGameHTML()
 
 	return Game{
-		ESPN: espnGame,
-		CBS:  cbsGame,
-		FOX:  foxGame,
+		GameID: gameID,
+		ESPN:   espnGame,
+		CBS:    cbsGame,
+		FOX:    foxGame,
 	}
 }
 
@@ -56,8 +58,9 @@ func (n AllNflGameInfo) gameInfo() Game {
 	var FoxGame *goquery.Selection = foxgame.FoxGame{FoxSchedulePage: n.FoxSchedulePage, GameID: gameID}.ExtractFoxGameHTML()
 
 	return Game{
-		ESPN: EspnGame,
-		CBS:  CbsGame,
-		FOX:  FoxGame,
+		GameID: gameID,
+		ESPN:   EspnGame,
+		CBS:    CbsGame,
+		FOX:    FoxGame,
 	}
 }

@@ -1,17 +1,5 @@
 package sharedtypes
 
-type BettingOdds struct {
-	GameID            string
-	Source            string
-	OverUnder         float32
-	AwayMoneyline     int16
-	HomeMoneyline     int16
-	AwaySpread        float32
-	HomeSpread        float32
-	AwayWinPercentage string
-	HomeWinPercentage string
-}
-
 type Boxscore struct {
 	GameID        string
 	TeamID        string

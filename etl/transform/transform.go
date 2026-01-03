@@ -1,9 +1,7 @@
 package transform
 
-import (
-	"have-a-nice-pickem-etl/etl/transform/gamedetails"
-)
+import "have-a-nice-pickem-etl/etl/extract/game"
 
-type TransformedGameData struct {
-	GameDetails gamedetails.GameDetails
+type GameTransformations struct {
+	GameExtract game.Game
 }

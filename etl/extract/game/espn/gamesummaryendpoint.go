@@ -85,7 +85,7 @@ type PickcenterProperty struct {
 }
 
 type TeamOddsProperty struct {
-	Moneyline int16 `json:"moneyline"`
+	Moneyline int `json:"moneyline"`
 }
 
 type PredictorProperty struct {
