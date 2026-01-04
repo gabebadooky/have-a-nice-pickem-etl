@@ -9,19 +9,19 @@ type Instantiator interface {
 }
 
 type EspnBettingOdds struct {
-	GameExtract game.Game
+	game.Game
 }
 
 type CbsBettingOdds struct {
-	GameExtract game.Game
+	game.Game
 }
 
 type FoxBettingOdds struct {
-	GameExtract game.Game
+	game.Game
 }
 
 type VegasBettingOdds struct {
-	GameExtract game.Game
+	game.Game
 }
 
 type BettingOdds struct {
@@ -43,7 +43,7 @@ func InstantiateBettingOdds(i Instantiator) BettingOdds {
 // Instantiates ESPN Betting Odds record from various sources
 func (b EspnBettingOdds) instantiate() BettingOdds {
 	return BettingOdds{
-		GameID:        b.GameExtract.GameID,
+		GameID:        b.GameID,
 		Source:        "ESPN",
 		OverUnder:     b.parseOverUnder(),
 		AwayMoneyline: b.parseAwayMoneyline(),
@@ -56,7 +56,7 @@ func (b EspnBettingOdds) instantiate() BettingOdds {
 // Instantiates CBS Betting Odds record from various sources
 func (b CbsBettingOdds) instantiate() BettingOdds {
 	return BettingOdds{
-		GameID:            b.GameExtract.GameID,
+		GameID:            b.GameID,
 		Source:            "CBS",
 		OverUnder:         b.parseOverUnder(),
 		AwayMoneyline:     b.parseAwayMoneyline(),

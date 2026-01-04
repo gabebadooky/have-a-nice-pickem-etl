@@ -8,9 +8,17 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
+type New interface {
+	scrapeGame() *goquery.Selection
+}
+
 type CbsGame struct {
 	CbsOddsPage *goquery.Selection
 	GameId      string
+}
+
+func GetGamePage(g New) *goquery.Selection {
+	return g.scrapeGame()
 }
 
 func setTeamID(cbsTeamCode string) string {
@@ -23,7 +31,7 @@ func setTeamID(cbsTeamCode string) string {
 }
 
 // Extracts CBS game code where AwayTeamID and HomeTeamID match with corresponding CBS team codes
-func (g CbsGame) ExtractCbsGameHTML() *goquery.Selection {
+func (g CbsGame) scrapeGame() *goquery.Selection {
 	var cbsGameOddsHTML *goquery.Selection
 	gameOddsTables := g.CbsOddsPage.Find("table.OddsBlock-game")
 

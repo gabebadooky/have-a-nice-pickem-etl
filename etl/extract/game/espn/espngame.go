@@ -1,6 +1,7 @@
 package espngame
 
 import (
+	"fmt"
 	"have-a-nice-pickem-etl/etl/utils"
 	"log"
 )
@@ -40,14 +41,14 @@ func makeAndHandleGameEndpointCall(gameCode string, espnGameEndpoint string) Gam
 
 // Call ESPN CFB Game Summary API Endpoint for a given ESPN Game code
 func (g EspnCfbGame) gameSummary() GameSummaryEndpoint {
-	const espnGameEndpoint string = utils.ESPN_CFB_GAME_ENDPOINT_URL
+	var espnGameEndpoint string = fmt.Sprintf("%s%s", utils.ESPN_CFB_GAME_ENDPOINT_URL, g.GameCode)
 	gameSummary := makeAndHandleGameEndpointCall(g.GameCode, espnGameEndpoint)
 	return gameSummary
 }
 
 // Call ESPN NFL Game Summary API Endpoint for a given ESPN Game code
 func (g EspnNflGame) gameSummary() GameSummaryEndpoint {
-	const espnGameEndpoint string = utils.ESPN_NFL_GAME_ENDPOINT_URL
+	var espnGameEndpoint string = fmt.Sprintf("%s%s", utils.ESPN_NFL_GAME_ENDPOINT_URL, g.GameCode)
 	gameSummary := makeAndHandleGameEndpointCall(g.GameCode, espnGameEndpoint)
 	return gameSummary
 }

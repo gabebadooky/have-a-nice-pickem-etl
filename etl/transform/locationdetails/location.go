@@ -6,8 +6,8 @@ type Instantiator interface {
 	instantiate() LocationDetails
 }
 
-type NewLocation struct {
-	LocationExtract location.Location
+type New struct {
+	location.Location
 }
 
 type LocationDetails struct {
@@ -23,37 +23,37 @@ func InstantiateLocationDetails(i Instantiator) LocationDetails {
 	return i.instantiate()
 }
 
-func (l NewLocation) parseLocationID() string {
-	var locationID string = l.LocationExtract.Opencage.Results[0].Annotations.Maidenhead
+func (l New) parseLocationID() string {
+	var locationID string = l.Opencage.Results[0].Annotations.Maidenhead
 	return locationID
 }
 
-func (l NewLocation) parseStadium() string {
-	var stadium string = l.LocationExtract.Opencage.Results[0].Components.Stadium
+func (l New) parseStadium() string {
+	var stadium string = l.Opencage.Results[0].Components.Stadium
 	return stadium
 }
 
-func (l NewLocation) parseCity() string {
-	var city string = l.LocationExtract.Opencage.Results[0].Components.City
+func (l New) parseCity() string {
+	var city string = l.Opencage.Results[0].Components.City
 	return city
 }
 
-func (l NewLocation) parseState() string {
-	var state string = l.LocationExtract.Opencage.Results[0].Components.State
+func (l New) parseState() string {
+	var state string = l.Opencage.Results[0].Components.State
 	return state
 }
 
-func (l NewLocation) parseLatitude() float64 {
-	var latitude float64 = l.LocationExtract.Opencage.Results[0].Geometry.Lat
+func (l New) parseLatitude() float64 {
+	var latitude float64 = l.Opencage.Results[0].Geometry.Lat
 	return latitude
 }
 
-func (l NewLocation) parseLongitude() float64 {
-	var longitude float64 = l.LocationExtract.Opencage.Results[0].Geometry.Lon
+func (l New) parseLongitude() float64 {
+	var longitude float64 = l.Opencage.Results[0].Geometry.Lon
 	return longitude
 }
 
-func (l NewLocation) instantiate() LocationDetails {
+func (l New) instantiate() LocationDetails {
 	return LocationDetails{
 		LocationID: l.parseLocationID(),
 		Stadium:    l.parseStadium(),

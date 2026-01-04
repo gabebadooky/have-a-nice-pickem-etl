@@ -1,17 +1,19 @@
 package game
 
 import (
+	"fmt"
 	cbsgame "have-a-nice-pickem-etl/etl/extract/game/cbs"
 	espngame "have-a-nice-pickem-etl/etl/extract/game/espn"
 	foxgame "have-a-nice-pickem-etl/etl/extract/game/fox"
 	espnsched "have-a-nice-pickem-etl/etl/extract/schedule/espn"
 	"have-a-nice-pickem-etl/etl/utils"
+	"strings"
 
 	"github.com/PuerkitoBio/goquery"
 )
 
 type AllGameInfo interface {
-	gameInfo() Game
+	gameInfo() (Game, error)
 }
 
 type AllCfbGameInfo struct {
@@ -33,34 +35,47 @@ type Game struct {
 	FOX    *goquery.Selection
 }
 
-func ConsolidateGameInfo(g AllGameInfo) Game {
+func ConsolidateGameInfo(g AllGameInfo) (Game, error) {
 	return g.gameInfo()
 }
 
-func (c AllCfbGameInfo) gameInfo() Game {
+func (c AllCfbGameInfo) gameInfo() (Game, error) {
+	fmt.Printf("Event: %s", c.EspnEvent.Name)
 	var gameID string = utils.FormatStringID(c.EspnEvent.Name)
-	var espnGame espngame.GameSummaryEndpoint = espngame.GetGameSummary(espngame.EspnCfbGame{GameCode: gameID})
-	var cbsGame *goquery.Selection = cbsgame.CbsGame{CbsOddsPage: c.CbsSchedulePage, GameId: gameID}.ExtractCbsGameHTML()
-	var foxGame *goquery.Selection = foxgame.FoxGame{FoxSchedulePage: c.FoxSchedulePage, GameID: gameID}.ExtractFoxGameHTML()
+	fmt.Printf("GameID: %s", gameID)
+	if strings.Contains(gameID, "tbd-") {
+		return Game{}, fmt.Errorf("GameID includes \"tbd\"")
+	}
+	if strings.Contains(gameID, "-tbd") {
+		return Game{}, fmt.Errorf("GameID includes \"tbd\"")
+	}
+
+	var espnGame espngame.GameSummaryEndpoint = espngame.GetGameSummary(espngame.EspnCfbGame{GameCode: c.EspnEvent.ID})
+	var cbsGame *goquery.Selection = cbsgame.GetGamePage(cbsgame.CbsGame{CbsOddsPage: c.CbsSchedulePage, GameId: gameID})
+	var foxGame *goquery.Selection = foxgame.GetGamePage(foxgame.FoxCFBGame{FoxSchedulePage: c.FoxSchedulePage, GameID: gameID})
 
 	return Game{
 		GameID: gameID,
 		ESPN:   espnGame,
 		CBS:    cbsGame,
 		FOX:    foxGame,
-	}
+	}, nil
 }
 
-func (n AllNflGameInfo) gameInfo() Game {
+func (n AllNflGameInfo) gameInfo() (Game, error) {
 	var gameID string = utils.FormatStringID(n.EspnEvent.Name)
-	var EspnGame espngame.GameSummaryEndpoint = espngame.GetGameSummary(espngame.EspnNflGame{GameCode: gameID})
-	var CbsGame *goquery.Selection = cbsgame.CbsGame{CbsOddsPage: n.CbsSchedulePage, GameId: gameID}.ExtractCbsGameHTML()
-	var FoxGame *goquery.Selection = foxgame.FoxGame{FoxSchedulePage: n.FoxSchedulePage, GameID: gameID}.ExtractFoxGameHTML()
+	if strings.Contains(gameID, "-tbd-") {
+		return Game{}, fmt.Errorf("GameID includes \"tbd\"")
+	}
+
+	var espnGame espngame.GameSummaryEndpoint = espngame.GetGameSummary(espngame.EspnNflGame{GameCode: n.EspnEvent.ID})
+	var cbsGame *goquery.Selection = cbsgame.GetGamePage(cbsgame.CbsGame{CbsOddsPage: n.CbsSchedulePage, GameId: gameID})
+	var foxGame *goquery.Selection = foxgame.GetGamePage(foxgame.FoxNFLGame{FoxSchedulePage: n.FoxSchedulePage, GameID: gameID})
 
 	return Game{
 		GameID: gameID,
-		ESPN:   EspnGame,
-		CBS:    CbsGame,
-		FOX:    FoxGame,
-	}
+		ESPN:   espnGame,
+		CBS:    cbsGame,
+		FOX:    foxGame,
+	}, nil
 }

@@ -1,6 +1,7 @@
 package foxgame
 
 import (
+	"fmt"
 	foxteam "have-a-nice-pickem-etl/etl/extract/team/fox"
 	"have-a-nice-pickem-etl/etl/utils"
 	"log"
@@ -9,9 +10,22 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
-type FoxGame struct {
+type FoxGame interface {
+	scrapeGame() *goquery.Selection
+}
+
+type FoxCFBGame struct {
 	FoxSchedulePage *goquery.Selection
 	GameID          string
+}
+
+type FoxNFLGame struct {
+	FoxSchedulePage *goquery.Selection
+	GameID          string
+}
+
+func GetGamePage(g FoxGame) *goquery.Selection {
+	return g.scrapeGame()
 }
 
 func setTeamID(foxTeamCode string) string {
@@ -42,7 +56,7 @@ func scrapeFoxGame(foxGameHyperlink string) *goquery.Selection {
 }
 
 // Extracts FOX game code where AwayTeamID and HomeTeamID match with corresponding FOX team codes
-func extractGameHyperlink(gameID string, schedulePage *goquery.Selection) string {
+func extractGameHyperlink(gameID string, urlPrefix string, schedulePage *goquery.Selection) string {
 	var foxGameHyperlink string
 	gameAnchorTags := schedulePage.Find("div.scores-app-root").Find("td.broadcast").Find("div").Find("a")
 
@@ -58,6 +72,7 @@ func extractGameHyperlink(gameID string, schedulePage *goquery.Selection) string
 		foxHomeTeamCode = foxteam.ExtractFoxTeamCode(foxteam.FoxAwayTeam{FoxGameCode: foxGameCode})
 		awayTeamID := setTeamID(foxAwayTeamCode)
 		homeTeamID := setTeamID(foxHomeTeamCode)
+		foxGameHyperlink = fmt.Sprintf("%s%s", urlPrefix, foxGameHyperlink)
 
 		if strings.Contains(gameID, awayTeamID) && strings.Contains(gameID, homeTeamID) {
 			// Break out of loop
@@ -70,8 +85,14 @@ func extractGameHyperlink(gameID string, schedulePage *goquery.Selection) string
 	return foxGameHyperlink
 }
 
-func (g FoxGame) ExtractFoxGameHTML() *goquery.Selection {
-	foxGameHyperlink := extractGameHyperlink(g.GameID, g.FoxSchedulePage)
+func (g FoxCFBGame) scrapeGame() *goquery.Selection {
+	foxGameHyperlink := extractGameHyperlink(g.GameID, utils.FOX_CFB_GAME_URL, g.FoxSchedulePage)
+	foxGame := scrapeFoxGame(foxGameHyperlink)
+	return foxGame
+}
+
+func (g FoxNFLGame) scrapeGame() *goquery.Selection {
+	foxGameHyperlink := extractGameHyperlink(g.GameID, utils.FOX_NFL_GAME_URL, g.FoxSchedulePage)
 	foxGame := scrapeFoxGame(foxGameHyperlink)
 	return foxGame
 }

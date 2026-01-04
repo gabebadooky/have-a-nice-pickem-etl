@@ -1,7 +1,6 @@
 package bettingodds
 
 import (
-	"have-a-nice-pickem-etl/etl/extract/game"
 	"have-a-nice-pickem-etl/etl/transform/common"
 	"have-a-nice-pickem-etl/etl/utils"
 	"strconv"
@@ -11,9 +10,8 @@ import (
 )
 
 func (c CbsBettingOdds) parseGameOddsTable() *goquery.Selection {
-	var gameExtract game.Game = c.GameExtract
-	var cbsGameCode string = common.ScrapeCbsGameCode(gameExtract)
-	var gameTables *goquery.Selection = gameExtract.CBS.Find("table.OddsBlock-game")
+	var cbsGameCode string = common.ScrapeCbsGameCode(c.Game)
+	var gameTables *goquery.Selection = c.CBS.Find("table.OddsBlock-game")
 	var gameOddsTable *goquery.Selection
 
 	gameTables.EachWithBreak(func(i int, gameTable *goquery.Selection) bool {
@@ -31,7 +29,7 @@ func (c CbsBettingOdds) parseGameOddsTable() *goquery.Selection {
 }
 
 func (c CbsBettingOdds) parseOverUnder() float32 {
-	var overUnderText string = c.GameExtract.CBS.Find("tbody").Find("tr").Eq(0).Find("td.OddsBlock-betOdds--total").Find("div.BetButton-text").Text()
+	var overUnderText string = c.CBS.Find("tbody").Find("tr").Eq(0).Find("td.OddsBlock-betOdds--total").Find("div.BetButton-text").Text()
 	var numericOverUnder string = strings.TrimSpace(overUnderText)
 	numericOverUnder = strings.ReplaceAll(numericOverUnder, "o", "")
 	numericOverUnder = strings.ReplaceAll(numericOverUnder, "u", "")
@@ -39,7 +37,7 @@ func (c CbsBettingOdds) parseOverUnder() float32 {
 }
 
 func (c CbsBettingOdds) parseAwayMoneyline() int {
-	var moneylineText string = c.GameExtract.CBS.Find("tbody").Find("tr").Eq(0).Find("td.OddsBlock-betOdds--moneyline").Find("div.BetButton-text").Text()
+	var moneylineText string = c.CBS.Find("tbody").Find("tr").Eq(0).Find("td.OddsBlock-betOdds--moneyline").Find("div.BetButton-text").Text()
 	var formattedMoneyline string = strings.TrimSpace(moneylineText)
 
 	if strings.Contains(formattedMoneyline, "+") {
@@ -55,7 +53,7 @@ func (c CbsBettingOdds) parseAwayMoneyline() int {
 }
 
 func (c CbsBettingOdds) parseHomeMoneyline() int {
-	var moneylineText string = c.GameExtract.CBS.Find("tbody").Find("tr").Eq(1).Find("td.OddsBlock-betOdds--moneyline").Find("div.BetButton-text").Text()
+	var moneylineText string = c.CBS.Find("tbody").Find("tr").Eq(1).Find("td.OddsBlock-betOdds--moneyline").Find("div.BetButton-text").Text()
 	var formattedMoneyline string = strings.TrimSpace(moneylineText)
 
 	if strings.Contains(formattedMoneyline, "+") {
@@ -71,7 +69,7 @@ func (c CbsBettingOdds) parseHomeMoneyline() int {
 }
 
 func (c CbsBettingOdds) parseAwaySpread() float32 {
-	var spreadText string = c.GameExtract.CBS.Find("tbody").Find("tr").Eq(0).Find("td.OddsBlock-betOdds--spread").Find("div.BetButton-text").Text()
+	var spreadText string = c.CBS.Find("tbody").Find("tr").Eq(0).Find("td.OddsBlock-betOdds--spread").Find("div.BetButton-text").Text()
 	var formattedSpread string = strings.TrimSpace(spreadText)
 
 	if strings.Contains(formattedSpread, "+") {
@@ -81,7 +79,7 @@ func (c CbsBettingOdds) parseAwaySpread() float32 {
 }
 
 func (c CbsBettingOdds) parseHomeSpread() float32 {
-	var spreadText string = c.GameExtract.CBS.Find("tbody").Find("tr").Eq(1).Find("td.OddsBlock-betOdds--spread").Find("div.BetButton-text").Text()
+	var spreadText string = c.CBS.Find("tbody").Find("tr").Eq(1).Find("td.OddsBlock-betOdds--spread").Find("div.BetButton-text").Text()
 	var formattedSpread string = strings.TrimSpace(spreadText)
 
 	if strings.Contains(formattedSpread, "+") {

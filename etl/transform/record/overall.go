@@ -6,7 +6,7 @@ import (
 )
 
 func (o OverallRecord) parseOverallRecordElements() [3]uint {
-	var overallRecord string = o.TeamExtract.ESPN.Team.OverallRecord.RecordItems[0].Summary
+	var overallRecord string = o.ESPN.Team.OverallRecord.RecordItems[0].Summary
 	var recordElements []string = strings.Split(overallRecord, "-")
 
 	if len(recordElements) == 2 {

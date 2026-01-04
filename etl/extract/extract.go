@@ -1,6 +1,7 @@
 package extract
 
 import (
+	"fmt"
 	"have-a-nice-pickem-etl/etl/extract/game"
 	"have-a-nice-pickem-etl/etl/extract/location"
 	"have-a-nice-pickem-etl/etl/extract/schedule"
@@ -8,16 +9,16 @@ import (
 	"have-a-nice-pickem-etl/etl/extract/team"
 )
 
-type GamesExtract interface {
-	allGames() []game.Game
+type GamesExtractor interface {
+	getGames() []game.Game
 }
 
-type TeamsExtract interface {
-	allTeams() []team.Team
+type TeamsExtractor interface {
+	getTeams() []team.Team
 }
 
-type LocationsExtract interface {
-	allLocations() []location.Location
+type LocationsExtractor interface {
+	getLocations() []location.Location
 }
 
 type CfbGamesExtract struct {
@@ -44,19 +45,19 @@ type NflLocationsExtract struct {
 	Week uint
 }
 
-func ExtractGames(g GamesExtract) []game.Game {
-	return g.allGames()
+func ExtractGames(g GamesExtractor) []game.Game {
+	return g.getGames()
 }
 
-func ExtractTeams(t TeamsExtract) []team.Team {
-	return t.allTeams()
+func ExtractTeams(t TeamsExtractor) []team.Team {
+	return t.getTeams()
 }
 
-func ExtractLocations(l LocationsExtract) []location.Location {
-	return l.allLocations()
+func ExtractLocations(l LocationsExtractor) []location.Location {
+	return l.getLocations()
 }
 
-func (g CfbGamesExtract) allGames() []game.Game {
+func (g CfbGamesExtract) getGames() []game.Game {
 	weekSchedule := schedule.ConsolidateScheduleInfo(schedule.AllCfbScheduleInfo{Week: g.Week})
 	var espnWeekGames []espnsched.EventProperty = weekSchedule.ESPN.Events
 	var gamesThisWeek []game.Game
@@ -64,11 +65,14 @@ func (g CfbGamesExtract) allGames() []game.Game {
 	for i := range espnWeekGames {
 		var espnEvent espnsched.EventProperty = espnWeekGames[i]
 
-		game := game.ConsolidateGameInfo(game.AllCfbGameInfo{
+		game, err := game.ConsolidateGameInfo(game.AllCfbGameInfo{
 			EspnEvent:       espnEvent,
 			CbsSchedulePage: weekSchedule.CBS,
 			FoxSchedulePage: weekSchedule.FOX,
 		})
+		if err != nil {
+			fmt.Printf("Skipping GameID that contatins \"tbd\"")
+		}
 
 		gamesThisWeek = append(gamesThisWeek, game)
 	}
@@ -76,7 +80,7 @@ func (g CfbGamesExtract) allGames() []game.Game {
 	return gamesThisWeek
 }
 
-func (g NflGamesExtract) allGames() []game.Game {
+func (g NflGamesExtract) getGames() []game.Game {
 	weekSchedule := schedule.ConsolidateScheduleInfo(schedule.AllNflScheduleInfo{Week: g.Week})
 	var espnWeekGames []espnsched.EventProperty = weekSchedule.ESPN.Events
 	var gamesThisWeek []game.Game
@@ -84,11 +88,14 @@ func (g NflGamesExtract) allGames() []game.Game {
 	for i := range espnWeekGames {
 		var espnEvent espnsched.EventProperty = espnWeekGames[i]
 
-		game := game.ConsolidateGameInfo(game.AllNflGameInfo{
+		game, err := game.ConsolidateGameInfo(game.AllNflGameInfo{
 			EspnEvent:       espnEvent,
 			CbsSchedulePage: weekSchedule.CBS,
 			FoxSchedulePage: weekSchedule.FOX,
 		})
+		if err != nil {
+			fmt.Printf("Skipping GameID that contatins \"tbd\"")
+		}
 
 		gamesThisWeek = append(gamesThisWeek, game)
 	}
@@ -96,7 +103,7 @@ func (g NflGamesExtract) allGames() []game.Game {
 	return gamesThisWeek
 }
 
-func (t CfbTeamsExtract) allTeams() []team.Team {
+func (t CfbTeamsExtract) getTeams() []team.Team {
 	weekSchedule := schedule.ConsolidateScheduleInfo(schedule.AllCfbScheduleInfo{Week: t.Week})
 	var espnWeekGames []espnsched.EventProperty = weekSchedule.ESPN.Events
 	var teamsThisWeek []team.Team
@@ -115,7 +122,7 @@ func (t CfbTeamsExtract) allTeams() []team.Team {
 	return teamsThisWeek
 }
 
-func (t NflTeamsExtract) allTeams() []team.Team {
+func (t NflTeamsExtract) getTeams() []team.Team {
 	weekSchedule := schedule.ConsolidateScheduleInfo(schedule.AllNflScheduleInfo{Week: t.Week})
 	var espnWeekGames []espnsched.EventProperty = weekSchedule.ESPN.Events
 	var teamsThisWeek []team.Team
@@ -134,7 +141,7 @@ func (t NflTeamsExtract) allTeams() []team.Team {
 	return teamsThisWeek
 }
 
-func (l CfbLocationsExtract) allLocations() []location.Location {
+func (l CfbLocationsExtract) getLocations() []location.Location {
 	weekSchedule := schedule.ConsolidateScheduleInfo(schedule.AllCfbScheduleInfo{Week: l.Week})
 	var espnWeekGames []espnsched.EventProperty = weekSchedule.ESPN.Events
 	var locationsThisWeek []location.Location
@@ -158,7 +165,7 @@ func (l CfbLocationsExtract) allLocations() []location.Location {
 	return locationsThisWeek
 }
 
-func (l NflLocationsExtract) allLocations() []location.Location {
+func (l NflLocationsExtract) getLocations() []location.Location {
 	weekSchedule := schedule.ConsolidateScheduleInfo(schedule.AllNflScheduleInfo{Week: l.Week})
 	var espnWeekGames []espnsched.EventProperty = weekSchedule.ESPN.Events
 	var locationsThisWeek []location.Location

@@ -9,11 +9,11 @@ type Instantiator interface {
 }
 
 type ConferenceRecord struct {
-	TeamExtract team.Team
+	team.Team
 }
 
 type OverallRecord struct {
-	TeamExtract team.Team
+	team.Team
 }
 
 type Record struct {
@@ -30,7 +30,7 @@ func InstantiateRecord(i Instantiator) Record {
 
 func (c ConferenceRecord) instantiate() Record {
 	return Record{
-		TeamID:     c.TeamExtract.TeamID,
+		TeamID:     c.TeamID,
 		RecordType: "Conference",
 		Wins:       0,
 		Losses:     0,
@@ -40,7 +40,7 @@ func (c ConferenceRecord) instantiate() Record {
 
 func (o OverallRecord) instantiate() Record {
 	return Record{
-		TeamID:     o.TeamExtract.TeamID,
+		TeamID:     o.TeamID,
 		RecordType: "Overall",
 		Wins:       0,
 		Losses:     0,

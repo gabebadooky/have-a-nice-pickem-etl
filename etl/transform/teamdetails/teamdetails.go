@@ -9,8 +9,8 @@ type Instantiator interface {
 	instantiate() TeamDetails
 }
 
-type NewTeamDetails struct {
-	TeamExtract team.Team
+type New struct {
+	team.Team
 }
 
 type TeamDetails struct {
@@ -32,44 +32,43 @@ func InstantiateTeamDetails(i Instantiator) TeamDetails {
 	return i.instantiate()
 }
 
-func (t NewTeamDetails) parseConferenceID() string {
-	var conferenceID string = t.TeamExtract.ESPN.Team.Groups.ID
+func (t New) parseConferenceID() string {
+	var conferenceID string = t.ESPN.Team.Groups.ID
 	return conferenceID
 }
 
-func (t NewTeamDetails) parseTeamName() string {
-	var teamName string = t.TeamExtract.ESPN.Team.Location
+func (t New) parseTeamName() string {
+	var teamName string = t.ESPN.Team.Location
 	return teamName
 }
 
-func (t NewTeamDetails) parseTeamMascot() string {
-	var teamMascot string = t.TeamExtract.ESPN.Team.Name
+func (t New) parseTeamMascot() string {
+	var teamMascot string = t.ESPN.Team.Name
 	return teamMascot
 }
 
-func (t NewTeamDetails) parsePrimaryColor() string {
-	var primaryColor string = t.TeamExtract.ESPN.Team.PrimaryColor
+func (t New) parsePrimaryColor() string {
+	var primaryColor string = t.ESPN.Team.PrimaryColor
 	return primaryColor
 }
 
-func (t NewTeamDetails) parseAlternateColor() string {
-	var alternateColor string = t.TeamExtract.ESPN.Team.AlternateColor
+func (t New) parseAlternateColor() string {
+	var alternateColor string = t.ESPN.Team.AlternateColor
 	return alternateColor
 }
 
-func (t NewTeamDetails) parseRanking() uint {
-	var ranking uint = t.TeamExtract.ESPN.Team.Ranking
+func (t New) parseRanking() uint {
+	var ranking uint = t.ESPN.Team.Ranking
 	return ranking
 }
 
-func (t NewTeamDetails) instantiate() TeamDetails {
-	var teamExtract team.Team = t.TeamExtract
-	var teamID string = teamExtract.TeamID
+func (t New) instantiate() TeamDetails {
+	var teamID string = t.TeamID
 
 	return TeamDetails{
 		TeamID:         teamID,
-		League:         teamExtract.League,
-		ESPNCode:       common.ParseEspnTeamCode(teamExtract),
+		League:         t.League,
+		ESPNCode:       common.ParseEspnTeamCode(t.Team),
 		CBSCode:        common.GetCbsTeamCode(teamID),
 		FoxCode:        common.GetFoxTeamCode(teamID),
 		VegasCode:      "",

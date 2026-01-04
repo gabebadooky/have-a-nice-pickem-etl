@@ -10,11 +10,11 @@ type Instantiator interface {
 }
 
 type AwayBoxscore struct {
-	GameExtract game.Game
+	game.Game
 }
 
 type HomeBoxscore struct {
-	GameExtract game.Game
+	game.Game
 }
 
 type Boxscore struct {
@@ -33,11 +33,9 @@ func InstantiateBoxscore(i Instantiator) Boxscore {
 }
 
 func (a AwayBoxscore) instantiate() Boxscore {
-	var gameExtract game.Game = a.GameExtract
-
 	return Boxscore{
-		GameID:        gameExtract.GameID,
-		TeamID:        common.ParseAwayTeamID(gameExtract),
+		GameID:        a.GameID,
+		TeamID:        common.ParseAwayTeamID(a.Game),
 		Q1Score:       a.parseQuarterScore(1),
 		Q2Score:       a.parseQuarterScore(2),
 		Q3Score:       a.parseQuarterScore(3),
@@ -48,11 +46,9 @@ func (a AwayBoxscore) instantiate() Boxscore {
 }
 
 func (h HomeBoxscore) instantiate() Boxscore {
-	var gameExtract game.Game = h.GameExtract
-
 	return Boxscore{
-		GameID:        gameExtract.GameID,
-		TeamID:        common.ParseAwayTeamID(gameExtract),
+		GameID:        h.GameID,
+		TeamID:        common.ParseAwayTeamID(h.Game),
 		Q1Score:       h.parseQuarterScore(1),
 		Q2Score:       h.parseQuarterScore(2),
 		Q3Score:       h.parseQuarterScore(3),

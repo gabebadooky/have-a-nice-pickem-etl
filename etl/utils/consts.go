@@ -26,3 +26,6 @@ const CBS_CFB_REGULAR_SEASON_SCHEDULE_URL string = "https://www.cbssports.com/co
 const CBS_CFB_POST_SEASON_SCHEDULE_URL string = "https://www.cbssports.com/college-football/odds/FBS/" + SEASON_YEAR + "/postseason/bowls-"
 const CBS_NFL_REGULAR_SEASON_SCHEDULE_URL string = "https://www.cbssports.com/nfl/odds/" + SEASON_YEAR + "/regular/week-"
 const CBS_NFL_POST_SEASON_SCHEDULE_URL string = "https://www.cbssports.com/nfl/odds/" + SEASON_YEAR + "/postseason/"
+
+const FOX_CFB_GAME_URL string = "https://www.foxsports.com/college-football"
+const FOX_NFL_GAME_URL string = "https://www.foxsports.com/nfl"

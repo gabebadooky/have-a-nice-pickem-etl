@@ -12,28 +12,28 @@ import (
 	"have-a-nice-pickem-etl/etl/transform/teamdetails"
 )
 
-type GameInstantiator interface {
+type GameTransformer interface {
 	transformData() GameTransformations
 }
 
-type TeamInstantiator interface {
+type TeamTransformer interface {
 	transformData() GameTransformations
 }
 
-type LocationInstantiator interface {
+type LocationTransformer interface {
 	transformData() GameTransformations
 }
 
 type NewGameTransformation struct {
-	GameExtract game.Game
+	game.Game
 }
 
 type NewTeamTransformation struct {
-	TeamExtract team.Team
+	team.Team
 }
 
 type NewLocationTransformations struct {
-	LocationExtract location.Location
+	location.Location
 }
 
 type GameTransformations struct {
@@ -69,14 +69,13 @@ func PerformLocationTransformations(l NewLocationTransformations) LocationTransf
 }
 
 func (g NewGameTransformation) transformData() GameTransformations {
-	gameExtract := g.GameExtract
-	newGameDetails := gamedetails.NewGameDetails{GameExtract: gameExtract}
-	newEspnBettingOdds := bettingodds.EspnBettingOdds{GameExtract: gameExtract}
-	newCbsBettingOdds := bettingodds.CbsBettingOdds{GameExtract: gameExtract}
+	newGameDetails := gamedetails.New{Game: g.Game}
+	newEspnBettingOdds := bettingodds.EspnBettingOdds{Game: g.Game}
+	newCbsBettingOdds := bettingodds.CbsBettingOdds{Game: g.Game}
 	//newFoxBettingOdds := bettingodds.FoxBettingOdds{GameExtract: gameExtract}
 	//newVegasBettingOdds := bettingodds.VegasBettingOdds{GameExtract: gameExtract}
-	newAwayBoxscore := boxscore.AwayBoxscore{GameExtract: gameExtract}
-	newHomeBoxscore := boxscore.HomeBoxscore{GameExtract: gameExtract}
+	newAwayBoxscore := boxscore.AwayBoxscore{Game: g.Game}
+	newHomeBoxscore := boxscore.HomeBoxscore{Game: g.Game}
 
 	var gameDetailsTransformation gamedetails.GameDetails = gamedetails.InstantiateGameDetails(newGameDetails)
 	var espnBettingOddsTransformation bettingodds.BettingOdds = bettingodds.InstantiateBettingOdds(newEspnBettingOdds)
@@ -94,10 +93,9 @@ func (g NewGameTransformation) transformData() GameTransformations {
 }
 
 func (t NewTeamTransformation) transformData() TeamTransformations {
-	teamExtract := t.TeamExtract
-	newTeamDetails := teamdetails.NewTeamDetails{TeamExtract: teamExtract}
-	newConferenceRecord := record.ConferenceRecord{TeamExtract: teamExtract}
-	newOverallRecord := record.OverallRecord{TeamExtract: teamExtract}
+	newTeamDetails := teamdetails.New{Team: t.Team}
+	newConferenceRecord := record.ConferenceRecord{Team: t.Team}
+	newOverallRecord := record.OverallRecord{Team: t.Team}
 
 	var teamDetailsTransformation teamdetails.TeamDetails = teamdetails.InstantiateTeamDetails(newTeamDetails)
 	var conferenceRecordTransformation record.Record = record.InstantiateRecord(newConferenceRecord)
@@ -111,8 +109,7 @@ func (t NewTeamTransformation) transformData() TeamTransformations {
 }
 
 func (l NewLocationTransformations) transformData() LocationTransformations {
-	locationExtract := l.LocationExtract
-	newLocationDetails := locationdetails.NewLocation{LocationExtract: locationExtract}
+	newLocationDetails := locationdetails.New{Location: l.Location}
 	var locationsTransformation locationdetails.LocationDetails = locationdetails.InstantiateLocationDetails(newLocationDetails)
 
 	return LocationTransformations{
