@@ -21,11 +21,29 @@ func FormatStringID(id string) string {
 	return formatString
 }
 
+func StripBowlGamePrefixFromFoxGameCode(foxGameCode string) string {
+	bowlString := "bowl-"
+	cfpFirstRoundGameString := "cfp-first-round-game-"
+	cfpNationalChampionshipString := "cfp-national-championship-"
+
+	if strings.Contains(foxGameCode, bowlString) {
+		return foxGameCode[strings.Index(foxGameCode, bowlString)+len(bowlString):]
+	}
+	if strings.Contains(foxGameCode, cfpFirstRoundGameString) {
+		return foxGameCode[strings.Index(foxGameCode, cfpFirstRoundGameString)+len(cfpFirstRoundGameString):]
+	}
+	if strings.Contains(foxGameCode, cfpNationalChampionshipString) {
+		return foxGameCode[strings.Index(foxGameCode, cfpNationalChampionshipString)+len(cfpNationalChampionshipString):]
+	}
+	return foxGameCode
+}
+
 // Strips Date and Box Score from Fox Game Code
 func StripDateAndBoxScoreIDFromFoxGameCode(foxGameCode string) string {
-	var seasonMonthAbbreviations [12]string = [12]string{"aug", "sep", "oct", "nov", "dec", "jan", "feb", "mar", "apr", "may", "jun", "jul"}
 	var formattedGameCode string
 	var monthAbbr string
+
+	seasonMonthAbbreviations := [12]string{"aug", "sep", "oct", "nov", "dec", "jan", "feb", "mar", "apr", "may", "jun", "jul"}
 
 	for i := range 12 {
 		if strings.Contains(foxGameCode, seasonMonthAbbreviations[i]) {
@@ -34,9 +52,8 @@ func StripDateAndBoxScoreIDFromFoxGameCode(foxGameCode string) string {
 		}
 	}
 
-	var idx int = strings.Index(foxGameCode, monthAbbr)
+	idx := strings.Index(foxGameCode, monthAbbr)
 	formattedGameCode = foxGameCode[:idx-1]
-
 	return formattedGameCode
 }
 

@@ -10,11 +10,11 @@ type FoxTeam interface {
 }
 
 type FoxAwayTeam struct {
-	FoxGameCode string
+	FoxGameHyperlink string
 }
 
 type FoxHomeTeam struct {
-	FoxGameCode string
+	FoxGameHyperlink string
 }
 
 func ExtractFoxTeamCode(t FoxTeam) string {
@@ -23,16 +23,20 @@ func ExtractFoxTeamCode(t FoxTeam) string {
 
 // Extracts team string BEFORE "-vs-" substring in a given Fox Game Code
 func (t FoxAwayTeam) teamCode() string {
-	formattedGameCode := utils.StripDateAndBoxScoreIDFromFoxGameCode(t.FoxGameCode)
-	// teamCode := strings.Split(formattedGameCode, "-vs-")[0]
+	formattedGameCode := utils.StripDateAndBoxScoreIDFromFoxGameCode(t.FoxGameHyperlink)
+	formattedGameCode = utils.StripBowlGamePrefixFromFoxGameCode(formattedGameCode)
 	teamCode, _, _ := strings.Cut(formattedGameCode, "-vs-")
+	_, teamCodeWithoutHyperlinkPrefix, exists := strings.Cut(teamCode, "l/")
+	if exists {
+		return teamCodeWithoutHyperlinkPrefix
+	}
 	return teamCode
 }
 
 // Extracts team string AFTER "-vs-" substring in a given Fox Game Code
 func (t FoxHomeTeam) teamCode() string {
-	formattedGameCode := utils.StripDateAndBoxScoreIDFromFoxGameCode(t.FoxGameCode)
-	// teamCode := strings.Split(formattedGameCode, "-vs-")[1]
+	formattedGameCode := utils.StripDateAndBoxScoreIDFromFoxGameCode(t.FoxGameHyperlink)
+	formattedGameCode = utils.StripBowlGamePrefixFromFoxGameCode(formattedGameCode)
 	_, teamCode, _ := strings.Cut(formattedGameCode, "-vs-")
 	return teamCode
 }

@@ -62,7 +62,7 @@ func (x CbsCfbSchedule) scheduleForWeek() *goquery.Selection {
 	return cbsSchedule
 }
 
-// Scrape Cbs CFB Schedule for a given week
+// Scrape Cbs NFL Schedule for a given week
 func (y CbsNflSchedule) scheduleForWeek() *goquery.Selection {
 	var cbsSchedulePageLink string
 

@@ -1,6 +1,7 @@
 package common
 
 import (
+	"fmt"
 	"have-a-nice-pickem-etl/etl/extract/game"
 	"have-a-nice-pickem-etl/etl/extract/team"
 	"have-a-nice-pickem-etl/etl/utils"
@@ -15,31 +16,33 @@ func ParseEspnGameCode(gameExtract game.Game) string {
 }
 
 func ScrapeCbsGameCode(gameExtract game.Game) string {
-	gameCode, exists := gameExtract.CBS.Attr("data-game-abbrev")
+	gameCode, exists := gameExtract.CBS.Find("table.OddsBlock-game").Attr("data-game-abbrev")
 	if !exists {
-		log.Panicf("Could not locate CBS Game Code for %v", gameExtract.CBS)
+		log.Panicf("Could not locate CBS Game Code for %v", &gameExtract.CBS)
 	}
-
 	return gameCode
 }
 
 func ScrapeFoxGameCode(gameExtract game.Game) string {
-	broadcastCell := gameExtract.FOX.Find("td.broadcast")
-	gameCode, exists := broadcastCell.Attr("")
+	matchupCell := gameExtract.FOX.Find("div.nav-horizontal").Find("a").First()
+	gameCode, exists := matchupCell.Attr("href")
 	if !exists {
-		log.Panicf("Could not locate CBS Game Code for %v", gameExtract.FOX)
+		log.Panicf("Could not locate Fox Game Code for %v", gameExtract.FOX)
 	}
-
-	return gameCode
+	formattedGameCode := gameCode[1:]
+	_, stringAfterSportPrefix, _ := strings.Cut(formattedGameCode, "/")
+	stringBeforeQueryParams, _, _ := strings.Cut(stringAfterSportPrefix, "?")
+	return stringBeforeQueryParams
 }
 
 func ParseAwayTeamID(gameExtract game.Game) string {
-	before, _, _ := strings.Cut(gameExtract.GameID, "-vs-")
+	before, _, _ := strings.Cut(gameExtract.GameID, "-at-")
 	return before
 }
 
 func ParseHomeTeamID(gameExtract game.Game) string {
-	startIndex := strings.Index(gameExtract.GameID, "-vs-") + 4
+	fmt.Printf("gameExtract.GameID: %s", gameExtract.GameID)
+	startIndex := strings.Index(gameExtract.GameID, "-at-") + 4
 	endIndex := strings.LastIndex(gameExtract.GameID, "-week-")
 	homeTeamID := gameExtract.GameID[startIndex:endIndex]
 	return homeTeamID

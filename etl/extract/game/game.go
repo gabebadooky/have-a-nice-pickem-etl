@@ -40,9 +40,11 @@ func ConsolidateGameInfo(g AllGameInfo) (Game, error) {
 }
 
 func (c AllCfbGameInfo) gameInfo() (Game, error) {
-	fmt.Printf("Event: %s", c.EspnEvent.Name)
-	var gameID string = utils.FormatStringID(c.EspnEvent.Name)
-	fmt.Printf("GameID: %s", gameID)
+	eventNameAndWeek := fmt.Sprintf("%s week %d", c.EspnEvent.Name, c.EspnEvent.Week.Number)
+	var gameID string = utils.FormatStringID(eventNameAndWeek)
+
+	fmt.Printf("\nEvent: %s", gameID)
+
 	if strings.Contains(gameID, "tbd-") {
 		return Game{}, fmt.Errorf("GameID includes \"tbd\"")
 	}
