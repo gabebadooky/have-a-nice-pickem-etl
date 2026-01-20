@@ -98,7 +98,8 @@ func (t NewTeamTransformation) transformData() TeamTransformations {
 	newConferenceRecord := record.ConferenceRecord{Team: t.Team}
 	newOverallRecord := record.OverallRecord{Team: t.Team}
 
-	var teamDetailsTransformation teamdetails.TeamDetails = teamdetails.InstantiateTeamDetails(newTeamDetails)
+	//var teamDetailsTransformation teamdetails.TeamDetails = teamdetails.InstantiateTeamDetails(newTeamDetails)
+	var teamDetailsTransformation teamdetails.TeamDetails = newTeamDetails.Instantiate()
 	var conferenceRecordTransformation record.Record = record.InstantiateRecord(newConferenceRecord)
 	var overallRecordTransformation record.Record = record.InstantiateRecord(newOverallRecord)
 

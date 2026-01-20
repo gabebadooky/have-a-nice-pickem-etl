@@ -48,7 +48,7 @@ func (a AwayBoxscore) instantiate() Boxscore {
 func (h HomeBoxscore) instantiate() Boxscore {
 	return Boxscore{
 		GameID:        h.GameID,
-		TeamID:        common.ParseAwayTeamID(h.Game),
+		TeamID:        common.ParseHomeTeamID(h.Game),
 		Q1Score:       h.parseQuarterScore(1),
 		Q2Score:       h.parseQuarterScore(2),
 		Q3Score:       h.parseQuarterScore(3),

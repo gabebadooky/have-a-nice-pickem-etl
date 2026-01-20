@@ -32,9 +32,9 @@ func (c ConferenceRecord) instantiate() Record {
 	return Record{
 		TeamID:     c.TeamID,
 		RecordType: "Conference",
-		Wins:       0,
-		Losses:     0,
-		Ties:       0,
+		Wins:       c.parseWins(),
+		Losses:     c.parseLosses(),
+		Ties:       c.parseTies(),
 	}
 }
 
@@ -42,8 +42,8 @@ func (o OverallRecord) instantiate() Record {
 	return Record{
 		TeamID:     o.TeamID,
 		RecordType: "Overall",
-		Wins:       0,
-		Losses:     0,
-		Ties:       0,
+		Wins:       o.parseOverallWins(),
+		Losses:     o.parseOverallLosses(),
+		Ties:       o.parseOverallTies(),
 	}
 }

@@ -17,6 +17,7 @@ type HeaderProperty struct {
 
 type SeasonProperty struct {
 	Year uint `json:"year"`
+	Type int  `json:"type"`
 }
 
 type CompetitionsProperty struct {

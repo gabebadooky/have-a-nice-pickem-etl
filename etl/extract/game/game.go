@@ -39,10 +39,19 @@ func ConsolidateGameInfo(g AllGameInfo) (Game, error) {
 	return g.gameInfo()
 }
 
-func (c AllCfbGameInfo) gameInfo() (Game, error) {
-	eventNameAndWeek := fmt.Sprintf("%s week %d", c.EspnEvent.Name, c.EspnEvent.Week.Number)
-	var gameID string = utils.FormatStringID(eventNameAndWeek)
+func instantiateGameID(sched espnsched.EventProperty) string {
+	var eventNameAndWeek string
+	if sched.Season.Type == 3 {
+		eventNameAndWeek = fmt.Sprintf("%s week post season", sched.Name)
+	} else {
+		eventNameAndWeek = fmt.Sprintf("%s week %d", sched.Name, sched.Week.Number)
+	}
+	gameID := utils.FormatStringID(eventNameAndWeek)
+	return gameID
+}
 
+func (c AllCfbGameInfo) gameInfo() (Game, error) {
+	gameID := instantiateGameID(c.EspnEvent)
 	fmt.Printf("\nEvent: %s", gameID)
 
 	if strings.Contains(gameID, "tbd-") {
@@ -65,8 +74,13 @@ func (c AllCfbGameInfo) gameInfo() (Game, error) {
 }
 
 func (n AllNflGameInfo) gameInfo() (Game, error) {
-	var gameID string = utils.FormatStringID(n.EspnEvent.Name)
-	if strings.Contains(gameID, "-tbd-") {
+	gameID := instantiateGameID(n.EspnEvent)
+	fmt.Printf("\nEvent: %s", gameID)
+
+	if strings.Contains(gameID, "tbd-") {
+		return Game{}, fmt.Errorf("GameID includes \"tbd\"")
+	}
+	if strings.Contains(gameID, "-tbd") {
 		return Game{}, fmt.Errorf("GameID includes \"tbd\"")
 	}
 

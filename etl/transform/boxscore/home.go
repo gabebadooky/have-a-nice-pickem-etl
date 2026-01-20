@@ -9,9 +9,9 @@ import (
 
 // Extract Points for given boxscore period
 func (h HomeBoxscore) parsePointsForGivenQuarter(team1homeAway string, team2homeAway string, team1points string, team2points string) uint {
-	switch "AWAY" {
+	switch "HOME" {
 	case strings.ToUpper(team1homeAway):
-		points, err := strconv.Atoi(team2points)
+		points, err := strconv.Atoi(team1points)
 		if err != nil {
 			points = 0
 		}

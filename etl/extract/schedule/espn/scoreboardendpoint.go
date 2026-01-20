@@ -7,11 +7,17 @@ type ScoreboardEndpoint struct {
 type EventProperty struct {
 	ID           string                 `json:"id"`
 	Name         string                 `json:"name"`
-	Week         NumberProperty         `json:"week"`
+	Season       SeasonProperty         `json:"season"`
+	Week         WeekProperty           `json:"week"`
 	Competitions []CompetitionsProperty `json:"competitions"`
 }
 
-type NumberProperty struct {
+type SeasonProperty struct {
+	Year uint `json:"year"`
+	Type uint `json:"type"`
+}
+
+type WeekProperty struct {
 	Number uint `json:"number"`
 }
 

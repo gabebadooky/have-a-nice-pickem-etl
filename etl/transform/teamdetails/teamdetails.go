@@ -5,10 +5,11 @@ import (
 	"have-a-nice-pickem-etl/etl/transform/common"
 )
 
-type Instantiator interface {
-	instantiate() TeamDetails
-}
-
+/*
+	type Instantiator interface {
+		instantiate() TeamDetails
+	}
+*/
 type New struct {
 	team.Team
 }
@@ -28,9 +29,11 @@ type TeamDetails struct {
 	Ranking        uint
 }
 
-func InstantiateTeamDetails(i Instantiator) TeamDetails {
-	return i.instantiate()
-}
+/*
+	func InstantiateTeamDetails(i Instantiator) TeamDetails {
+		return i.instantiate()
+	}
+*/
 
 func (t New) parseConferenceID() string {
 	var conferenceID string = t.ESPN.Team.Groups.ID
@@ -62,7 +65,7 @@ func (t New) parseRanking() uint {
 	return ranking
 }
 
-func (t New) instantiate() TeamDetails {
+func (t New) Instantiate() TeamDetails {
 	var teamID string = t.TeamID
 
 	return TeamDetails{
