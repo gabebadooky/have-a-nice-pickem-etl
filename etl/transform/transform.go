@@ -77,7 +77,8 @@ func (g NewGameTransformation) transformData() GameTransformations {
 	newAwayBoxscore := boxscore.AwayBoxscore{Game: g.Game}
 	newHomeBoxscore := boxscore.HomeBoxscore{Game: g.Game}
 
-	var gameDetailsTransformation gamedetails.GameDetails = gamedetails.InstantiateGameDetails(newGameDetails)
+	//var gameDetailsTransformation gamedetails.GameDetails = gamedetails.InstantiateGameDetails(newGameDetails)
+	var gameDetailsTransformation gamedetails.GameDetails = newGameDetails.InstantiateGameDetails()
 	var espnBettingOddsTransformation bettingodds.BettingOdds = bettingodds.InstantiateBettingOdds(newEspnBettingOdds)
 	var cbsBettingOddsTransformation bettingodds.BettingOdds = bettingodds.InstantiateBettingOdds(newCbsBettingOdds)
 	var awayBoxscoreTransformation boxscore.Boxscore = boxscore.InstantiateBoxscore(newAwayBoxscore)

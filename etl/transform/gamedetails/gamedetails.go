@@ -5,10 +5,6 @@ import (
 	"have-a-nice-pickem-etl/etl/transform/common"
 )
 
-type Instantiator interface {
-	instantiate() GameDetails
-}
-
 type New struct {
 	game.Game
 }
@@ -28,10 +24,6 @@ type GameDetails struct {
 	Broadcast     string
 	Location      string
 	Finished      bool
-}
-
-func InstantiateGameDetails(i Instantiator) GameDetails {
-	return i.instantiate()
 }
 
 // Parses "League" field from ESPN Game Summary API
@@ -86,7 +78,7 @@ func (g New) parseGameStatus() bool {
 
 }
 
-func (g New) instantiate() GameDetails {
+func (g New) InstantiateGameDetails() GameDetails {
 	return GameDetails{
 		GameID:        g.GameID,
 		League:        g.parseLeague(),
