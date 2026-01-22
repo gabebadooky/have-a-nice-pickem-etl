@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"have-a-nice-pickem-etl/etl/extract"
-	"have-a-nice-pickem-etl/etl/transform/record"
+	"have-a-nice-pickem-etl/etl/transform/teamstats"
 )
 
 func main() {
@@ -24,14 +24,30 @@ func main() {
 		if !slices.Contains(distinctTeams, gamedetailsrow.HomeTeamID) {
 			distinctTeams = append(distinctTeams, gamedetailsrow.HomeTeamID)
 		}
+
+		fmt.Println()
+		fmt.Printf(`
+			GameID: %s,
+			EspnCode: %s,
+			CbsCode: %s,
+			FoxCode: %s
+		`,
+			gamedetailsrow.GameID,
+			gamedetailsrow.EspnCode,
+			gamedetailsrow.CbsCode,
+			gamedetailsrow.FoxCode,
+		)
+		fmt.Println()
 	}*/
 
 	teams := extract.ExtractTeams(extract.CfbTeamsExtract{Week: 16})
+	fmt.Printf("len(teams): %d", len(teams))
 
 	for i := range len(teams) {
 		//teamdetailsrow := teamdetails.New{Team: teams[i]}.Instantiate()
 		//conferenceRecord := record.InstantiateRecord(record.ConferenceRecord{Team: teams[i]})
-		overallRecord := record.InstantiateRecord(record.OverallRecord{Team: teams[i]})
+		//overallRecord := record.InstantiateRecord(record.OverallRecord{Team: teams[i]})
+		teamStats := teamstats.New{Team: teams[i]}.Instantiate()
 
 		fmt.Println()
 		/*fmt.Printf(`
@@ -73,7 +89,7 @@ func main() {
 			conferenceRecord.Wins,
 			conferenceRecord.Losses,
 			conferenceRecord.Ties,
-		)*/
+		)*
 		fmt.Printf(`
 			TeamID: %s
 			RecordType: %s
@@ -86,7 +102,19 @@ func main() {
 			overallRecord.Wins,
 			overallRecord.Losses,
 			overallRecord.Ties,
-		)
+		)*/
+
+		for i := range len(teamStats.Stats) {
+			fmt.Printf(`
+				TeamID: %s
+				Metric: %s
+				Value: %f
+			`,
+				teamStats.TeamID,
+				teamStats.Stats[i].Metric,
+				teamStats.Stats[i].Value,
+			)
+		}
 		fmt.Println()
 		fmt.Println()
 	}

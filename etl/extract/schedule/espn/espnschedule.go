@@ -55,7 +55,8 @@ func (e CfbEspnSchedule) scheduleForWeek() ScoreboardEndpoint {
 		espnScoreboardEndpoint = fmt.Sprintf("%s%d", utils.ESPN_CFB_REGULAR_SEASON_SCHEDULE_URL, e.Week)
 	} else {
 		// SeasonType 3 only has one week for CFB Postseason
-		espnScoreboardEndpoint = fmt.Sprintf("%s%d", utils.ESPN_CFB_POST_SEASON_SCHEDULE_URL, 1)
+		//espnScoreboardEndpoint = fmt.Sprintf("%s%d", utils.ESPN_CFB_POST_SEASON_SCHEDULE_URL, 1)
+		espnScoreboardEndpoint = fmt.Sprintf("%s", utils.ESPN_CFB_POST_SEASON_SCHEDULE_URL)
 	}
 
 	espnScoreboard := makeAndHandleScoreboardEndpointCall(e.Week, espnScoreboardEndpoint)

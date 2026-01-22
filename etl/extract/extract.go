@@ -107,13 +107,13 @@ func (t CfbTeamsExtract) getTeams() []team.Team {
 	weekSchedule := schedule.ConsolidateScheduleInfo(schedule.AllCfbScheduleInfo{Week: t.Week})
 	var espnWeekGames []espnsched.EventProperty = weekSchedule.ESPN.Events
 	var teamsThisWeek []team.Team
-
+	fmt.Printf("len(espnWeekGames): %d", len(espnWeekGames))
 	for i := range espnWeekGames {
 		espnTeamCode1 := espnWeekGames[i].Competitions[0].Competitors[0].ID
 		espnTeamCode2 := espnWeekGames[i].Competitions[0].Competitors[1].ID
 
-		team1 := team.ConsolidateTeamInfo(team.AllCfbTeamInfo{TeamCode: espnTeamCode1})
-		team2 := team.ConsolidateTeamInfo(team.AllCfbTeamInfo{TeamCode: espnTeamCode2})
+		team1 := team.ConsolidateTeamInfo(team.AllCfbTeamInfo{EspnCode: espnTeamCode1})
+		team2 := team.ConsolidateTeamInfo(team.AllCfbTeamInfo{EspnCode: espnTeamCode2})
 
 		teamsThisWeek = append(teamsThisWeek, team1)
 		teamsThisWeek = append(teamsThisWeek, team2)
@@ -131,8 +131,8 @@ func (t NflTeamsExtract) getTeams() []team.Team {
 		espnTeamCode1 := espnWeekGames[i].Competitions[0].Competitors[0].ID
 		espnTeamCode2 := espnWeekGames[i].Competitions[0].Competitors[1].ID
 
-		team1 := team.ConsolidateTeamInfo(team.AllNflTeamInfo{TeamCode: espnTeamCode1})
-		team2 := team.ConsolidateTeamInfo(team.AllNflTeamInfo{TeamCode: espnTeamCode2})
+		team1 := team.ConsolidateTeamInfo(team.AllNflTeamInfo{EspnCode: espnTeamCode1})
+		team2 := team.ConsolidateTeamInfo(team.AllNflTeamInfo{EspnCode: espnTeamCode2})
 
 		teamsThisWeek = append(teamsThisWeek, team1)
 		teamsThisWeek = append(teamsThisWeek, team2)

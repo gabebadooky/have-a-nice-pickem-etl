@@ -91,3 +91,19 @@ var FoxTeamCodeToTeamIDmapping map[string]string = map[string]string{
 	"massachusetts-minutemen":         "umass-minutemen",
 	"miami-hurricanes":                "miami-fl-hurricanes",
 }
+
+func GetCbsTeamCode(teamID string) string {
+	cbsCode, cbsMappingExists := TeamIDtoCbsTeamCode[teamID]
+	if cbsMappingExists {
+		return cbsCode
+	}
+	return teamID
+}
+
+func GetFoxTeamCode(teamID string) string {
+	foxCode, foxMappingExists := TeamIDtoFoxTeamCode[teamID]
+	if foxMappingExists {
+		return foxCode
+	}
+	return teamID
+}

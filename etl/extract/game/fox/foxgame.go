@@ -2,7 +2,6 @@ package foxgame
 
 import (
 	"fmt"
-	foxteam "have-a-nice-pickem-etl/etl/extract/team/fox"
 	"have-a-nice-pickem-etl/etl/utils"
 	"log"
 	"strings"
@@ -56,6 +55,26 @@ func scrapeFoxGame(foxGameHyperlink string) *goquery.Selection {
 	return page
 }
 
+// Extracts team string BEFORE "-vs-" substring in a given Fox Game Code
+func scrapeAwayTeamCode(foxGameHyperlink string) string {
+	formattedGameCode := utils.StripDateAndBoxScoreIDFromFoxGameCode(foxGameHyperlink)
+	formattedGameCode = utils.StripBowlGamePrefixFromFoxGameCode(formattedGameCode)
+	teamCode, _, _ := strings.Cut(formattedGameCode, "-vs-")
+	_, teamCodeWithoutHyperlinkPrefix, exists := strings.Cut(teamCode, "l/")
+	if exists {
+		return teamCodeWithoutHyperlinkPrefix
+	}
+	return teamCode
+}
+
+// Extracts team string AFTER "-vs-" substring in a given Fox Game Code
+func scrapeHomeTeamCode(foxGameHyperlink string) string {
+	formattedGameCode := utils.StripDateAndBoxScoreIDFromFoxGameCode(foxGameHyperlink)
+	formattedGameCode = utils.StripBowlGamePrefixFromFoxGameCode(formattedGameCode)
+	_, teamCode, _ := strings.Cut(formattedGameCode, "-vs-")
+	return teamCode
+}
+
 // Extracts FOX game code where AwayTeamID and HomeTeamID match with corresponding FOX team codes
 func scrapeGameHyperlink(gameID string, urlPrefix string, schedulePage *goquery.Selection) string {
 	var foxGameHyperlink string
@@ -67,8 +86,10 @@ func scrapeGameHyperlink(gameID string, urlPrefix string, schedulePage *goquery.
 		// https://www.foxsports.com/college-football/bowling-green-falcons-vs-umass-minutemen-nov-25-2025-game-boxscore-42675
 		foxGameHyperlink = fmt.Sprintf("%s%s", urlPrefix, anchorTag.AttrOr("href", "gamehref"))
 
-		var foxAwayTeamCode string = foxteam.ExtractFoxTeamCode(foxteam.FoxAwayTeam{FoxGameHyperlink: foxGameHyperlink})
-		var foxHomeTeamCode string = foxteam.ExtractFoxTeamCode(foxteam.FoxHomeTeam{FoxGameHyperlink: foxGameHyperlink})
+		//var foxAwayTeamCode string = foxteam.ExtractFoxTeamCode(foxteam.FoxAwayTeam{FoxGameHyperlink: foxGameHyperlink})
+		//var foxHomeTeamCode string = foxteam.ExtractFoxTeamCode(foxteam.FoxHomeTeam{FoxGameHyperlink: foxGameHyperlink})
+		foxAwayTeamCode := scrapeAwayTeamCode(foxGameHyperlink)
+		foxHomeTeamCode := scrapeHomeTeamCode(foxGameHyperlink)
 
 		awayTeamID := setTeamID(foxAwayTeamCode)
 		homeTeamID := setTeamID(foxHomeTeamCode)

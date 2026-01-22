@@ -3,6 +3,7 @@ package teamdetails
 import (
 	"have-a-nice-pickem-etl/etl/extract/team"
 	"have-a-nice-pickem-etl/etl/transform/common"
+	"have-a-nice-pickem-etl/etl/utils"
 )
 
 /*
@@ -72,8 +73,8 @@ func (t New) Instantiate() TeamDetails {
 		TeamID:         teamID,
 		League:         t.League,
 		ESPNCode:       common.ParseEspnTeamCode(t.Team),
-		CBSCode:        common.GetCbsTeamCode(teamID),
-		FoxCode:        common.GetFoxTeamCode(teamID),
+		CBSCode:        utils.GetCbsTeamCode(teamID),
+		FoxCode:        utils.GetFoxTeamCode(teamID),
 		VegasCode:      "",
 		ConferenceID:   t.parseConferenceID(),
 		Name:           t.parseTeamName(),

@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"have-a-nice-pickem-etl/etl/extract/game"
 	"have-a-nice-pickem-etl/etl/extract/team"
-	"have-a-nice-pickem-etl/etl/utils"
 	"log"
 	"strings"
 )
@@ -32,6 +31,8 @@ func ScrapeFoxGameCode(gameExtract game.Game) string {
 	formattedGameCode := gameCode[1:]
 	_, stringAfterSportPrefix, _ := strings.Cut(formattedGameCode, "/")
 	stringBeforeQueryParams, _, _ := strings.Cut(stringAfterSportPrefix, "?")
+	//gameCodeWithoutBowlPrefix := utils.StripBowlGamePrefixFromFoxGameCode(stringBeforeQueryParams)
+	//gameCodeWithDateSuffix := utils.StripDateAndBoxScoreIDFromFoxGameCode(gameCodeWithoutBowlPrefix)
 	return stringBeforeQueryParams
 }
 
@@ -51,21 +52,4 @@ func ParseHomeTeamID(gameExtract game.Game) string {
 func ParseEspnTeamCode(teamExtract team.Team) string {
 	var espnTeamCode string = teamExtract.ESPN.Team.Code
 	return espnTeamCode
-}
-
-func GetCbsTeamCode(teamID string) string {
-	cbsCode, cbsMappingExists := utils.TeamIDtoCbsTeamCode[teamID]
-	if cbsMappingExists {
-		return cbsCode
-	}
-	return teamID
-
-}
-
-func GetFoxTeamCode(teamID string) string {
-	foxCode, foxMappingExists := utils.TeamIDtoFoxTeamCode[teamID]
-	if foxMappingExists {
-		return foxCode
-	}
-	return teamID
 }
