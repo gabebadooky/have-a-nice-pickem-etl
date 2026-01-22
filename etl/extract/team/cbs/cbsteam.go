@@ -75,7 +75,7 @@ func locateAndScrapeTeamStatsPage(teamsPageHyperlink string, teamID string) *goq
 	allTeamsPage := scrapePage(teamsPageHyperlink)
 	teamHyperlinks := compileAllTeamHyperlinks(*allTeamsPage)
 	teamStatsHyperlink := locateTeamStatsLink(teamHyperlinks, teamID)
-	fullTeamStatsHyperlink := fmt.Sprintf("%s%s%s", utils.CBS_BASE_URL, teamStatsHyperlink, "/stats/")
+	fullTeamStatsHyperlink := fmt.Sprintf("%s%s%s", utils.CBS_BASE_URL, teamStatsHyperlink, "stats/")
 
 	log.Printf("\nRequesting CBS Teams Stats page: %s\n", fullTeamStatsHyperlink)
 	teamStatsPage := scrapePage(fullTeamStatsHyperlink)

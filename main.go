@@ -3,11 +3,12 @@ package main
 import (
 	"fmt"
 	"have-a-nice-pickem-etl/etl/extract"
-	"have-a-nice-pickem-etl/etl/transform/teamstats"
+	"have-a-nice-pickem-etl/etl/transform/gamedetails"
+	"slices"
 )
 
 func main() {
-	/*games := extract.ExtractGames(extract.CfbGamesExtract{Week: 16})
+	games := extract.ExtractGames(extract.CfbGamesExtract{Week: 16})
 	var distinctTeams []string
 
 	for i := range 4 {
@@ -38,84 +39,88 @@ func main() {
 			gamedetailsrow.FoxCode,
 		)
 		fmt.Println()
-	}*/
-
-	teams := extract.ExtractTeams(extract.CfbTeamsExtract{Week: 16})
-	fmt.Printf("len(teams): %d", len(teams))
-
-	for i := range len(teams) {
-		//teamdetailsrow := teamdetails.New{Team: teams[i]}.Instantiate()
-		//conferenceRecord := record.InstantiateRecord(record.ConferenceRecord{Team: teams[i]})
-		//overallRecord := record.InstantiateRecord(record.OverallRecord{Team: teams[i]})
-		teamStats := teamstats.New{Team: teams[i]}.Instantiate()
-
-		fmt.Println()
-		/*fmt.Printf(`
-			TeamID: %s
-			League: %s
-			ESPNCode: %s
-			CBSCode: %s
-			FoxCode: %s
-			VegasCode: %s
-			ConferenceID: %s
-			Name: %s
-			Mascot: %s
-			PrimaryColor: %s
-			AlternateColor: %s
-			Ranking: %d
-		`,
-			teamdetailsrow.TeamID,
-			teamdetailsrow.League,
-			teamdetailsrow.ESPNCode,
-			teamdetailsrow.CBSCode,
-			teamdetailsrow.FoxCode,
-			teamdetailsrow.VegasCode,
-			teamdetailsrow.ConferenceID,
-			teamdetailsrow.Name,
-			teamdetailsrow.Mascot,
-			teamdetailsrow.PrimaryColor,
-			teamdetailsrow.AlternateColor,
-			teamdetailsrow.Ranking,
-		)*/
-		/*fmt.Printf(`
-			TeamID: %s
-			RecordType: %s
-			Wins: %d
-			Losses: %d
-			Ties: %d
-		`,
-			conferenceRecord.TeamID,
-			conferenceRecord.RecordType,
-			conferenceRecord.Wins,
-			conferenceRecord.Losses,
-			conferenceRecord.Ties,
-		)*
-		fmt.Printf(`
-			TeamID: %s
-			RecordType: %s
-			Wins: %d
-			Losses: %d
-			Ties: %d
-		`,
-			overallRecord.TeamID,
-			overallRecord.RecordType,
-			overallRecord.Wins,
-			overallRecord.Losses,
-			overallRecord.Ties,
-		)*/
-
-		for i := range len(teamStats.Stats) {
-			fmt.Printf(`
-				TeamID: %s
-				Metric: %s
-				Value: %f
-			`,
-				teamStats.TeamID,
-				teamStats.Stats[i].Metric,
-				teamStats.Stats[i].Value,
-			)
-		}
-		fmt.Println()
-		fmt.Println()
 	}
+
+	/*
+		teams := extract.ExtractTeams(extract.CfbTeamsExtract{Week: 16})
+		fmt.Printf("len(teams): %d", len(teams))
+
+		for i := range len(teams) {
+			//teamdetailsrow := teamdetails.New{Team: teams[i]}.Instantiate()
+			//conferenceRecord := record.InstantiateRecord(record.ConferenceRecord{Team: teams[i]})
+			//overallRecord := record.InstantiateRecord(record.OverallRecord{Team: teams[i]})
+			teamStats := teamstats.New{Team: teams[i]}.Instantiate()
+
+			fmt.Println()
+			/*fmt.Printf(`
+				TeamID: %s
+				League: %s
+				ESPNCode: %s
+				CBSCode: %s
+				FoxCode: %s
+				VegasCode: %s
+				ConferenceID: %s
+				Name: %s
+				Mascot: %s
+				PrimaryColor: %s
+				AlternateColor: %s
+				Ranking: %d
+			`,
+				teamdetailsrow.TeamID,
+				teamdetailsrow.League,
+				teamdetailsrow.ESPNCode,
+				teamdetailsrow.CBSCode,
+				teamdetailsrow.FoxCode,
+				teamdetailsrow.VegasCode,
+				teamdetailsrow.ConferenceID,
+				teamdetailsrow.Name,
+				teamdetailsrow.Mascot,
+				teamdetailsrow.PrimaryColor,
+				teamdetailsrow.AlternateColor,
+				teamdetailsrow.Ranking,
+			)*/
+	/*fmt.Printf(`
+		TeamID: %s
+		RecordType: %s
+		Wins: %d
+		Losses: %d
+		Ties: %d
+	`,
+		conferenceRecord.TeamID,
+		conferenceRecord.RecordType,
+		conferenceRecord.Wins,
+		conferenceRecord.Losses,
+		conferenceRecord.Ties,
+	)*
+	fmt.Printf(`
+		TeamID: %s
+		RecordType: %s
+		Wins: %d
+		Losses: %d
+		Ties: %d
+	`,
+		overallRecord.TeamID,
+		overallRecord.RecordType,
+		overallRecord.Wins,
+		overallRecord.Losses,
+		overallRecord.Ties,
+	)*/
+
+	/*
+			for i := range len(teamStats.Stats) {
+				fmt.Printf(`
+					TeamID: %s
+					Metric: %s
+					Value: %f
+				`,
+					teamStats.TeamID,
+					teamStats.Stats[i].Metric,
+					teamStats.Stats[i].Value,
+				)
+			}
+			fmt.Println()
+			fmt.Println()
+			* /
+		}
+	*/
 }
