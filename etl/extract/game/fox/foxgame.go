@@ -107,12 +107,12 @@ func scrapeGameHyperlink(gameID string, urlPrefix string, schedulePage *goquery.
 
 func (g FoxCFBGame) scrapeGame() *goquery.Selection {
 	foxGameHyperlink := scrapeGameHyperlink(g.GameID, utils.FOX_GAME_BASE_URL, g.FoxSchedulePage)
-	foxGame := scrapeFoxGame(fmt.Sprintf("%s?tab=gamestats", foxGameHyperlink))
+	foxGame := scrapeFoxGame(foxGameHyperlink)
 	return foxGame
 }
 
 func (g FoxNFLGame) scrapeGame() *goquery.Selection {
 	foxGameHyperlink := scrapeGameHyperlink(g.GameID, utils.FOX_GAME_BASE_URL, g.FoxSchedulePage)
-	foxGame := scrapeFoxGame(fmt.Sprintf("%s?tab=gamestats", foxGameHyperlink))
+	foxGame := scrapeFoxGame(foxGameHyperlink)
 	return foxGame
 }

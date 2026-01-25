@@ -7,8 +7,16 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
-func (t New) scrapeTeamCompletionPercentage() Stat {
-	passingStatsTable := scrapePassingStatsTable(t.CBS)
+type teamCompletionPercentage struct {
+	page *goquery.Selection
+}
+
+type oppCompletionPercentage struct {
+	page *goquery.Selection
+}
+
+func (cp teamCompletionPercentage) scrape() Stat {
+	passingStatsTable := scrapePassingStatsTable(cp.page)
 	var teamTotalsTableRow *goquery.Selection = scrapeStatsTableTeamTotalRow(passingStatsTable)
 	completionPercentageTD := teamTotalsTableRow.Find("td").Eq(4)
 	completionPercentage := strings.TrimSpace(completionPercentageTD.Text())
@@ -20,8 +28,8 @@ func (t New) scrapeTeamCompletionPercentage() Stat {
 	}
 }
 
-func (t New) scrapeOpponentCompletionPercentage() Stat {
-	passingStatsTable := scrapePassingStatsTable(t.CBS)
+func (cp oppCompletionPercentage) scrape() Stat {
+	passingStatsTable := scrapePassingStatsTable(cp.page)
 	var opponentTotalTableRow *goquery.Selection = scrapeStatsTableOpponentTotalRow(passingStatsTable)
 	completionPercentageTD := opponentTotalTableRow.Find("td").Eq(4)
 	completionPercentage := strings.TrimSpace(completionPercentageTD.Text())

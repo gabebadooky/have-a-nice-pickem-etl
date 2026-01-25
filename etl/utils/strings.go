@@ -57,11 +57,28 @@ func StripDateAndBoxScoreIDFromFoxGameCode(foxGameCode string) string {
 	return formattedGameCode
 }
 
-func ConvertStringToFloat32(bettingOddString string) float32 {
-	f64, err := strconv.ParseFloat(bettingOddString, 32)
+func ConvertStringToFloat32(str string) float32 {
+	f64, err := strconv.ParseFloat(str, 32)
 	if err != nil {
 		f64 = 0.00
 	}
 
 	return float32(f64)
+}
+
+func ConvertStringToInt(str string) int {
+	convertedNumber, err := strconv.Atoi(str)
+	if err != nil {
+		convertedNumber = 0
+	}
+
+	return convertedNumber
+}
+
+func GetNumberOfSecondsFromDurationString(durationString string) int {
+	colonIndex := strings.Index(durationString, ":")
+	minutes := durationString[:colonIndex]
+	seconds := durationString[colonIndex:]
+	totalSeconds := ConvertStringToInt(minutes) + ConvertStringToInt(seconds)
+	return totalSeconds
 }

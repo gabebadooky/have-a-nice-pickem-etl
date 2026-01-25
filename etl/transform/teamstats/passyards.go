@@ -7,8 +7,16 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
-func (t New) scrapeTeamPassYards() Stat {
-	passingStatsTable := scrapePassingStatsTable(t.CBS)
+type teamPassYards struct {
+	page *goquery.Selection
+}
+
+type oppPassYards struct {
+	page *goquery.Selection
+}
+
+func (py teamPassYards) scrape() Stat {
+	passingStatsTable := scrapePassingStatsTable(py.page)
 	var teamTotalsTableRow *goquery.Selection = scrapeStatsTableTeamTotalRow(passingStatsTable)
 	passYardsTD := teamTotalsTableRow.Find("td").Eq(5)
 	passYards := strings.TrimSpace(passYardsTD.Text())
@@ -20,8 +28,8 @@ func (t New) scrapeTeamPassYards() Stat {
 	}
 }
 
-func (t New) scrapeOpponentPassYards() Stat {
-	passingStatsTable := scrapePassingStatsTable(t.CBS)
+func (py oppPassYards) scrape() Stat {
+	passingStatsTable := scrapePassingStatsTable(py.page)
 	var opponentTotalTableRow *goquery.Selection = scrapeStatsTableOpponentTotalRow(passingStatsTable)
 	passYardsTD := opponentTotalTableRow.Find("td").Eq(5)
 	passYards := strings.TrimSpace(passYardsTD.Text())

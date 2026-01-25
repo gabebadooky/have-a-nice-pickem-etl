@@ -7,8 +7,16 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
-func (t New) scrapeTeamRushYards() Stat {
-	rushingStatsTable := scrapeRushingStatsTable(t.CBS)
+type teamRushYards struct {
+	page *goquery.Selection
+}
+
+type oppRushYards struct {
+	page *goquery.Selection
+}
+
+func (ry teamRushYards) scrape() Stat {
+	rushingStatsTable := scrapeRushingStatsTable(ry.page)
 	var teamTotalsTableRow *goquery.Selection = scrapeStatsTableTeamTotalRow(rushingStatsTable)
 	rushYardsTD := teamTotalsTableRow.Find("td").Eq(3)
 	rushYards := strings.TrimSpace(rushYardsTD.Text())
@@ -20,8 +28,8 @@ func (t New) scrapeTeamRushYards() Stat {
 	}
 }
 
-func (t New) scrapeOpponentRushYards() Stat {
-	rushingStatsTable := scrapeRushingStatsTable(t.CBS)
+func (ry oppRushYards) scrape() Stat {
+	rushingStatsTable := scrapeRushingStatsTable(ry.page)
 	var opponentTotalTableRow *goquery.Selection = scrapeStatsTableOpponentTotalRow(rushingStatsTable)
 	rushYardsTD := opponentTotalTableRow.Find("td").Eq(3)
 	rushYards := strings.TrimSpace(rushYardsTD.Text())
