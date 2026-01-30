@@ -1,6 +1,7 @@
 package gamestats
 
 import (
+	"fmt"
 	"have-a-nice-pickem-etl/etl/extract/game"
 	"have-a-nice-pickem-etl/etl/transform/common"
 	"have-a-nice-pickem-etl/etl/utils"
@@ -64,7 +65,7 @@ var possessionStatsTableIndices map[int]string = map[int]string{
 }
 
 var passingStatsTableIndices map[int]string = map[int]string{
-	0: "total_yards",
+	0: "total_passing_yards",
 	1: "passing_completions",
 	2: "passing_attempts",
 	3: "yards_per_pass",
@@ -72,22 +73,21 @@ var passingStatsTableIndices map[int]string = map[int]string{
 }
 
 var rushingStatsTableIndices map[int]string = map[int]string{
-	0: "total_yards",
+	0: "total_rushing_yards",
 	1: "rushing_attempts",
-	2: "rushing_attempts",
-	3: "yards_per_rush",
-	4: "rushing_touchdowns",
+	2: "yards_per_rush",
+	3: "rushing_touchdowns",
 }
 
 var defenseStatsTableIndices map[int]string = map[int]string{
 	0: "sacks",
 	1: "tackles_for_loss",
 	2: "pass_deflections",
-	3: "yards_per_rush",
+	//3: "yards_per_rush",
 }
 
 var turnoverStatsTableIndices map[int]string = map[int]string{
-	0: "total",
+	0: "total_turnovers",
 	1: "fumbles_lost",
 	2: "interceptions",
 }
@@ -101,10 +101,11 @@ var statTableIndices map[int]map[int]string = map[int]map[int]string{
 }
 
 func getNumberOfSecondsFromDurationString(durationString string) int {
-	colonIndex := strings.Index(durationString, ":")
-	minutes := durationString[:colonIndex]
-	seconds := durationString[colonIndex:]
-	totalSeconds := utils.ConvertStringToInt(minutes) + utils.ConvertStringToInt(seconds)
+	before, after, _ := strings.Cut(durationString, ":")
+	minutes := before
+	seconds := after
+	fmt.Printf("\nminutes: %s | seconds: %s\n", minutes, seconds)
+	totalSeconds := (utils.ConvertStringToInt(minutes) * 60) + utils.ConvertStringToInt(seconds)
 	return totalSeconds
 }
 

@@ -14,6 +14,7 @@ const FOX_NFL_POST_SEASON_SCHEDULE_URL string = "https://www.foxsports.com/nfl/s
 const FOX_GAME_BASE_URL string = "https://www.foxsports.com"
 const FOX_CFB_GAME_URL string = "https://www.foxsports.com/college-football"
 const FOX_NFL_GAME_URL string = "https://www.foxsports.com/nfl"
+const FOX_GAME_STATS_URL_SUFFIX string = "?tab=gamestats"
 
 const ESPN_CFB_REGULAR_SEASON_SCHEDULE_URL string = "https://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard?groups=80&year=" + SEASON_YEAR + "&seasonType=2&week="
 const ESPN_CFB_POST_SEASON_SCHEDULE_URL string = "https://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard?groups=80&year=" + SEASON_YEAR + "&seasonType=3"
