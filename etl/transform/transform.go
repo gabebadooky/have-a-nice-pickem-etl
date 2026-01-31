@@ -7,6 +7,7 @@ import (
 	"have-a-nice-pickem-etl/etl/transform/bettingodds"
 	"have-a-nice-pickem-etl/etl/transform/boxscore"
 	"have-a-nice-pickem-etl/etl/transform/gamedetails"
+	"have-a-nice-pickem-etl/etl/transform/gamestats"
 	"have-a-nice-pickem-etl/etl/transform/locationdetails"
 	"have-a-nice-pickem-etl/etl/transform/record"
 	"have-a-nice-pickem-etl/etl/transform/teamdetails"
@@ -17,11 +18,11 @@ type GameTransformer interface {
 }
 
 type TeamTransformer interface {
-	transformData() GameTransformations
+	transformData() TeamTransformations
 }
 
 type LocationTransformer interface {
-	transformData() GameTransformations
+	transformData() LocationTransformations
 }
 
 type NewGameTransformation struct {
@@ -40,10 +41,12 @@ type GameTransformations struct {
 	GameDetails     gamedetails.GameDetails
 	EspnBettingOdds bettingodds.BettingOdds
 	CbsBettingOdds  bettingodds.BettingOdds
-	//FoxBettingOdds   bettingodds.BettingOdds
+	FoxBettingOdds  bettingodds.BettingOdds
 	//VegasBettingOdds bettingodds.BettingOdds
-	AwayBoxscore boxscore.Boxscore
-	HomeBoxscore boxscore.Boxscore
+	AwayBoxscore  boxscore.Boxscore
+	HomeBoxscore  boxscore.Boxscore
+	AwayTeamStats gamestats.GameStats
+	HomeTeamStats gamestats.GameStats
 }
 
 type TeamTransformations struct {
@@ -72,7 +75,7 @@ func (g NewGameTransformation) transformData() GameTransformations {
 	newGameDetails := gamedetails.New{Game: g.Game}
 	newEspnBettingOdds := bettingodds.EspnBettingOdds{Game: g.Game}
 	newCbsBettingOdds := bettingodds.CbsBettingOdds{Game: g.Game}
-	//newFoxBettingOdds := bettingodds.FoxBettingOdds{GameExtract: gameExtract}
+	newFoxBettingOdds := bettingodds.FoxBettingOdds{Game: g.Game}
 	//newVegasBettingOdds := bettingodds.VegasBettingOdds{GameExtract: gameExtract}
 	newAwayBoxscore := boxscore.AwayBoxscore{Game: g.Game}
 	newHomeBoxscore := boxscore.HomeBoxscore{Game: g.Game}
@@ -81,6 +84,7 @@ func (g NewGameTransformation) transformData() GameTransformations {
 	var gameDetailsTransformation gamedetails.GameDetails = newGameDetails.InstantiateGameDetails()
 	var espnBettingOddsTransformation bettingodds.BettingOdds = bettingodds.InstantiateBettingOdds(newEspnBettingOdds)
 	var cbsBettingOddsTransformation bettingodds.BettingOdds = bettingodds.InstantiateBettingOdds(newCbsBettingOdds)
+	var foxBettingOddsTransformation bettingodds.BettingOdds = bettingodds.InstantiateBettingOdds(newFoxBettingOdds)
 	var awayBoxscoreTransformation boxscore.Boxscore = boxscore.InstantiateBoxscore(newAwayBoxscore)
 	var homeBoxscoreTransformation boxscore.Boxscore = boxscore.InstantiateBoxscore(newHomeBoxscore)
 
@@ -88,6 +92,7 @@ func (g NewGameTransformation) transformData() GameTransformations {
 		GameDetails:     gameDetailsTransformation,
 		EspnBettingOdds: espnBettingOddsTransformation,
 		CbsBettingOdds:  cbsBettingOddsTransformation,
+		FoxBettingOdds:  foxBettingOddsTransformation,
 		AwayBoxscore:    awayBoxscoreTransformation,
 		HomeBoxscore:    homeBoxscoreTransformation,
 	}

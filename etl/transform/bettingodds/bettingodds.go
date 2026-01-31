@@ -67,3 +67,18 @@ func (b CbsBettingOdds) instantiate() BettingOdds {
 		HomeWinPercentage: b.parseHomeWinPercentage(),
 	}
 }
+
+// Instantiates Fox Betting Odds record from various sources
+func (b FoxBettingOdds) instantiate() BettingOdds {
+	return BettingOdds{
+		GameID:            b.GameID,
+		Source:            "FOX",
+		OverUnder:         b.parseOverUnder(),
+		AwayMoneyline:     b.parseAwayMoneyline(),
+		HomeMoneyline:     b.parseHomeMoneyline(),
+		AwaySpread:        b.parseAwaySpread(),
+		HomeSpread:        b.parseHomeSpread(),
+		AwayWinPercentage: b.parseAwayWinPercentage(),
+		HomeWinPercentage: b.parseHomeWinPercentage(),
+	}
+}
