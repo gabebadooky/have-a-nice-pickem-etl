@@ -8,10 +8,6 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
-type CbsSchedule interface {
-	scheduleForWeek() *goquery.Selection
-}
-
 type CbsCfbSchedule struct {
 	Week uint
 }
@@ -19,12 +15,15 @@ type CbsCfbSchedule struct {
 type CbsNflSchedule struct {
 	Week uint
 }
-
-func GetScheduleForWeek(s CbsSchedule) *goquery.Selection {
-	return s.scheduleForWeek()
+type cbsScheduleInstantiator interface {
+	scrapeSchedule() *goquery.Selection
 }
 
-func setNflPostseasonWeek(week uint) string {
+func GetScheduleForWeek(s cbsScheduleInstantiator) *goquery.Selection {
+	return s.scrapeSchedule()
+}
+
+func setNflPostseasonWeekValue(week uint) string {
 	switch week - utils.NFL_REG_SEASON_WEEKS {
 	case 1:
 		return "wild-card"
@@ -39,40 +38,54 @@ func setNflPostseasonWeek(week uint) string {
 	}
 }
 
-func scrapeCbsSchedule(cbsSchedulePageLink string) *goquery.Selection {
+// Make and handle CBS Schedule web scrape attempt
+func fetchCbsSchedule(cbsSchedulePageLink string) *goquery.Selection {
 	log.Printf("\nRequesting CBS Schedule page for: %s\n", cbsSchedulePageLink)
+
 	page, err := utils.GetGoQuerySelectionBody(cbsSchedulePageLink)
+
 	if err != nil {
 		log.Panicf("%s", err.Error())
 	}
+
 	return page
 }
 
-// Scrape Cbs CFB Schedule for a given week
-func (x CbsCfbSchedule) scheduleForWeek() *goquery.Selection {
+func (sched CbsCfbSchedule) instantiateShedulePageLink() string {
 	var cbsSchedulePageLink string
 
-	if x.Week > utils.CFB_REG_SEASON_WEEKS {
-		cbsSchedulePageLink = fmt.Sprintf("%s%d", utils.CBS_CFB_POST_SEASON_SCHEDULE_URL, x.Week)
+	if sched.Week > utils.CFB_REG_SEASON_WEEKS {
+		cbsSchedulePageLink = fmt.Sprintf("%s%d", utils.CBS_CFB_POST_SEASON_SCHEDULE_URL, sched.Week)
 	} else {
-		cbsSchedulePageLink = fmt.Sprintf("%s%d", utils.CBS_CFB_REGULAR_SEASON_SCHEDULE_URL, x.Week)
+		cbsSchedulePageLink = fmt.Sprintf("%s%d", utils.CBS_CFB_REGULAR_SEASON_SCHEDULE_URL, sched.Week)
 	}
 
-	cbsSchedule := scrapeCbsSchedule(cbsSchedulePageLink)
+	return cbsSchedulePageLink
+}
+
+func (sched CbsNflSchedule) instantiateShedulePageLink() string {
+	var cbsSchedulePageLink string
+
+	if sched.Week > utils.NFL_REG_SEASON_WEEKS {
+		var week string = setNflPostseasonWeekValue(sched.Week)
+		cbsSchedulePageLink = fmt.Sprintf("%s%s", utils.CBS_NFL_POST_SEASON_SCHEDULE_URL, week)
+	} else {
+		cbsSchedulePageLink = fmt.Sprintf("%s%d", utils.CBS_NFL_REGULAR_SEASON_SCHEDULE_URL, sched.Week)
+	}
+
+	return cbsSchedulePageLink
+}
+
+// Scrape Cbs CFB Schedule for a given week
+func (sched CbsCfbSchedule) scrapeSchedule() *goquery.Selection {
+	cbsSchedulePageLink := sched.instantiateShedulePageLink()
+	cbsSchedule := fetchCbsSchedule(cbsSchedulePageLink)
 	return cbsSchedule
 }
 
 // Scrape Cbs NFL Schedule for a given week
-func (y CbsNflSchedule) scheduleForWeek() *goquery.Selection {
-	var cbsSchedulePageLink string
-
-	if y.Week > utils.NFL_REG_SEASON_WEEKS {
-		var week string = setNflPostseasonWeek(y.Week)
-		cbsSchedulePageLink = fmt.Sprintf("%s%s", utils.CBS_NFL_POST_SEASON_SCHEDULE_URL, week)
-	} else {
-		cbsSchedulePageLink = fmt.Sprintf("%s%d", utils.CBS_NFL_REGULAR_SEASON_SCHEDULE_URL, y.Week)
-	}
-
-	cbsSchedule := scrapeCbsSchedule(cbsSchedulePageLink)
+func (sched CbsNflSchedule) scrapeSchedule() *goquery.Selection {
+	cbsSchedulePageLink := sched.instantiateShedulePageLink()
+	cbsSchedule := fetchCbsSchedule(cbsSchedulePageLink)
 	return cbsSchedule
 }

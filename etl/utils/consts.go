@@ -6,7 +6,7 @@ const SEASON_YEAR string = "2025"
 const CFB_REG_SEASON_WEEKS uint = 14
 const NFL_REG_SEASON_WEEKS uint = 18
 
-const FOX_CFB_REGULER_SEASON_SCHEDULE_URL string = "https://www.foxsports.com/college-football/schedule?groupId=2&seasonType=reg&week="
+const FOX_CFB_REGULAR_SEASON_SCHEDULE_URL string = "https://www.foxsports.com/college-football/schedule?groupId=2&seasonType=reg&week="
 const FOX_CFB_POST_SEASON_SCHEDULE_URL string = "https://www.foxsports.com/college-football/schedule?groupId=2&seasonType=post&week="
 const FOX_NFL_REGULAR_SEASON_SCHEDULE_URL string = "https://www.foxsports.com/nfl/schedule?groupId=2&seasonType=reg&week="
 const FOX_NFL_POST_SEASON_SCHEDULE_URL string = "https://www.foxsports.com/nfl/schedule?groupId=2&seasonType=post&week="
