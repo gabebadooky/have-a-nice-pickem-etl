@@ -15,11 +15,11 @@ type EspnCfbGame struct {
 }
 
 type instantiator interface {
-	gameSummary() GameSummaryEndpoint
+	getGameSummary() GameSummaryEndpoint
 }
 
 func GetGameSummary(g instantiator) GameSummaryEndpoint {
-	return g.gameSummary()
+	return g.getGameSummary()
 }
 
 // Make and handle API call to given ESPN game summary endpoint
@@ -41,14 +41,14 @@ func fetchGameSummary(gameCode string, espnGameEndpoint string) GameSummaryEndpo
 }
 
 // Fetch ESPN CFB Game Summary for a given ESPN Game code
-func (g EspnCfbGame) gameSummary() GameSummaryEndpoint {
+func (g EspnCfbGame) getGameSummary() GameSummaryEndpoint {
 	espnGameEndpoint := fmt.Sprintf("%s%s", utils.ESPN_CFB_GAME_ENDPOINT_URL, g.GameCode)
 	return fetchGameSummary(g.GameCode, espnGameEndpoint)
 
 }
 
 // Fetch ESPN NFL Game Summary a given ESPN Game code
-func (g EspnNflGame) gameSummary() GameSummaryEndpoint {
+func (g EspnNflGame) getGameSummary() GameSummaryEndpoint {
 	espnGameEndpoint := fmt.Sprintf("%s%s", utils.ESPN_NFL_GAME_ENDPOINT_URL, g.GameCode)
 	return fetchGameSummary(g.GameCode, espnGameEndpoint)
 

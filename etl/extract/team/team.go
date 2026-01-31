@@ -9,15 +9,11 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
-type AllTeamInfo interface {
-	allTeamInfo() Team
-}
-
-type AllCfbTeamInfo struct {
+type CfbTeam struct {
 	EspnCode string
 }
 
-type AllNflTeamInfo struct {
+type NflTeam struct {
 	EspnCode string
 }
 
@@ -28,14 +24,18 @@ type Team struct {
 	CBS    *goquery.Selection
 }
 
-func ConsolidateTeamInfo(t AllTeamInfo) Team {
-	return t.allTeamInfo()
+type teamInstantiator interface {
+	extractTeam() Team
 }
 
-func (t AllCfbTeamInfo) allTeamInfo() Team {
+func ConsolidateTeamInfo(t teamInstantiator) Team {
+	return t.extractTeam()
+}
+
+func (t CfbTeam) extractTeam() Team {
 	var espnTeam espnteam.TeamSummaryEndpoint = espnteam.GetTeamSummary(espnteam.EspnCfbTeam{TeamCode: t.EspnCode})
-	var teamLocationName string = fmt.Sprintf("%s %s", espnTeam.Team.Location, espnTeam.Team.Name)
-	var teamID string = utils.FormatStringID(teamLocationName)
+	teamLocationName := fmt.Sprintf("%s %s", espnTeam.Team.Location, espnTeam.Team.Name)
+	teamID := utils.FormatStringID(teamLocationName)
 	var cbsTeamStats *goquery.Selection = cbsteam.GetTeamStatsPage(cbsteam.CbsCfbTeam{TeamID: teamID})
 
 	return Team{
@@ -46,10 +46,10 @@ func (t AllCfbTeamInfo) allTeamInfo() Team {
 	}
 }
 
-func (t AllNflTeamInfo) allTeamInfo() Team {
+func (t NflTeam) extractTeam() Team {
 	var espnTeam espnteam.TeamSummaryEndpoint = espnteam.GetTeamSummary(espnteam.EspnNflTeam{TeamCode: t.EspnCode})
-	var teamLocationName string = fmt.Sprintf("%s %s", espnTeam.Team.Location, espnTeam.Team.Name)
-	var teamID string = utils.FormatStringID(teamLocationName)
+	teamLocationName := fmt.Sprintf("%s %s", espnTeam.Team.Location, espnTeam.Team.Name)
+	teamID := utils.FormatStringID(teamLocationName)
 	var cbsTeamStats *goquery.Selection = cbsteam.GetTeamStatsPage(cbsteam.CbsNflTeam{TeamID: teamID})
 
 	return Team{

@@ -8,15 +8,11 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
-type AllScheduleInfo interface {
-	scheduleInfo() Schedule
-}
-
-type AllCfbScheduleInfo struct {
+type CfbSchedule struct {
 	Week uint
 }
 
-type AllNflScheduleInfo struct {
+type NflSchedule struct {
 	Week uint
 }
 
@@ -26,11 +22,15 @@ type Schedule struct {
 	FOX  *goquery.Selection
 }
 
-func ConsolidateScheduleInfo(s AllScheduleInfo) Schedule {
-	return s.scheduleInfo()
+type scheduleInstantiator interface {
+	extractSchedule() Schedule
 }
 
-func (c AllCfbScheduleInfo) scheduleInfo() Schedule {
+func ConsolidateScheduleInfo(s scheduleInstantiator) Schedule {
+	return s.extractSchedule()
+}
+
+func (c CfbSchedule) extractSchedule() Schedule {
 	var EspnSchedule espnschedule.ScoreboardEndpoint = espnschedule.GetScheduleForWeek(espnschedule.CfbEspnSchedule{Week: c.Week})
 	var CbsSchedule *goquery.Selection = cbsschedule.GetScheduleForWeek(cbsschedule.CbsCfbSchedule{Week: c.Week})
 	var FoxSchedule *goquery.Selection = foxschedule.GetScheduleForWeek(foxschedule.FoxCfbSchedule{Week: c.Week})
@@ -42,7 +42,7 @@ func (c AllCfbScheduleInfo) scheduleInfo() Schedule {
 	}
 }
 
-func (n AllNflScheduleInfo) scheduleInfo() Schedule {
+func (n NflSchedule) extractSchedule() Schedule {
 	var EspnSchedule espnschedule.ScoreboardEndpoint = espnschedule.GetScheduleForWeek(espnschedule.NflEspnSchedule{Week: n.Week})
 	var CbsSchedule *goquery.Selection = cbsschedule.GetScheduleForWeek(cbsschedule.CbsNflSchedule{Week: n.Week})
 	var FoxSchedule *goquery.Selection = foxschedule.GetScheduleForWeek(foxschedule.FoxNflSchedule{Week: n.Week})

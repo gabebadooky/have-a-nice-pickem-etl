@@ -12,13 +12,13 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
-type AllCfbGameInfo struct {
+type CfbGame struct {
 	EspnEvent       espnsched.EventProperty
 	CbsSchedulePage *goquery.Selection
 	FoxSchedulePage *goquery.Selection
 }
 
-type AllNflGameInfo struct {
+type NflGame struct {
 	EspnEvent       espnsched.EventProperty
 	CbsSchedulePage *goquery.Selection
 	FoxSchedulePage *goquery.Selection
@@ -30,12 +30,13 @@ type Game struct {
 	CBS    *goquery.Selection
 	FOX    foxgame.FoxGamePages
 }
-type instantiator interface {
-	gameInfo() (Game, error)
+
+type gameInstantiator interface {
+	extractGame() (Game, error)
 }
 
-func ConsolidateGameInfo(g instantiator) (Game, error) {
-	return g.gameInfo()
+func ConsolidateGameInfo(g gameInstantiator) (Game, error) {
+	return g.extractGame()
 }
 
 // Instantiate GameID based on whether a game is a regular season or post-season matchup
@@ -50,7 +51,7 @@ func instantiateGameID(sched espnsched.EventProperty) string {
 	return gameID
 }
 
-func (c AllCfbGameInfo) gameInfo() (Game, error) {
+func (c CfbGame) extractGame() (Game, error) {
 	gameID := instantiateGameID(c.EspnEvent)
 	fmt.Printf("\nEvent: %s", gameID)
 
@@ -70,7 +71,7 @@ func (c AllCfbGameInfo) gameInfo() (Game, error) {
 	}, nil
 }
 
-func (n AllNflGameInfo) gameInfo() (Game, error) {
+func (n NflGame) extractGame() (Game, error) {
 	gameID := instantiateGameID(n.EspnEvent)
 	fmt.Printf("\nEvent: %s", gameID)
 

@@ -30,7 +30,8 @@ const ESPN_NFL_TEAM_ENDPOINT_URL string = "https://site.api.espn.com/apis/site/v
 
 const CBS_BASE_URL string = "https://www.cbssports.com"
 const CBS_CFB_SCHEDULE_URL string = "https://www.cbssports.com/college-football/odds/FBS"
-const CBS_NFL_SCHEDULE_URL string = ""
+const CBS_NFL_SCHEDULE_URL string = "https://www.cbssports.com/nfl/schedule/"
+const CBS_TEAM_STATS_URL_SUFFIX string = "stats/"
 
 const CBS_CFB_ALL_TEAMS_PAGE_URL string = "https://www.cbssports.com/college-football/teams/"
 const CBS_NFL_ALL_TEAMS_PAGE_URL string = "https://www.cbssports.com/nfl/teams/"
