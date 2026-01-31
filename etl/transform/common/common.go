@@ -23,7 +23,7 @@ func ScrapeCbsGameCode(gameExtract game.Game) string {
 }
 
 func ScrapeFoxGameCode(gameExtract game.Game) string {
-	matchupCell := gameExtract.FOX.Find("div.nav-horizontal").Find("a").First()
+	matchupCell := gameExtract.FOX.OddsPage.Find("div.nav-horizontal").Find("a").First()
 	gameCode, exists := matchupCell.Attr("href")
 	if !exists {
 		log.Panicf("Could not locate Fox Game Code for %v", gameExtract.FOX)

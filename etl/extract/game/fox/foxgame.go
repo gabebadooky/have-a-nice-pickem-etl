@@ -9,11 +9,12 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
-type FoxGame interface {
-	scrapeGame() *goquery.Selection
+type FoxGame struct {
+	FoxSchedulePage *goquery.Selection
+	GameID          string
 }
 
-type FoxCFBGame struct {
+/*type FoxCFBGame struct {
 	FoxSchedulePage *goquery.Selection
 	GameID          string
 }
@@ -21,14 +22,33 @@ type FoxCFBGame struct {
 type FoxNFLGame struct {
 	FoxSchedulePage *goquery.Selection
 	GameID          string
+}*/
+
+// scrapeGame function return type
+type FoxGamePages struct {
+	BoxscorePage *goquery.Selection
+	StatsPage    *goquery.Selection
+	OddsPage     *goquery.Selection
 }
 
-func GetGamePage(g FoxGame) *goquery.Selection {
+type instantiator interface {
+	scrapeGame() FoxGamePages
+}
+
+func GetGamePages(g instantiator) FoxGamePages {
 	return g.scrapeGame()
 }
 
-func setTeamID(foxTeamCode string) string {
-	// Map Fox Team Code to global Team IDs
+/* // Retrieve string after first occurrence of "/" in gameHyperlink
+func parseGameCodeFromGameHREF(gameHyperlink string) string {
+	lastSlashIndex := strings.LastIndex(gameHyperlink, "/")
+	foxGameCode := gameHyperlink[lastSlashIndex+1:]
+	foxGameCode = utils.StripDateAndBoxScoreIDFromFoxGameCode(foxGameCode)
+	return foxGameCode
+}*/
+
+// Map Fox Team Code to global Team IDs
+func getTeamID(foxTeamCode string) string {
 	teamID, exists := utils.FoxTeamCodeToTeamIDmapping[foxTeamCode]
 	if exists {
 		return teamID
@@ -37,65 +57,32 @@ func setTeamID(foxTeamCode string) string {
 	}
 }
 
-func parseGameCodeFromGameHREF(gameHyperlink string) string {
-	lastSlashIndex := strings.LastIndex(gameHyperlink, "/")
-	foxGameCode := gameHyperlink[lastSlashIndex+1:]
-	foxGameCode = utils.StripDateAndBoxScoreIDFromFoxGameCode(foxGameCode)
-	return foxGameCode
-}
-
+// Handle web scrape attempt for given Fox hyperlink
 func scrapeFoxGame(foxGameHyperlink string) *goquery.Selection {
+	var page *goquery.Selection
 	log.Printf("\nRequesting Fox Game page: %s\n", foxGameHyperlink)
 
 	page, err := utils.GetGoQuerySelectionBody(foxGameHyperlink)
 	if err != nil {
-		log.Panicf("%s", err.Error())
+		log.Printf("Error occuring scraping %s\n\n", foxGameHyperlink)
+		return nil
 	}
 
 	return page
 }
 
-// Extracts team string BEFORE "-vs-" substring in a given Fox Game Code
-func scrapeAwayTeamCode(foxGameHyperlink string) string {
-	formattedGameCode := utils.StripDateAndBoxScoreIDFromFoxGameCode(foxGameHyperlink)
-	formattedGameCode = utils.StripBowlGamePrefixFromFoxGameCode(formattedGameCode)
-	teamCode, _, _ := strings.Cut(formattedGameCode, "-vs-")
-	_, teamCodeWithoutHyperlinkPrefix, exists := strings.Cut(teamCode, "l/")
-	if exists {
-		return teamCodeWithoutHyperlinkPrefix
-	}
-	return teamCode
-}
-
-// Extracts team string AFTER "-vs-" substring in a given Fox Game Code
-func scrapeHomeTeamCode(foxGameHyperlink string) string {
-	formattedGameCode := utils.StripDateAndBoxScoreIDFromFoxGameCode(foxGameHyperlink)
-	formattedGameCode = utils.StripBowlGamePrefixFromFoxGameCode(formattedGameCode)
-	_, teamCode, _ := strings.Cut(formattedGameCode, "-vs-")
-	return teamCode
-}
-
 // Extracts FOX game code where AwayTeamID and HomeTeamID match with corresponding FOX team codes
 func scrapeGameHyperlink(gameID string, urlPrefix string, schedulePage *goquery.Selection) string {
 	var foxGameHyperlink string
-	// gameAnchorTags := schedulePage.Find("div.scores-app-root").Find("td.broadcast").Find("div").Find("a")
 	gameAnchorTags := schedulePage.Find("div.scores-scorechips-container").Find("table.data-table").Find(`td[data-index="3"]`).Find("a")
 
 	gameAnchorTags.EachWithBreak(func(i int, anchorTag *goquery.Selection) bool {
-		// Sample Fox Game HREF:
-		// https://www.foxsports.com/college-football/bowling-green-falcons-vs-umass-minutemen-nov-25-2025-game-boxscore-42675
 		foxGameHyperlink = fmt.Sprintf("%s%s", urlPrefix, anchorTag.AttrOr("href", "gamehref"))
-
-		//var foxAwayTeamCode string = foxteam.ExtractFoxTeamCode(foxteam.FoxAwayTeam{FoxGameHyperlink: foxGameHyperlink})
-		//var foxHomeTeamCode string = foxteam.ExtractFoxTeamCode(foxteam.FoxHomeTeam{FoxGameHyperlink: foxGameHyperlink})
-		foxAwayTeamCode := scrapeAwayTeamCode(foxGameHyperlink)
-		foxHomeTeamCode := scrapeHomeTeamCode(foxGameHyperlink)
-
-		awayTeamID := setTeamID(foxAwayTeamCode)
-		homeTeamID := setTeamID(foxHomeTeamCode)
+		awayTeamID := getTeamID(awayTeam{hyperlink: foxGameHyperlink}.scrapeTeamCode())
+		homeTeamID := getTeamID(homeTeam{hyperlink: foxGameHyperlink}.scrapeTeamCode())
 
 		if strings.Contains(gameID, awayTeamID) && strings.Contains(gameID, homeTeamID) {
-			// Break out of loop
+			// Break out of loop `gameID` string contains `awayTeamID` and `homeTeamID`
 			return false
 		}
 		return true
@@ -105,16 +92,38 @@ func scrapeGameHyperlink(gameID string, urlPrefix string, schedulePage *goquery.
 	return foxGameHyperlink
 }
 
-func (g FoxCFBGame) scrapeGame() *goquery.Selection {
+/*func (g FoxCFBGame) scrapeGame() FoxGamePages {
 	foxGameHyperlink := scrapeGameHyperlink(g.GameID, utils.FOX_GAME_BASE_URL, g.FoxSchedulePage)
-	foxGameStatsHyperlink := fmt.Sprint(foxGameHyperlink, utils.FOX_GAME_STATS_URL_SUFFIX)
-	foxGame := scrapeFoxGame(foxGameStatsHyperlink)
-	return foxGame
-}
 
-func (g FoxNFLGame) scrapeGame() *goquery.Selection {
-	foxGameHyperlink := scrapeGameHyperlink(g.GameID, utils.FOX_GAME_BASE_URL, g.FoxSchedulePage)
+	foxGameBoxscoreHyperlink := fmt.Sprint(foxGameHyperlink, utils.FOX_GAME_BOXSCORE_URL_SUFFIX)
 	foxGameStatsHyperlink := fmt.Sprint(foxGameHyperlink, utils.FOX_GAME_STATS_URL_SUFFIX)
-	foxGame := scrapeFoxGame(foxGameStatsHyperlink)
-	return foxGame
+	foxGameOddsHyperlink := fmt.Sprint(foxGameHyperlink, utils.FOX_GAME_ODDS_URL_SUFFIX)
+
+	boxscorePage := scrapeFoxGame(foxGameBoxscoreHyperlink)
+	statsPage := scrapeFoxGame(foxGameStatsHyperlink)
+	oddsPage := scrapeFoxGame(foxGameOddsHyperlink)
+
+	return FoxGamePages{
+		BoxscorePage: boxscorePage,
+		StatsPage:    statsPage,
+		OddsPage:     oddsPage,
+	}
+}*/
+
+func (g FoxGame) scrapeGame() FoxGamePages {
+	foxGameHyperlink := scrapeGameHyperlink(g.GameID, utils.FOX_GAME_BASE_URL, g.FoxSchedulePage)
+
+	foxGameBoxscoreHyperlink := fmt.Sprint(foxGameHyperlink, utils.FOX_GAME_BOXSCORE_URL_SUFFIX)
+	foxGameStatsHyperlink := fmt.Sprint(foxGameHyperlink, utils.FOX_GAME_STATS_URL_SUFFIX)
+	foxGameOddsHyperlink := fmt.Sprint(foxGameHyperlink, utils.FOX_GAME_ODDS_URL_SUFFIX)
+
+	boxscorePage := scrapeFoxGame(foxGameBoxscoreHyperlink)
+	statsPage := scrapeFoxGame(foxGameStatsHyperlink)
+	oddsPage := scrapeFoxGame(foxGameOddsHyperlink)
+
+	return FoxGamePages{
+		BoxscorePage: boxscorePage,
+		StatsPage:    statsPage,
+		OddsPage:     oddsPage,
+	}
 }

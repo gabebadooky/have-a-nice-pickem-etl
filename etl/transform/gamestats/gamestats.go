@@ -23,17 +23,20 @@ type HomeTeamStat struct {
 }
 
 /*
-type AwayTeamStat struct {
-	GameStatsPageSelection *goquery.Selection
-	StatTableIndex         int
-	StatIndex              int
-}
+TODO:
+- Develop methods to scrape following stats from Fox Boxscore Page (Away and Home teams):
+	- Kick Returns: (6th stat table)
+	- Kick Return Yards: (6th stat table)
 
-type HomeTeamStat struct {
-	GameStatsPageSelection *goquery.Selection
-	StatTableIndex         int
-	StatIndex              int
-}
+	- Punt Returns: 7th stat table
+	- Punt Return Yards: 7th stat table
+
+	- Field Goals Made: 8th stat table
+	- Field Goals Attempted: 8th stat table
+	- Extra Points Made: 8th stat table
+	- Extra Points Attempted: 8th stat table
+
+	- Punts: 9th stat table
 */
 
 type Stat struct {
@@ -171,7 +174,7 @@ func (a AwayTeamStat) instantiate() GameStats {
 
 	for statTableIndex, statTable := range statTableIndices {
 		for statIndex := range statTable {
-			awayStat := scrapeStat(a.FOX, statTableIndex, statIndex, awayStatSpanIndex)
+			awayStat := scrapeStat(a.FOX.StatsPage, statTableIndex, statIndex, awayStatSpanIndex)
 			statSlice = append(statSlice, awayStat)
 		}
 	}
@@ -189,7 +192,7 @@ func (h HomeTeamStat) instantiate() GameStats {
 
 	for statTableIndex, statTable := range statTableIndices {
 		for statIndex := range statTable {
-			awayStat := scrapeStat(h.FOX, statTableIndex, statIndex, homeStatSpanIndex)
+			awayStat := scrapeStat(h.FOX.StatsPage, statTableIndex, statIndex, homeStatSpanIndex)
 			statSlice = append(statSlice, awayStat)
 		}
 	}
