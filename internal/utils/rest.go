@@ -1,3 +1,6 @@
+// Package utils provides REST API client utilities for making HTTP requests
+// and decoding JSON responses. These functions handle API endpoint calls
+// and generic JSON deserialization used throughout the ETL pipeline.
 package utils
 
 import (
@@ -7,7 +10,17 @@ import (
 	"net/http"
 )
 
-// Call a given API endpoint and read response
+// CallEndpoint performs an HTTP GET request to the specified endpoint URL
+// and returns the response body as a byte slice. It validates that the
+// response status code is 200 and returns an error for any network failures,
+// non-200 status codes, or issues reading the response body.
+//
+// Parameters:
+//   - endpoint: The full URL of the API endpoint to call
+//
+// Returns:
+//   - []byte: The raw response body bytes, or nil on error
+//   - error: An error describing any failures during the request or response processing
 func CallEndpoint(endpoint string) ([]byte, error) {
 	resp, err := http.Get(endpoint)
 	if err != nil {
@@ -27,7 +40,20 @@ func CallEndpoint(endpoint string) ([]byte, error) {
 	return body, nil
 }
 
-// Generic that accepts and decodes the Body of a JSON Response and returns the "T" type output
+// DecodeJSON unmarshals JSON data from a byte slice into a value of type T.
+// It is a generic function that accepts any type T and attempts to decode the
+// JSON bytes into that type. If the JSON cannot be decoded into the target type,
+// an error is returned.
+//
+// Type Parameters:
+//   - T: The target type to decode the JSON into (must be a concrete type)
+//
+// Parameters:
+//   - body: The JSON data as a byte slice to decode
+//
+// Returns:
+//   - T: The decoded value of type T, or the zero value of T on error
+//   - error: An error describing any failures during JSON unmarshaling
 func DecodeJSON[T any](body []byte) (T, error) {
 	var decodedJsonBody T
 

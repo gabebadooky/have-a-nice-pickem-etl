@@ -1,3 +1,6 @@
+// Package cbsgame provides CBS Sports game page web scraping functionality.
+// It extracts game-specific data from CBS Sports HTML pages by matching team codes
+// and locating the corresponding game odds table.
 package cbsgame
 
 import (

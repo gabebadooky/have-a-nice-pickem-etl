@@ -1,3 +1,6 @@
+// Package cbsschedule provides CBS Sports schedule web scraping functionality.
+// It extracts schedule data from CBS Sports HTML pages for both college football (CFB)
+// and NFL, handling both regular season and postseason schedules.
 package cbsschedule
 
 import (

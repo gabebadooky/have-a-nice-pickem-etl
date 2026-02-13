@@ -1,3 +1,6 @@
+// Package location provides location extraction functionality that uses the Opencage
+// geocoding API to convert stadium addresses into geographic coordinates and
+// standardized location data.
 package location
 
 import opencagelocation "have-a-nice-pickem-etl/internal/extract/location/opencage"

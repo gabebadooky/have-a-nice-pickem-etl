@@ -1,3 +1,5 @@
+// Package record provides overall record parsing functionality.
+// It extracts overall win-loss-tie records from ESPN Team Summary API responses.
 package record
 
 import (

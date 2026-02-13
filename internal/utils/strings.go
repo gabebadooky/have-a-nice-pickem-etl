@@ -1,3 +1,6 @@
+// Package utils provides string manipulation and conversion utility functions.
+// These functions handle formatting, parsing, and transforming string data
+// used throughout the ETL pipeline.
 package utils
 
 import (

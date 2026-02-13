@@ -1,3 +1,6 @@
+// Package cbsgame provides helper functions for extracting team codes from CBS game pages.
+// These functions parse team identifiers from CBS Sports HTML structures for matching
+// games with team IDs.
 package cbsgame
 
 import (

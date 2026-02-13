@@ -1,3 +1,6 @@
+// Package common provides shared parsing and extraction utilities used across
+// transformation packages. These functions extract identifiers and codes from
+// game and team data structures.
 package common
 
 import (

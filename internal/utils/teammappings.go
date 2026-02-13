@@ -1,3 +1,5 @@
+// Package utils provides team code mapping functions and mappings between different
+// sports data provider team identifiers (CBS, Fox, ESPN) and the internal team ID format.
 package utils
 
 // Map Type of [TeamID]cbsCode

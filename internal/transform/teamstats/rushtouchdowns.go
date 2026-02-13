@@ -1,3 +1,6 @@
+// Package teamstats provides rushing touchdowns statistics scraping functionality.
+// It extracts rushing touchdowns data from CBS Sports team stats pages for both
+// team and opponent statistics.
 package teamstats
 
 import (

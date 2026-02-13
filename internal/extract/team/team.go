@@ -1,3 +1,6 @@
+// Package team provides team extraction functionality that consolidates team data
+// from multiple sources (ESPN API, CBS web scraping) into a unified Team structure
+// for both college football (CFB) and NFL.
 package team
 
 import (

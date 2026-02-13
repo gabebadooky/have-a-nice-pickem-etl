@@ -1,3 +1,6 @@
+// Package gamestats provides game statistics transformation functionality that extracts
+// and structures in-game statistics (possession, passing, rushing, defense, turnovers)
+// from Fox Sports HTML pages for both away and home teams.
 package gamestats
 
 import (
@@ -139,34 +142,6 @@ func scrapeStat(GameStatsPageSelection *goquery.Selection, statTableIndex int, s
 		Value:  statFloat,
 	}
 }
-
-/*
-func (a AwayTeamStat) ScrapeStat() Stat {
-	statComparisonRow := scrapeStatContainerRow(a.GameStatsPageSelection, a.StatTableIndex, a.StatIndex)
-	statSpan := statComparisonRow.Find("span.comparison-data").Eq(0)
-	statText := strings.TrimSpace(statSpan.Text())
-	statFloat := utils.ConvertStringToFloat32(statText)
-	statType := statTableIndices[a.StatTableIndex][a.StatIndex]
-
-	return Stat{
-		Metric: statType,
-		Value:  statFloat,
-	}
-}
-
-func (h HomeTeamStat) ScrapeStat() Stat {
-	statComparisonRow := scrapeStatContainerRow(h.GameStatsPageSelection, h.StatTableIndex, h.StatIndex)
-	statSpan := statComparisonRow.Find("span.comparison-data").Eq(1)
-	statText := strings.TrimSpace(statSpan.Text())
-	statFloat := utils.ConvertStringToFloat32(statText)
-	statType := statTableIndices[h.StatTableIndex][h.StatIndex]
-
-	return Stat{
-		Metric: statType,
-		Value:  statFloat,
-	}
-}
-*/
 
 func (a AwayTeamStat) instantiate() GameStats {
 	var statSlice []Stat

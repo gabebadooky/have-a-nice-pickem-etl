@@ -1,3 +1,6 @@
+// Package teamstats provides rushing yards statistics scraping functionality.
+// It extracts rushing yards data from CBS Sports team stats pages for both
+// team and opponent statistics.
 package teamstats
 
 import (

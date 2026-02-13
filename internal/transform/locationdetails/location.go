@@ -1,3 +1,6 @@
+// Package locationdetails provides location details transformation functionality that extracts
+// and structures location information from Opencage geocoding API responses including
+// stadium name, city, state, and geographic coordinates.
 package locationdetails
 
 import "have-a-nice-pickem-etl/internal/extract/location"

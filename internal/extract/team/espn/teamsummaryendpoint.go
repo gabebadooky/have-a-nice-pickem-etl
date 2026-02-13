@@ -1,3 +1,6 @@
+// Package espnteam defines the data structures for ESPN Team Summary API responses.
+// These types represent the JSON structure returned by ESPN's team summary endpoint
+// including team details, records, logos, and group information.
 package espnteam
 
 type TeamSummaryEndpoint struct {

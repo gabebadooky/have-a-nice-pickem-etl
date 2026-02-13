@@ -1,3 +1,6 @@
+// Package espngame provides ESPN game summary API client functionality.
+// It calls the ESPN Game Summary API endpoint to retrieve detailed game information
+// including scores, betting odds, and game status for both college football (CFB) and NFL.
 package espngame
 
 import (

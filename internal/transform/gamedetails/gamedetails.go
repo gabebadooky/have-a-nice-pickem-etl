@@ -1,3 +1,6 @@
+// Package gamedetails provides game details transformation functionality that extracts
+// and structures comprehensive game information including league, week, year, game codes
+// from multiple sources (ESPN, CBS, Fox), team IDs, timestamps, broadcast info, and game status.
 package gamedetails
 
 import (

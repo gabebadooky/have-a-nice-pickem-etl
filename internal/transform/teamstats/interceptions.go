@@ -1,3 +1,6 @@
+// Package teamstats provides interceptions statistics scraping functionality.
+// It extracts interception data from CBS Sports team stats pages for both
+// offensive and defensive interceptions.
 package teamstats
 
 import (

@@ -1,3 +1,6 @@
+// Package espnschedule defines the data structures for ESPN Scoreboard API responses.
+// These types represent the JSON structure returned by ESPN's scoreboard endpoint
+// for schedule and event information.
 package espnschedule
 
 type ScoreboardEndpoint struct {

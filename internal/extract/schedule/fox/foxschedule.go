@@ -1,3 +1,6 @@
+// Package foxschedule provides Fox Sports schedule web scraping functionality.
+// It extracts schedule data from Fox Sports HTML pages for both college football (CFB)
+// and NFL, handling both regular season and postseason schedules.
 package foxschedule
 
 import (

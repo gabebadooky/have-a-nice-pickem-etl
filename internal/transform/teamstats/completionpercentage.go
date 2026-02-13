@@ -1,3 +1,6 @@
+// Package teamstats provides completion percentage statistics scraping functionality.
+// It extracts completion percentage data from CBS Sports team stats pages for both
+// team and opponent statistics.
 package teamstats
 
 import (

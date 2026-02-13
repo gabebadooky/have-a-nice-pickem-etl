@@ -1,3 +1,6 @@
+// Package boxscore provides away team boxscore parsing functionality.
+// It extracts scoring data from ESPN Game Summary API responses for away teams
+// including quarter-by-quarter scores, total scores, and overtime scores.
 package boxscore
 
 import (

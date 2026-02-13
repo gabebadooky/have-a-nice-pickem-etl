@@ -1,3 +1,6 @@
+// Package extract provides the main extraction orchestration layer for the ETL pipeline.
+// It coordinates the extraction of games, teams, and locations from multiple data sources
+// (ESPN, CBS, Fox) and consolidates them into unified data structures.
 package extract
 
 import (

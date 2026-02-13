@@ -1,3 +1,6 @@
+// Package espngame defines the data structures for ESPN Game Summary API responses.
+// These types represent the JSON structure returned by ESPN's game summary endpoint
+// including game details, betting odds, and competitor information.
 package espngame
 
 type GameSummaryEndpoint struct {

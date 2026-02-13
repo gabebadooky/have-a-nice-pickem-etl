@@ -1,3 +1,6 @@
+// Package teamstats provides pass completions statistics scraping functionality.
+// It extracts pass completions data from CBS Sports team stats pages for both
+// team and opponent statistics.
 package teamstats
 
 import (

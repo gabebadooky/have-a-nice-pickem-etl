@@ -1,3 +1,6 @@
+// Package foxgame provides Fox Sports game page web scraping functionality.
+// It extracts game-specific data from Fox Sports HTML pages including boxscores,
+// statistics, and betting odds by matching team codes and locating game hyperlinks.
 package foxgame
 
 import (
@@ -93,7 +96,7 @@ func scrapeGameHyperlink(gameID string, urlPrefix string, schedulePage *goquery.
 }
 
 /*func (g FoxCFBGame) scrapeGame() FoxGamePages {
-	foxGameHyperlink := scrapeGameHyperlink(g.GameID, utils.FOX_GAME_BASE_URL, g.FoxSchedulePage)
+	foxGameHyperlink := scrapeGameHyperlink(g.GameID, utils.FOX_BASE_URL, g.FoxSchedulePage)
 
 	foxGameBoxscoreHyperlink := fmt.Sprint(foxGameHyperlink, utils.FOX_GAME_BOXSCORE_URL_SUFFIX)
 	foxGameStatsHyperlink := fmt.Sprint(foxGameHyperlink, utils.FOX_GAME_STATS_URL_SUFFIX)
@@ -111,7 +114,7 @@ func scrapeGameHyperlink(gameID string, urlPrefix string, schedulePage *goquery.
 }*/
 
 func (g FoxGame) scrapeGame() FoxGamePages {
-	foxGameHyperlink := scrapeGameHyperlink(g.GameID, utils.FOX_GAME_BASE_URL, g.FoxSchedulePage)
+	foxGameHyperlink := scrapeGameHyperlink(g.GameID, utils.FOX_BASE_URL, g.FoxSchedulePage)
 
 	foxGameBoxscoreHyperlink := fmt.Sprint(foxGameHyperlink, utils.FOX_GAME_BOXSCORE_URL_SUFFIX)
 	foxGameStatsHyperlink := fmt.Sprint(foxGameHyperlink, utils.FOX_GAME_STATS_URL_SUFFIX)

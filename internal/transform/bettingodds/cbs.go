@@ -1,3 +1,6 @@
+// Package bettingodds provides CBS Sports betting odds parsing functionality.
+// It extracts betting odds data from CBS Sports HTML pages including spread,
+// moneyline, and over/under for both away and home teams.
 package bettingodds
 
 import (

@@ -1,3 +1,6 @@
+// Package teamstats provides passing attempts statistics scraping functionality.
+// It extracts pass attempts data from CBS Sports team stats pages for both
+// team and opponent statistics.
 package teamstats
 
 import (

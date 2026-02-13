@@ -1,3 +1,6 @@
+// Package game provides game extraction functionality that consolidates game data
+// from multiple sources (ESPN API, CBS web scraping, Fox web scraping) into
+// a unified Game structure for both college football (CFB) and NFL.
 package game
 
 import (

@@ -1,3 +1,6 @@
+// Package bettingodds provides betting odds transformation functionality that extracts
+// and structures betting data (spread, moneyline, over/under, win probability) from
+// multiple sources (ESPN, CBS, Fox) for both away and home teams.
 package bettingodds
 
 import (

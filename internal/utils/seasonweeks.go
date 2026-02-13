@@ -1,3 +1,6 @@
+// Package utils provides season week configuration data.
+// This file contains date ranges for each week of the football season used
+// for scheduling and data extraction operations.
 package utils
 
 type weekRange struct {

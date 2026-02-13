@@ -1,3 +1,6 @@
+// Package schedule provides schedule extraction functionality that consolidates
+// schedule data from multiple sources (ESPN API, CBS web scraping, Fox web scraping)
+// for both college football (CFB) and NFL seasons.
 package schedule
 
 import (

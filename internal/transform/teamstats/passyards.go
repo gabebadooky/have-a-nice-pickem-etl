@@ -1,3 +1,6 @@
+// Package teamstats provides passing yards statistics scraping functionality.
+// It extracts passing yards data from CBS Sports team stats pages for both
+// team and opponent statistics.
 package teamstats
 
 import (

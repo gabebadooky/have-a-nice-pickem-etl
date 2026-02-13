@@ -1,3 +1,7 @@
+// Package teamstats provides team statistics transformation functionality that extracts
+// and structures season-long team statistics from CBS Sports HTML pages including
+// passing stats (attempts, completions, yards, touchdowns, interceptions) and
+// rushing stats (attempts, yards, touchdowns, yards per rush) for both team and opponent.
 package teamstats
 
 import (

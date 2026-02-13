@@ -1,3 +1,6 @@
+// Package record provides team record transformation functionality that extracts
+// and structures win-loss-tie records from ESPN team data for both conference
+// and overall records.
 package record
 
 import (

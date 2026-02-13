@@ -1,3 +1,6 @@
+// Package foxgame provides helper functions for extracting team codes from Fox game URLs.
+// These functions parse team identifiers from Fox Sports hyperlinks for matching
+// games with team IDs.
 package foxgame
 
 import (

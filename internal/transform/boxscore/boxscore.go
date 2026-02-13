@@ -1,3 +1,6 @@
+// Package boxscore provides boxscore transformation functionality that extracts
+// and structures scoring data (quarter scores, total scores, overtime scores)
+// from ESPN game data for both away and home teams.
 package boxscore
 
 import (

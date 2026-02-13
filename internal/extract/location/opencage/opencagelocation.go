@@ -1,3 +1,6 @@
+// Package opencagelocation provides Opencage geocoding API client functionality.
+// It calls the Opencage Forward Geocoding API to convert stadium addresses (stadium name,
+// city, state) into geographic coordinates and standardized location data.
 package opencagelocation
 
 import (

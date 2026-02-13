@@ -1,3 +1,6 @@
+// Package espnschedule provides ESPN schedule API client functionality.
+// It calls the ESPN Scoreboard API endpoint to retrieve schedule data for both
+// college football (CFB) and NFL, handling both regular season and postseason schedules.
 package espnschedule
 
 import (

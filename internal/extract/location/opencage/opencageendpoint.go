@@ -1,3 +1,6 @@
+// Package opencagelocation defines the data structures for Opencage Geocoding API responses.
+// These types represent the JSON structure returned by Opencage's forward geocoding endpoint
+// including coordinates, address components, and location annotations.
 package opencagelocation
 
 type OpencageEndpoint struct {

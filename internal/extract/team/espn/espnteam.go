@@ -1,3 +1,6 @@
+// Package espnteam provides ESPN team summary API client functionality.
+// It calls the ESPN Team Summary API endpoint to retrieve team information including
+// records, logos, and team details for both college football (CFB) and NFL.
 package espnteam
 
 import (

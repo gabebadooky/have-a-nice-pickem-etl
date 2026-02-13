@@ -1,3 +1,6 @@
+// Package bettingodds provides ESPN betting odds parsing functionality.
+// It extracts betting odds data from ESPN Game Summary API responses including
+// spread, moneyline, over/under, and win probability for both away and home teams.
 package bettingodds
 
 import (

@@ -1,3 +1,6 @@
+// Package teamdetails provides team details transformation functionality that extracts
+// and structures comprehensive team information including team codes from multiple sources,
+// conference ID, name, mascot, colors, and ranking from ESPN team data.
 package teamdetails
 
 import (

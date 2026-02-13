@@ -1,3 +1,6 @@
+// Package cbsteam provides CBS Sports team stats page web scraping functionality.
+// It extracts team statistics by locating team pages from the CBS Sports teams directory
+// and scraping team stats pages for both college football (CFB) and NFL.
 package cbsteam
 
 import (

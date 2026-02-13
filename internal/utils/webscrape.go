@@ -1,3 +1,6 @@
+// Package utils provides web scraping utilities for fetching and parsing HTML content.
+// These functions handle HTTP requests and return goquery document selections
+// for parsing web pages in the ETL pipeline.
 package utils
 
 import (

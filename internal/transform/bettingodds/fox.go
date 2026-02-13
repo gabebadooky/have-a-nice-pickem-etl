@@ -1,3 +1,6 @@
+// Package bettingodds provides Fox Sports betting odds parsing functionality.
+// It extracts betting odds data from Fox Sports HTML pages including spread,
+// moneyline, over/under, and win probability for both away and home teams.
 package bettingodds
 
 import (
