@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"have-a-nice-pickem-etl/etl/extract"
-	"have-a-nice-pickem-etl/etl/transform/gamestats"
+	"have-a-nice-pickem-etl/internal/extract"
+	"have-a-nice-pickem-etl/internal/transform/gamestats"
 )
 
 func main() {
