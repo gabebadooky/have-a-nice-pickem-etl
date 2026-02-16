@@ -26,7 +26,7 @@ func GetScheduleForWeek(s espnScheduleInstantiator) ScoreboardEndpoint {
 
 // Make and handle ESPN Scoreboard API Endpoint request
 func fetchEspnSchedule(espnScoreboardEndpoint string) ScoreboardEndpoint {
-	log.Printf("\nCalling Scoreboard endpoint %d: %s\n", espnScoreboardEndpoint)
+	log.Printf("\nCalling Scoreboard endpoint: %s\n", espnScoreboardEndpoint)
 
 	body, err := utils.CallEndpoint(espnScoreboardEndpoint)
 	if err != nil {

@@ -52,8 +52,9 @@ func compileAllTeamHyperlinks(teamsPageSelection goquery.Selection) []string {
 // Return hyperlink from allHyperlinks that contains `teamID` string
 func locateTeamPageHyperLink(allHyperlinks []string, teamID string) string {
 	var teamStatsHyperlink string
-
+	fmt.Printf("\n\nLocating page hyperlink for %s", teamID)
 	for i := range allHyperlinks {
+		fmt.Printf("\n%s", allHyperlinks[i])
 		currentHyperlink := allHyperlinks[i]
 		mappedCbsCode := utils.GetCbsTeamCode(teamID)
 		if strings.Contains(currentHyperlink, mappedCbsCode) {
@@ -76,14 +77,19 @@ func setTeamPageHyperlink(teamsPageHyperlink string, teamID string) string {
 
 func (c CbsCfbTeam) scrapeTeamPage() *goquery.Selection {
 	teamPageHyperlink := setTeamPageHyperlink(utils.CBS_CFB_ALL_TEAMS_PAGE_URL, c.TeamID)
-	teamStatsHyperlink := fmt.Sprintf("%s%s%s", utils.CBS_BASE_URL, teamPageHyperlink, utils.CBS_TEAM_STATS_URL_SUFFIX)
+	teamStatsHyperlink := fmt.Sprintf("%s%s/%s", utils.CBS_BASE_URL, teamPageHyperlink, utils.CBS_TEAM_STATS_URL_SUFFIX)
 	teamStatsPage := scrapePage(teamStatsHyperlink)
 	return teamStatsPage
 }
 
 func (n CbsNflTeam) scrapeTeamPage() *goquery.Selection {
 	teamPageHyperlink := setTeamPageHyperlink(utils.CBS_NFL_ALL_TEAMS_PAGE_URL, n.TeamID)
-	teamStatsHyperlink := fmt.Sprintf("%s%s%s", utils.CBS_BASE_URL, teamPageHyperlink, utils.CBS_TEAM_STATS_URL_SUFFIX)
+	teamStatsHyperlink := fmt.Sprintf("%s%s/%s", utils.CBS_BASE_URL, teamPageHyperlink, utils.CBS_TEAM_STATS_URL_SUFFIX)
+
+	if teamStatsHyperlink == "https://www.cbssports.com/stats/" {
+		return nil
+	}
+
 	teamStatsPage := scrapePage(teamStatsHyperlink)
 	return teamStatsPage
 }

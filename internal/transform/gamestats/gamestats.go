@@ -43,8 +43,8 @@ TODO:
 */
 
 type Stat struct {
-	Metric string
-	Value  float32
+	StatType string
+	Value    float32
 }
 
 type GameStats struct {
@@ -138,8 +138,8 @@ func scrapeStat(GameStatsPageSelection *goquery.Selection, statTableIndex int, s
 	}
 
 	return Stat{
-		Metric: statType,
-		Value:  statFloat,
+		StatType: statType,
+		Value:    statFloat,
 	}
 }
 

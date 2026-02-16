@@ -43,8 +43,8 @@ func (sched FoxCfbSchedule) instantiateShedulePageLink() string {
 	var foxSchedulePageLink string
 
 	if sched.Week > utils.CFB_REG_SEASON_WEEKS {
-		postSeasonWeek := sched.Week - utils.CFB_REG_SEASON_WEEKS
-		foxSchedulePageLink = fmt.Sprintf("%s%d", utils.FOX_CFB_POST_SEASON_SCHEDULE_URL, postSeasonWeek)
+		//postSeasonWeek := sched.Week - utils.CFB_REG_SEASON_WEEKS
+		foxSchedulePageLink = fmt.Sprintf("%s%d", utils.FOX_CFB_POST_SEASON_SCHEDULE_URL, 1)
 	} else {
 		foxSchedulePageLink = fmt.Sprintf("%s%d", utils.FOX_CFB_REGULAR_SEASON_SCHEDULE_URL, sched.Week)
 	}
