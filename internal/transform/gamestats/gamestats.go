@@ -53,6 +53,7 @@ type GameStats struct {
 	Stats  []Stat
 }
 
+// InstantiateGameStats runs the given instantiator and returns the consolidated game stats.
 func InstantiateGameStats(i Instantiator) GameStats {
 	return i.instantiate()
 }
@@ -106,6 +107,7 @@ var statTableIndices map[int]map[int]string = map[int]map[int]string{
 	4: turnoverStatsTableIndices,
 }
 
+// getNumberOfSecondsFromDurationString parses a "M:SS" duration and returns total seconds.
 func getNumberOfSecondsFromDurationString(durationString string) int {
 	before, after, _ := strings.Cut(durationString, ":")
 	minutes := before
@@ -115,6 +117,7 @@ func getNumberOfSecondsFromDurationString(durationString string) int {
 	return totalSeconds
 }
 
+// scrapeStatContainerRow returns the stat comparison row for the given table and row index.
 func scrapeStatContainerRow(gameStatsPageSelection *goquery.Selection, statTableIndex int, statIndex int) *goquery.Selection {
 	gameStatsContainer := gameStatsPageSelection.Find("div.event-stats-container")
 	possessionStatsContainer := gameStatsContainer.Find("div.stats-comparison-container").Eq(statTableIndex).Find("div.stats-team-comparison")
@@ -122,6 +125,7 @@ func scrapeStatContainerRow(gameStatsPageSelection *goquery.Selection, statTable
 	return statComparisonRow
 }
 
+// scrapeStat extracts a single stat value from the Fox stats page for the given table, row, and team span.
 func scrapeStat(GameStatsPageSelection *goquery.Selection, statTableIndex int, statIndex int, statComparisonRowSpanIndex int) Stat {
 	var statFloat float32
 
@@ -143,6 +147,7 @@ func scrapeStat(GameStatsPageSelection *goquery.Selection, statTableIndex int, s
 	}
 }
 
+// instantiate scrapes away team stats from the game's Fox stats page and returns GameStats.
 func (a AwayTeamStat) instantiate() GameStats {
 	var statSlice []Stat
 	var teamID string = common.ParseAwayTeamID(a.Game)
@@ -161,6 +166,7 @@ func (a AwayTeamStat) instantiate() GameStats {
 	}
 }
 
+// instantiate scrapes home team stats from the game's Fox stats page and returns GameStats.
 func (h HomeTeamStat) instantiate() GameStats {
 	var statSlice []Stat
 	var teamID string = common.ParseAwayTeamID(h.Game)

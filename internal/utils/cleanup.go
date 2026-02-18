@@ -1,3 +1,5 @@
+// Package utils provides shared constants and utility functions used across the ETL pipeline.
+// This file handles data archiving and destination folder naming.
 package utils
 
 import (
@@ -8,6 +10,7 @@ import (
 	"time"
 )
 
+// instantiateDestinationFolderName returns a timestamp-based folder name for archiving (e.g. 2026-2-17-12:30).
 func instantiateDestinationFolderName() string {
 	timestamp := time.Now().Local().UTC()
 	year := timestamp.Year()
@@ -19,6 +22,7 @@ func instantiateDestinationFolderName() string {
 	return folderName
 }
 
+// ArchiveData reads the data directory and prepares to archive existing files (destination folder is computed but not yet applied).
 func ArchiveData() {
 	files, err := os.ReadDir("./data/")
 	if err != nil {

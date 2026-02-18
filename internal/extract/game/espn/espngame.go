@@ -21,11 +21,12 @@ type instantiator interface {
 	getGameSummary() GameSummaryEndpoint
 }
 
+// GetGameSummary runs the given game instantiator and returns the ESPN game summary response.
 func GetGameSummary(g instantiator) GameSummaryEndpoint {
 	return g.getGameSummary()
 }
 
-// Make and handle API call to given ESPN game summary endpoint
+// fetchGameSummary calls the ESPN game summary endpoint and decodes the JSON response.
 func fetchGameSummary(gameCode string, espnGameEndpoint string) GameSummaryEndpoint {
 	log.Printf("\nCalling ESPN endpoint for game code %s: %s\n", gameCode, espnGameEndpoint)
 
@@ -43,14 +44,14 @@ func fetchGameSummary(gameCode string, espnGameEndpoint string) GameSummaryEndpo
 	return gameDetails
 }
 
-// Fetch ESPN CFB Game Summary for a given ESPN Game code
+// getGameSummary fetches the ESPN college football game summary for the configured game code.
 func (g EspnCfbGame) getGameSummary() GameSummaryEndpoint {
 	espnGameEndpoint := fmt.Sprintf("%s%s", utils.ESPN_CFB_GAME_ENDPOINT_URL, g.GameCode)
 	return fetchGameSummary(g.GameCode, espnGameEndpoint)
 
 }
 
-// Fetch ESPN NFL Game Summary a given ESPN Game code
+// getGameSummary fetches the ESPN NFL game summary for the configured game code.
 func (g EspnNflGame) getGameSummary() GameSummaryEndpoint {
 	espnGameEndpoint := fmt.Sprintf("%s%s", utils.ESPN_NFL_GAME_ENDPOINT_URL, g.GameCode)
 	return fetchGameSummary(g.GameCode, espnGameEndpoint)

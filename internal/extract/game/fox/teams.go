@@ -16,8 +16,7 @@ type homeTeam struct {
 	hyperlink string
 }
 
-// Extracts team string Between after league path ("/nfl/", "/college-football/")
-// and "-vs-" substring in a given Fox hyperlink
+// scrapeTeamCode returns the Fox away team code from the game URL (before "-vs-").
 func (a awayTeam) scrapeTeamCode() string {
 	formattedGameCode := utils.StripDateAndBoxScoreIDFromFoxGameCode(a.hyperlink)
 	formattedGameCode = utils.StripBowlGamePrefixFromFoxGameCode(formattedGameCode)
@@ -29,7 +28,7 @@ func (a awayTeam) scrapeTeamCode() string {
 	return teamCode
 }
 
-// Extracts team string AFTER "-vs-" substring in a given Fox hyperlink
+// scrapeTeamCode returns the Fox home team code from the game URL (after "-vs-").
 func (h homeTeam) scrapeTeamCode() string {
 	formattedGameCode := utils.StripDateAndBoxScoreIDFromFoxGameCode(h.hyperlink)
 	formattedGameCode = utils.StripBowlGamePrefixFromFoxGameCode(formattedGameCode)

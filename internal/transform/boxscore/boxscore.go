@@ -31,10 +31,12 @@ type Boxscore struct {
 	TotalScore    uint
 }
 
+// InstantiateBoxscore runs the given instantiator and returns the boxscore.
 func InstantiateBoxscore(i Instantiator) Boxscore {
 	return i.instantiate()
 }
 
+// instantiate builds the away team boxscore from the game's ESPN linescore data.
 func (a AwayBoxscore) instantiate() Boxscore {
 	return Boxscore{
 		GameID:        a.GameID,
@@ -48,6 +50,7 @@ func (a AwayBoxscore) instantiate() Boxscore {
 	}
 }
 
+// instantiate builds the home team boxscore from the game's ESPN linescore data.
 func (h HomeBoxscore) instantiate() Boxscore {
 	return Boxscore{
 		GameID:        h.GameID,

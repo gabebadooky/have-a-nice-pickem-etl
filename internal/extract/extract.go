@@ -48,18 +48,22 @@ type NflLocationsExtract struct {
 	Week uint
 }
 
+// ExtractGames runs the given GamesExtractor and returns the consolidated games.
 func ExtractGames(g GamesExtractor) []game.Game {
 	return g.getGames()
 }
 
+// ExtractTeams runs the given TeamsExtractor and returns the consolidated teams.
 func ExtractTeams(t TeamsExtractor) []team.Team {
 	return t.getTeams()
 }
 
+// ExtractLocations runs the given LocationsExtractor and returns the consolidated locations.
 func ExtractLocations(l LocationsExtractor) []location.Location {
 	return l.getLocations()
 }
 
+// getGames fetches and consolidates college football games for the configured week.
 func (g CfbGamesExtract) getGames() []game.Game {
 	weekSchedule := schedule.ConsolidateScheduleInfo(schedule.CfbSchedule{Week: g.Week})
 	var espnWeekGames []espnsched.EventProperty = weekSchedule.ESPN.Events
@@ -83,6 +87,7 @@ func (g CfbGamesExtract) getGames() []game.Game {
 	return gamesThisWeek
 }
 
+// getGames fetches and consolidates NFL games for the configured week.
 func (g NflGamesExtract) getGames() []game.Game {
 	weekSchedule := schedule.ConsolidateScheduleInfo(schedule.NflSchedule{Week: g.Week})
 	var espnWeekGames []espnsched.EventProperty = weekSchedule.ESPN.Events
@@ -106,6 +111,7 @@ func (g NflGamesExtract) getGames() []game.Game {
 	return gamesThisWeek
 }
 
+// getTeams fetches and consolidates college football teams for the configured week.
 func (t CfbTeamsExtract) getTeams() []team.Team {
 	weekSchedule := schedule.ConsolidateScheduleInfo(schedule.CfbSchedule{Week: t.Week})
 	var espnWeekGames []espnsched.EventProperty = weekSchedule.ESPN.Events
@@ -125,6 +131,7 @@ func (t CfbTeamsExtract) getTeams() []team.Team {
 	return teamsThisWeek
 }
 
+// getTeams fetches and consolidates NFL teams for the configured week.
 func (t NflTeamsExtract) getTeams() []team.Team {
 	weekSchedule := schedule.ConsolidateScheduleInfo(schedule.NflSchedule{Week: t.Week})
 	var espnWeekGames []espnsched.EventProperty = weekSchedule.ESPN.Events
@@ -144,6 +151,7 @@ func (t NflTeamsExtract) getTeams() []team.Team {
 	return teamsThisWeek
 }
 
+// getLocations fetches and consolidates college football game locations for the configured week.
 func (l CfbLocationsExtract) getLocations() []location.Location {
 	weekSchedule := schedule.ConsolidateScheduleInfo(schedule.CfbSchedule{Week: l.Week})
 	var espnWeekGames []espnsched.EventProperty = weekSchedule.ESPN.Events
@@ -167,6 +175,7 @@ func (l CfbLocationsExtract) getLocations() []location.Location {
 	return locationsThisWeek
 }
 
+// getLocations fetches and consolidates NFL game locations for the configured week.
 func (l NflLocationsExtract) getLocations() []location.Location {
 	weekSchedule := schedule.ConsolidateScheduleInfo(schedule.NflSchedule{Week: l.Week})
 	var espnWeekGames []espnsched.EventProperty = weekSchedule.ESPN.Events

@@ -38,6 +38,7 @@ type instantiator interface {
 	scrapeGame() FoxGamePages
 }
 
+// GetGamePages runs the given game instantiator and returns boxscore, stats, and odds page selections.
 func GetGamePages(g instantiator) FoxGamePages {
 	return g.scrapeGame()
 }
@@ -50,7 +51,7 @@ func parseGameCodeFromGameHREF(gameHyperlink string) string {
 	return foxGameCode
 }*/
 
-// Map Fox Team Code to global Team IDs
+// getTeamID maps a Fox team code to the global team ID using the package mapping.
 func getTeamID(foxTeamCode string) string {
 	teamID, exists := utils.FoxTeamCodeToTeamIDmapping[foxTeamCode]
 	if exists {
@@ -60,7 +61,7 @@ func getTeamID(foxTeamCode string) string {
 	}
 }
 
-// Handle web scrape attempt for given Fox hyperlink
+// scrapeFoxGame fetches the Fox Sports page at the given URL and returns its body as a goquery selection.
 func scrapeFoxGame(foxGameHyperlink string) *goquery.Selection {
 	var page *goquery.Selection
 	log.Printf("\nRequesting Fox Game page: %s\n", foxGameHyperlink)
@@ -74,7 +75,7 @@ func scrapeFoxGame(foxGameHyperlink string) *goquery.Selection {
 	return page
 }
 
-// Extracts FOX game code where AwayTeamID and HomeTeamID match with corresponding FOX team codes
+// scrapeGameHyperlink finds the Fox game URL whose away and home team IDs match the given gameID.
 func scrapeGameHyperlink(gameID string, urlPrefix string, schedulePage *goquery.Selection) string {
 	var foxGameHyperlink string
 	gameAnchorTags := schedulePage.Find("div.scores-scorechips-container").Find("table.data-table").Find(`td[data-index="3"]`).Find("a")
@@ -113,6 +114,7 @@ func scrapeGameHyperlink(gameID string, urlPrefix string, schedulePage *goquery.
 	}
 }*/
 
+// scrapeGame fetches the Fox boxscore, stats, and odds pages for the configured game.
 func (g FoxGame) scrapeGame() FoxGamePages {
 	foxGameHyperlink := scrapeGameHyperlink(g.GameID, utils.FOX_BASE_URL, g.FoxSchedulePage)
 

@@ -29,10 +29,12 @@ type scheduleInstantiator interface {
 	extractSchedule() Schedule
 }
 
+// ConsolidateScheduleInfo runs the given schedule instantiator and returns the consolidated Schedule.
 func ConsolidateScheduleInfo(s scheduleInstantiator) Schedule {
 	return s.extractSchedule()
 }
 
+// extractSchedule fetches college football schedule data from ESPN, CBS, and Fox for the week.
 func (c CfbSchedule) extractSchedule() Schedule {
 	var EspnSchedule espnschedule.ScoreboardEndpoint = espnschedule.GetScheduleForWeek(espnschedule.CfbEspnSchedule{Week: c.Week})
 	var CbsSchedule *goquery.Selection = cbsschedule.GetScheduleForWeek(cbsschedule.CbsCfbSchedule{Week: c.Week})
@@ -45,6 +47,7 @@ func (c CfbSchedule) extractSchedule() Schedule {
 	}
 }
 
+// extractSchedule fetches NFL schedule data from ESPN, CBS, and Fox for the week.
 func (n NflSchedule) extractSchedule() Schedule {
 	var EspnSchedule espnschedule.ScoreboardEndpoint = espnschedule.GetScheduleForWeek(espnschedule.NflEspnSchedule{Week: n.Week})
 	var CbsSchedule *goquery.Selection = cbsschedule.GetScheduleForWeek(cbsschedule.CbsNflSchedule{Week: n.Week})

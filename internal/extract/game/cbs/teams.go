@@ -17,13 +17,14 @@ type homeTeam struct {
 	oddsPageTable *goquery.Selection
 }
 
+// extractCbsTeamCodeFromTeamHREF parses the CBS team code from a team profile URL path.
 func extractCbsTeamCodeFromTeamHREF(teamHREF string) string {
 	_, after, _ := strings.Cut(teamHREF, "teams/")
 	teamCBScode := strings.TrimRight(after, "/")
 	return teamCBScode
 }
 
-// Extracts team hyperlink in first "tr" tag in a given Odds Page Table goquery selection
+// scrapeTeamCode returns the CBS team code for the away team from the odds block row.
 func (a awayTeam) scrapeTeamCode() string {
 	const awayTrIndex int = 1
 	teamHREF := a.oddsPageTable.Find("tbody").Find("tr").Eq(awayTrIndex).Find("span.OddsBlock-teamText").Find("a").AttrOr("href", "cbsTeamHREF")
@@ -31,7 +32,7 @@ func (a awayTeam) scrapeTeamCode() string {
 
 }
 
-// Extracts team hyperlink in second "tr" tag in a given Odds Page Table goquery selection
+// scrapeTeamCode returns the CBS team code for the home team from the odds block row.
 func (h homeTeam) scrapeTeamCode() string {
 	const homeTrIndex int = 0
 	teamHREF := h.oddsPageTable.Find("tbody").Find("tr").Eq(homeTrIndex).Find("span.OddsBlock-teamText").Find("a").AttrOr("href", "cbsTeamHREF")

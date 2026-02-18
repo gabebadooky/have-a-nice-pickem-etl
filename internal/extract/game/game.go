@@ -38,11 +38,12 @@ type gameInstantiator interface {
 	extractGame() (Game, error)
 }
 
+// ConsolidateGameInfo runs the given game instantiator and returns the consolidated Game.
 func ConsolidateGameInfo(g gameInstantiator) (Game, error) {
 	return g.extractGame()
 }
 
-// Instantiate GameID based on whether a game is a regular season or post-season matchup
+// instantiateGameID builds a GameID from the event name and week (or post-season).
 func instantiateGameID(sched espnsched.EventProperty) string {
 	var eventNameAndWeek string
 	if sched.Season.Type == 3 {
@@ -54,6 +55,7 @@ func instantiateGameID(sched espnsched.EventProperty) string {
 	return gameID
 }
 
+// extractGame fetches and consolidates college football game data from ESPN, CBS, and Fox.
 func (c CfbGame) extractGame() (Game, error) {
 	gameID := instantiateGameID(c.EspnEvent)
 	fmt.Printf("\nEvent: %s", gameID)
@@ -74,6 +76,7 @@ func (c CfbGame) extractGame() (Game, error) {
 	}, nil
 }
 
+// extractGame fetches and consolidates NFL game data from ESPN, CBS, and Fox.
 func (n NflGame) extractGame() (Game, error) {
 	gameID := instantiateGameID(n.EspnEvent)
 	fmt.Printf("\nEvent: %s", gameID)

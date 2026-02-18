@@ -13,6 +13,8 @@ import (
 	"have-a-nice-pickem-etl/internal/utils"
 )
 
+// main runs the ETL pipeline: archives existing data, extracts games and teams,
+// transforms them into loadable records, and writes CSV outputs.
 func main() {
 	utils.ArchiveData()
 

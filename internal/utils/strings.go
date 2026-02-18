@@ -8,22 +8,23 @@ import (
 	"strings"
 )
 
-// Replaces spaces with - and strips the following characters from a given string: .')(&é
+// FormatStringID normalizes a string into an ID: lowercase, spaces to hyphens, and strips .')(&é.
 func FormatStringID(id string) string {
-	var toLower string = strings.ToLower(id)
-	var stripSpaces string = strings.ReplaceAll(toLower, " ", "-")
-	var stripDuplicateDashes string = strings.ReplaceAll(stripSpaces, "--", "-")
-	var stripPeriods string = strings.ReplaceAll(stripDuplicateDashes, ".", "")
-	var stripSingleQuote string = strings.ReplaceAll(stripPeriods, "'", "")
-	var stripLeftParan string = strings.ReplaceAll(stripSingleQuote, "(", "")
-	var stripRightParan string = strings.ReplaceAll(stripLeftParan, ")", "")
-	var stripAmpersand string = strings.ReplaceAll(stripRightParan, "&", "")
-	var stripAccentedE string = strings.ReplaceAll(stripAmpersand, "é", "e")
+	toLower := strings.ToLower(id)
+	stripSpaces := strings.ReplaceAll(toLower, " ", "-")
+	stripDuplicateDashes := strings.ReplaceAll(stripSpaces, "--", "-")
+	stripPeriods := strings.ReplaceAll(stripDuplicateDashes, ".", "")
+	stripSingleQuote := strings.ReplaceAll(stripPeriods, "'", "")
+	stripLeftParan := strings.ReplaceAll(stripSingleQuote, "(", "")
+	stripRightParan := strings.ReplaceAll(stripLeftParan, ")", "")
+	stripAmpersand := strings.ReplaceAll(stripRightParan, "&", "")
+	stripAccentedE := strings.ReplaceAll(stripAmpersand, "é", "e")
 
-	var formatString string = stripAccentedE
+	formatString := stripAccentedE
 	return formatString
 }
 
+// StripBowlGamePrefixFromFoxGameCode removes bowl/CFP prefixes from a Fox game code string.
 func StripBowlGamePrefixFromFoxGameCode(foxGameCode string) string {
 	bowlString := "bowl-"
 	cfpFirstRoundGameString := "cfp-first-round-game-"
@@ -41,7 +42,7 @@ func StripBowlGamePrefixFromFoxGameCode(foxGameCode string) string {
 	return foxGameCode
 }
 
-// Strips Date and Box Score from Fox Game Code
+// StripDateAndBoxScoreIDFromFoxGameCode removes the date and box score suffix from a Fox game code.
 func StripDateAndBoxScoreIDFromFoxGameCode(foxGameCode string) string {
 	var formattedGameCode string
 	var monthAbbr string
@@ -60,6 +61,7 @@ func StripDateAndBoxScoreIDFromFoxGameCode(foxGameCode string) string {
 	return formattedGameCode
 }
 
+// ConvertStringToFloat32 parses a string as float32, returning 0 on parse error.
 func ConvertStringToFloat32(str string) float32 {
 	f64, err := strconv.ParseFloat(str, 32)
 	if err != nil {
@@ -69,6 +71,7 @@ func ConvertStringToFloat32(str string) float32 {
 	return float32(f64)
 }
 
+// ConvertStringToInt parses a string as int via Atoi, returning 0 on parse error.
 func ConvertStringToInt(str string) int {
 	convertedNumber, err := strconv.Atoi(str)
 	if err != nil {
@@ -78,6 +81,7 @@ func ConvertStringToInt(str string) int {
 	return convertedNumber
 }
 
+// GetNumberOfSecondsFromDurationString parses a "M:SS" duration string and returns total seconds.
 func GetNumberOfSecondsFromDurationString(durationString string) int {
 	colonIndex := strings.Index(durationString, ":")
 	minutes := durationString[:colonIndex]

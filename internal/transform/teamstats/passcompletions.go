@@ -18,6 +18,7 @@ type oppPassCompletions struct {
 	page *goquery.Selection
 }
 
+// scrape extracts team pass completions from the CBS passing stats table.
 func (pc teamPassCompletions) scrape() Stat {
 	passingStatsTable := scrapePassingStatsTable(pc.page)
 	var teamTotalsTableRow *goquery.Selection = scrapeStatsTableTeamTotalRow(passingStatsTable)
@@ -31,6 +32,7 @@ func (pc teamPassCompletions) scrape() Stat {
 	}
 }
 
+// scrape extracts opponent pass completions from the CBS passing stats table.
 func (pc oppPassCompletions) scrape() Stat {
 	passingStatsTable := scrapePassingStatsTable(pc.page)
 	var opponentTotalTableRow *goquery.Selection = scrapeStatsTableOpponentTotalRow(passingStatsTable)

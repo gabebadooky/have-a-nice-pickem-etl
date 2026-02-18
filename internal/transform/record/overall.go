@@ -7,6 +7,7 @@ import (
 	"strings"
 )
 
+// parseOverallRecordElements parses the ESPN overall record summary into wins, losses, and ties.
 func (o OverallRecord) parseOverallRecordElements() [3]uint {
 	var overallRecord string = o.ESPN.Team.OverallRecord.RecordItems[0].Summary
 	recordElements := strings.Split(overallRecord, "-")
@@ -33,16 +34,19 @@ func (o OverallRecord) parseOverallRecordElements() [3]uint {
 	return [3]uint{uint(wins), uint(losses), uint(ties)}
 }
 
+// parseOverallWins returns overall wins from the team's ESPN record.
 func (o OverallRecord) parseOverallWins() uint {
 	var overallWins uint = o.parseOverallRecordElements()[0]
 	return overallWins
 }
 
+// parseOverallLosses returns overall losses from the team's ESPN record.
 func (o OverallRecord) parseOverallLosses() uint {
 	var overallLosses uint = o.parseOverallRecordElements()[1]
 	return overallLosses
 }
 
+// parseOverallTies returns overall ties from the team's ESPN record.
 func (o OverallRecord) parseOverallTies() uint {
 	var overallTies uint = o.parseOverallRecordElements()[2]
 	return overallTies

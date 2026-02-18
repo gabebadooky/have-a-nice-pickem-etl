@@ -20,11 +20,12 @@ type espnScheduleInstantiator interface {
 	callSchedule() ScoreboardEndpoint
 }
 
+// GetScheduleForWeek runs the given ESPN schedule instantiator and returns the scoreboard response.
 func GetScheduleForWeek(s espnScheduleInstantiator) ScoreboardEndpoint {
 	return s.callSchedule()
 }
 
-// Make and handle ESPN Scoreboard API Endpoint request
+// fetchEspnSchedule calls the ESPN scoreboard endpoint and decodes the JSON response.
 func fetchEspnSchedule(espnScoreboardEndpoint string) ScoreboardEndpoint {
 	log.Printf("\nCalling Scoreboard endpoint: %s\n", espnScoreboardEndpoint)
 
@@ -41,6 +42,7 @@ func fetchEspnSchedule(espnScoreboardEndpoint string) ScoreboardEndpoint {
 	return scheduleDetails
 }
 
+// instantiateScoreboardEndpoint returns the ESPN college football scoreboard URL for the configured week.
 func (sched CfbEspnSchedule) instantiateScoreboardEndpoint() string {
 	var espnScoreboardEndpoint string
 
@@ -54,6 +56,7 @@ func (sched CfbEspnSchedule) instantiateScoreboardEndpoint() string {
 	return espnScoreboardEndpoint
 }
 
+// instantiateScoreboardEndpoint returns the ESPN NFL scoreboard URL for the configured week.
 func (sched NflEspnSchedule) instantiateScoreboardEndpoint() string {
 	var espnScoreboardEndpoint string
 
@@ -68,14 +71,14 @@ func (sched NflEspnSchedule) instantiateScoreboardEndpoint() string {
 	return espnScoreboardEndpoint
 }
 
-// Call CFB ESPN Scoreboard Summary API Endpoint
+// callSchedule fetches the ESPN college football scoreboard for the configured week.
 func (sched CfbEspnSchedule) callSchedule() ScoreboardEndpoint {
 	espnScoreboardEndpoint := sched.instantiateScoreboardEndpoint()
 	espnScoreboard := fetchEspnSchedule(espnScoreboardEndpoint)
 	return espnScoreboard
 }
 
-// Call NFL ESPN Scoreboard Summary API Endpoint
+// callSchedule fetches the ESPN NFL scoreboard for the configured week.
 func (sched NflEspnSchedule) callSchedule() ScoreboardEndpoint {
 	espnScoreboardEndpoint := sched.instantiateScoreboardEndpoint()
 	espnScoreboard := fetchEspnSchedule(espnScoreboardEndpoint)

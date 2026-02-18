@@ -27,10 +27,12 @@ type Record struct {
 	Ties       uint
 }
 
+// InstantiateRecord runs the given instantiator and returns the team record.
 func InstantiateRecord(i Instantiator) Record {
 	return i.instantiate()
 }
 
+// instantiate builds a conference record from the team's CBS page.
 func (c ConferenceRecord) instantiate() Record {
 	return Record{
 		TeamID:     c.TeamID,
@@ -41,6 +43,7 @@ func (c ConferenceRecord) instantiate() Record {
 	}
 }
 
+// instantiate builds an overall record from the team's ESPN data.
 func (o OverallRecord) instantiate() Record {
 	return Record{
 		TeamID:     o.TeamID,

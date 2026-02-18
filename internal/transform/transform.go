@@ -52,6 +52,7 @@ type LocationTransformations struct {
 	Location locationdetails.LocationDetails
 }
 
+// TransformData produces all game-level transformations (details, odds, boxscore, stats) from the extracted game.
 func (g NewGameTransformation) TransformData() GameTransformations {
 	// Initialize transformation structs
 	newGameDetails := gamedetails.New{Game: g.Game}
@@ -94,6 +95,7 @@ func (g NewGameTransformation) TransformData() GameTransformations {
 	}
 }
 
+// TransformData produces team details and conference/overall records from the extracted team.
 func (t NewTeamTransformation) TransformData() TeamTransformations {
 	// Initialize transformation structs
 	newTeamDetails := teamdetails.New{Team: t.Team}
@@ -112,6 +114,7 @@ func (t NewTeamTransformation) TransformData() TeamTransformations {
 	}
 }
 
+// TransformData produces location details from the extracted location data.
 func (l NewLocationTransformation) TransformData() LocationTransformations {
 	// Initialize transformation struct
 	newLocationDetails := locationdetails.New{Location: l.Location}

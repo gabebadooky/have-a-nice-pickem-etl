@@ -41,30 +41,36 @@ type TeamStats struct {
 	Stats  []Stat
 }
 
+// ScrapeStat runs the given scraper and returns the stat.
 func ScrapeStat(s scraper) Stat {
 	return s.scrape()
 }
 
+// scrapePassingStatsTable returns the first (passing) stats table from the CBS team stats page.
 func scrapePassingStatsTable(teamStatsPageSelection *goquery.Selection) *goquery.Selection {
 	passingStatsTable := teamStatsPageSelection.Find("div.TableBaseWrapper").Eq(0)
 	return passingStatsTable
 }
 
+// scrapeRushingStatsTable returns the second (rushing) stats table from the CBS team stats page.
 func scrapeRushingStatsTable(teamStatsPageSelection *goquery.Selection) *goquery.Selection {
 	rushingStatsTable := teamStatsPageSelection.Find("div.TableBaseWrapper").Eq(1)
 	return rushingStatsTable
 }
 
+// scrapeStatsTableTeamTotalRow returns the team total row (first total row) from a stats table.
 func scrapeStatsTableTeamTotalRow(statsTableSelection *goquery.Selection) *goquery.Selection {
 	teamTotalTableRow := statsTableSelection.Find("tr.TableBase-bodyTr--total").Eq(0)
 	return teamTotalTableRow
 }
 
+// scrapeStatsTableOpponentTotalRow returns the opponent total row (second total row) from a stats table.
 func scrapeStatsTableOpponentTotalRow(statsTableSelection *goquery.Selection) *goquery.Selection {
 	opponentTotalTableRow := statsTableSelection.Find("tr.TableBase-bodyTr--total").Eq(1)
 	return opponentTotalTableRow
 }
 
+// Instantiate scrapes all team and opponent stats from the CBS team stats page and returns TeamStats.
 func (t New) Instantiate() TeamStats {
 	/*teamPassAttempts := t.scrapeTeamPassAttempts()
 	oppPassAttempts := t.scrapeOpponentPassAttempts()

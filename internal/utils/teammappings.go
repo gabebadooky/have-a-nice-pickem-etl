@@ -94,6 +94,7 @@ var FoxTeamCodeToTeamIDmapping map[string]string = map[string]string{
 	"miami-hurricanes":                "miami-fl-hurricanes",
 }
 
+// GetCbsTeamCode returns the CBS team code for the given internal team ID, or the teamID if unmapped.
 func GetCbsTeamCode(teamID string) string {
 	cbsCode, cbsMappingExists := TeamIDtoCbsTeamCode[teamID]
 	if cbsMappingExists {
@@ -102,6 +103,7 @@ func GetCbsTeamCode(teamID string) string {
 	return teamID
 }
 
+// GetFoxTeamCode returns the Fox team code for the given internal team ID, or the teamID if unmapped.
 func GetFoxTeamCode(teamID string) string {
 	foxCode, foxMappingExists := TeamIDtoFoxTeamCode[teamID]
 	if foxMappingExists {

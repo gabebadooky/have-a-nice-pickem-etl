@@ -10,7 +10,7 @@ import (
 	"strings"
 )
 
-// Extract Points for given boxscore period
+// parsePointsForGivenQuarter returns the away team's points for the period given competitor home/away and point strings.
 func (a AwayBoxscore) parsePointsForGivenQuarter(team1homeAway string, team2homeAway string, team1points string, team2points string) uint {
 	switch "AWAY" {
 	case strings.ToUpper(team1homeAway):
@@ -33,7 +33,7 @@ func (a AwayBoxscore) parsePointsForGivenQuarter(team1homeAway string, team2home
 	}
 }
 
-// Parses "Linescore" field for a given competitor and quarter from the ESPN Game Summary API
+// parseQuarterScore returns the away team's score for the given quarter (1-4) from the ESPN linescore.
 func (a AwayBoxscore) parseQuarterScore(quarterNumber uint) uint {
 	var linescoreArraryIndex uint = quarterNumber - 1
 
@@ -48,7 +48,7 @@ func (a AwayBoxscore) parseQuarterScore(quarterNumber uint) uint {
 	}
 }
 
-// Parses "score" field for a given competitor from the ESPN Game Summary API
+// parseTotalScore returns the away team's total score from the ESPN competition data.
 func (a AwayBoxscore) parseTotalScore() uint {
 	var team1HomeAway string = a.ESPN.Header.Competitions[0].Competitors[0].HomeAway
 	var team2HomeAway string = a.ESPN.Header.Competitions[0].Competitors[1].HomeAway
@@ -62,7 +62,7 @@ func (a AwayBoxscore) parseTotalScore() uint {
 	}
 }
 
-// Parses "Linescore" field for a given competitor and quarter from the ESPN Game Summary API
+// ParseOvertimeScore returns the away team's overtime score from the ESPN linescore (fifth period if present).
 func (a AwayBoxscore) ParseOvertimeScore() uint {
 	var team1HomeAway string = a.ESPN.Header.Competitions[0].Competitors[0].HomeAway
 	var team2HomeAway string = a.ESPN.Header.Competitions[0].Competitors[1].HomeAway

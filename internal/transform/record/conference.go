@@ -9,11 +9,13 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
+// scrapeConferenceRecordText extracts the conference record W-L-T text from the CBS team subnav.
 func scrapeConferenceRecordText(cbsTeamStatsPage *goquery.Selection) string {
 	recordText := cbsTeamStatsPage.Find("div.GlobalSubnav_overviewWrap__kQuwK").Find("ul.GlobalSubnav_overview__7CYn6").Find("li.GlobalSubnav_overviewItem__KtQsg").Last().Text()
 	return recordText
 }
 
+// parseWins returns conference wins from the CBS conference record text.
 func (c ConferenceRecord) parseWins() uint {
 	conferenceRecordText := scrapeConferenceRecordText(c.CBS)
 	conferenceWinsString := strings.Split(conferenceRecordText, "-")[0]
@@ -21,6 +23,7 @@ func (c ConferenceRecord) parseWins() uint {
 	return uint(conferenceWins)
 }
 
+// parseLosses returns conference losses from the CBS conference record text.
 func (c ConferenceRecord) parseLosses() uint {
 	conferenceRecordText := scrapeConferenceRecordText(c.CBS)
 	conferenceLossesString := strings.Split(conferenceRecordText, "-")[1]
@@ -28,6 +31,7 @@ func (c ConferenceRecord) parseLosses() uint {
 	return uint(conferenceLosses)
 }
 
+// parseTies returns conference ties from the CBS conference record text.
 func (c ConferenceRecord) parseTies() uint {
 	var conferenceTiesString string
 	conferenceRecordText := scrapeConferenceRecordText(c.CBS)

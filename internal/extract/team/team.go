@@ -31,10 +31,12 @@ type teamInstantiator interface {
 	extractTeam() Team
 }
 
+// ConsolidateTeamInfo runs the given team instantiator and returns the consolidated Team.
 func ConsolidateTeamInfo(t teamInstantiator) Team {
 	return t.extractTeam()
 }
 
+// extractTeam fetches and consolidates college football team data from ESPN and CBS.
 func (t CfbTeam) extractTeam() Team {
 	var espnTeam espnteam.TeamSummaryEndpoint = espnteam.GetTeamSummary(espnteam.EspnCfbTeam{TeamCode: t.EspnCode})
 	teamLocationName := fmt.Sprintf("%s %s", espnTeam.Team.Location, espnTeam.Team.Name)
@@ -49,6 +51,7 @@ func (t CfbTeam) extractTeam() Team {
 	}
 }
 
+// extractTeam fetches and consolidates NFL team data from ESPN and CBS.
 func (t NflTeam) extractTeam() Team {
 	var espnTeam espnteam.TeamSummaryEndpoint = espnteam.GetTeamSummary(espnteam.EspnNflTeam{TeamCode: t.EspnCode})
 	teamLocationName := fmt.Sprintf("%s %s", espnTeam.Team.Location, espnTeam.Team.Name)

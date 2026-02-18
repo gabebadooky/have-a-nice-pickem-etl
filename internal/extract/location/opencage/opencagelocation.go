@@ -22,11 +22,12 @@ type OpencageForwardGeocode struct {
 	State   string
 }
 
+// GetLocationDetails runs the given Opencage location instantiator and returns geocoded location data.
 func GetLocationDetails(l OpencageLocation) OpencageEndpoint {
 	return l.geocodeDetails()
 }
 
-// Concatenate query string onto Opencage Forward Geocode Endpoint URL
+// formatURLwithQueryString builds the Opencage forward geocode URL with API key and address query.
 func formatURLwithQueryString(stadium string, city string, state string) string {
 	godotenv.Load()
 	var apikey string = os.Getenv("OPENCAGE_API_KEY")
@@ -44,11 +45,12 @@ func formatURLwithQueryString(stadium string, city string, state string) string 
 	}
 }
 
+// decodeOpencageResponse unmarshals the Opencage API response body into OpencageEndpoint.
 func decodeOpencageResponse(body []byte) (OpencageEndpoint, error) {
 	return utils.DecodeJSON[OpencageEndpoint](body)
 }
 
-// Retreive Opencage Forward Geocode API Response for given stadium, city, state and country
+// geocodeDetails calls the Opencage forward geocode API for the configured stadium, city, and state.
 func (g OpencageForwardGeocode) geocodeDetails() OpencageEndpoint {
 	opencageEndpoint := formatURLwithQueryString(g.Stadium, g.City, g.State)
 	log.Printf("\nCalling Opencage API endpoint for %s %s, %s: %s\n", g.Stadium, g.City, g.State, opencageEndpoint)

@@ -16,6 +16,7 @@ import (
 	"os"
 )
 
+// instantiateCsvWriter creates and returns a CSV writer for the given file path.
 func instantiateCsvWriter(filepath string) *csv.Writer {
 	f, err := os.OpenFile(filepath, os.O_CREATE, 0o644)
 	if err != nil {
@@ -27,6 +28,7 @@ func instantiateCsvWriter(filepath string) *csv.Writer {
 	return csvwriter
 }
 
+// BettingOdds writes betting odds records to data/bettingodds.csv.
 func BettingOdds(records []bettingodds.BettingOdds) {
 	bulkDataLoadFilePath := "./data/bettingodds.csv"
 	w := instantiateCsvWriter(bulkDataLoadFilePath)
@@ -49,6 +51,7 @@ func BettingOdds(records []bettingodds.BettingOdds) {
 	}
 }
 
+// Boxscores writes boxscore records to data/boxscores.csv.
 func Boxscores(records []boxscore.Boxscore) {
 	bulkDataLoadFilePath := "./data/boxscores.csv"
 	w := instantiateCsvWriter(bulkDataLoadFilePath)
@@ -72,6 +75,7 @@ func Boxscores(records []boxscore.Boxscore) {
 	}
 }
 
+// GameDetails writes game detail records to data/gamedetails.csv.
 func GameDetails(records []gamedetails.GameDetails) {
 	bulkDataLoadFilePath := "./data/gamedetails.csv"
 	w := instantiateCsvWriter(bulkDataLoadFilePath)
@@ -101,6 +105,7 @@ func GameDetails(records []gamedetails.GameDetails) {
 	}
 }
 
+// Stats writes game stats records to data/stats.csv.
 func Stats(records []gamestats.GameStats) {
 	bulkDataLoadFilePath := "./data/stats.csv"
 	w := instantiateCsvWriter(bulkDataLoadFilePath)
@@ -126,6 +131,7 @@ func Stats(records []gamestats.GameStats) {
 	}
 }
 
+// LocationDetails writes location detail records to data/locations.csv.
 func LocationDetails(records []locationdetails.LocationDetails) {
 	bulkDataLoadFilePath := "./data/locations.csv"
 	w := instantiateCsvWriter(bulkDataLoadFilePath)
@@ -147,6 +153,7 @@ func LocationDetails(records []locationdetails.LocationDetails) {
 	}
 }
 
+// TeamRecord writes team record rows to data/teamrecords.csv.
 func TeamRecord(records []record.Record) {
 	bulkDataLoadFilePath := "./data/teamrecords.csv"
 	w := instantiateCsvWriter(bulkDataLoadFilePath)
@@ -167,6 +174,7 @@ func TeamRecord(records []record.Record) {
 	}
 }
 
+// TeamDetails writes team detail records to data/teams.csv.
 func TeamDetails(records []teamdetails.TeamDetails) {
 	bulkDataLoadFilePath := "./data/teams.csv"
 	w := instantiateCsvWriter(bulkDataLoadFilePath)

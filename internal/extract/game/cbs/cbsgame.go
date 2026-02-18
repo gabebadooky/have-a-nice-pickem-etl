@@ -19,11 +19,12 @@ type instantiator interface {
 	scrapeGame() *goquery.Selection
 }
 
+// GetGamePage runs the given game instantiator and returns the scraped CBS game odds selection.
 func GetGamePage(g instantiator) *goquery.Selection {
 	return g.scrapeGame()
 }
 
-// Map CBS Team Code to global Team IDs
+// getTeamID maps a CBS team code to the global team ID using the package mapping.
 func getTeamID(teamCode string) string {
 	cbsTeamCodeWithoutAbbr := teamCode[strings.Index(teamCode, "/")+1:]
 	teamID, exists := utils.CbsTeamCodeToTeamIDmapping[cbsTeamCodeWithoutAbbr]
@@ -34,7 +35,7 @@ func getTeamID(teamCode string) string {
 	}
 }
 
-// Extracts CBS game code where AwayTeamID and HomeTeamID match with corresponding CBS team codes
+// scrapeGame finds the CBS odds block whose away and home team IDs match the game ID.
 func (g CbsGame) scrapeGame() *goquery.Selection {
 	var cbsGameOddsHTML *goquery.Selection
 	gameOddsTables := g.CbsOddsPage.Find(`div.OddsBlock`)

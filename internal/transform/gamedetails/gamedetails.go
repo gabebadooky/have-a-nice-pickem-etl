@@ -29,7 +29,7 @@ type GameDetails struct {
 	Finished      bool
 }
 
-// Parses "League" field from ESPN Game Summary API
+// parseLeague returns the league abbreviation (CFB or NFL) from the ESPN game header.
 func (g New) parseLeague() string {
 	var league string = g.ESPN.Header.League.Abbreviation
 	if league == "NCAAF" {
@@ -39,27 +39,27 @@ func (g New) parseLeague() string {
 	}
 }
 
-// Parses "Week" field from ESPN Game Summary API
+// parseWeek returns the week number from the ESPN game header.
 func (g New) parseWeek() int8 {
 	var week int8 = g.ESPN.Header.Week
 	return week
 
 }
 
-// Parses "Year" field from ESPN Game Summary API
+// parseYear returns the season year from the ESPN game header.
 func (g New) parseYear() uint {
 	var year uint = g.ESPN.Header.Season.Year
 	return year
 
 }
 
-// Parses "Date" field from ESPN Game Summary API
+// parseGameZuluTimestamp returns the game date from the ESPN competition data.
 func (g New) parseGameZuluTimestamp() string {
 	var gameDate string = g.ESPN.Header.Competitions[0].Date
 	return gameDate
 }
 
-// Parses "Broadcast" field from ESPN Game Summary API
+// parseBroadcast returns the broadcast network from the ESPN competition data.
 func (g New) parseBroadcast() string {
 	var broadcast string = g.ESPN.Header.Competitions[0].Broadcasts[0].Media.ShortName
 	return broadcast
@@ -74,13 +74,14 @@ func (g New) parseBroadcast() string {
 	return concatenatedLocation
 }*/
 
-// Parses "Status" field from ESPN Game Summary API
+// parseGameStatus returns whether the game is completed from the ESPN competition status.
 func (g New) parseGameStatus() bool {
 	var gameStatus bool = g.ESPN.Header.Competitions[0].Status.Type.Completed
 	return gameStatus
 
 }
 
+// InstantiateGameDetails builds a GameDetails value from the extracted game data.
 func (g New) InstantiateGameDetails() GameDetails {
 	return GameDetails{
 		GameID:        g.GameID,

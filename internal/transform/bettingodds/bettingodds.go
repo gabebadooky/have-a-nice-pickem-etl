@@ -30,11 +30,12 @@ type BettingOdds struct {
 	WinProbability float32
 }
 
+// InstantiateBettingOdds runs the given instantiator and returns the betting odds record.
 func InstantiateBettingOdds(i Instantiator) BettingOdds {
 	return i.instantiate()
 }
 
-// Instantiates Away Team ESPN Betting Odds record
+// instantiate builds ESPN away team betting odds from the game data.
 func (b EspnAwayBettingOdds) instantiate() BettingOdds {
 	return BettingOdds{
 		GameID:         b.GameID,
@@ -47,7 +48,7 @@ func (b EspnAwayBettingOdds) instantiate() BettingOdds {
 	}
 }
 
-// Instantiates Home Team ESPN Betting Odds record
+// instantiate builds ESPN home team betting odds from the game data.
 func (b EspnHomeBettingOdds) instantiate() BettingOdds {
 	return BettingOdds{
 		GameID:         b.GameID,
@@ -60,7 +61,7 @@ func (b EspnHomeBettingOdds) instantiate() BettingOdds {
 	}
 }
 
-// Instantiates Away Team CBS Betting Odds record
+// instantiate builds CBS away team betting odds from the game's CBS odds page.
 func (b CbsAwayBettingOdds) instantiate() BettingOdds {
 	return BettingOdds{
 		GameID:         b.GameID,
@@ -72,7 +73,7 @@ func (b CbsAwayBettingOdds) instantiate() BettingOdds {
 	}
 }
 
-// Instantiates Home Team CBS Betting Odds record
+// instantiate builds CBS home team betting odds from the game's CBS odds page.
 func (b CbsHomeBettingOdds) instantiate() BettingOdds {
 	return BettingOdds{
 		GameID:         b.GameID,
@@ -84,7 +85,7 @@ func (b CbsHomeBettingOdds) instantiate() BettingOdds {
 	}
 }
 
-// Instantiates Away Team Fox Betting Odds record
+// instantiate builds Fox away team betting odds from the game's Fox odds page.
 func (b FoxAwayBettingOdds) instantiate() BettingOdds {
 	return BettingOdds{
 		GameID:         b.GameID,
@@ -96,7 +97,7 @@ func (b FoxAwayBettingOdds) instantiate() BettingOdds {
 	}
 }
 
-// Instantiates Home Team Fox Betting Odds record
+// instantiate builds Fox home team betting odds from the game's Fox odds page.
 func (b FoxHomeBettingOdds) instantiate() BettingOdds {
 	return BettingOdds{
 		GameID:         b.GameID,

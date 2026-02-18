@@ -19,10 +19,12 @@ type locationInstantiator interface {
 	extractLocation() Location
 }
 
+// ConsolidateLocationInfo runs the given location instantiator and returns the consolidated Location.
 func ConsolidateLocationInfo(l locationInstantiator) Location {
 	return l.extractLocation()
 }
 
+// extractLocation geocodes the venue via Opencage and returns location details.
 func (l OpencageLocation) extractLocation() Location {
 	var opencageLocationDetails opencagelocation.OpencageEndpoint
 

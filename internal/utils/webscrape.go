@@ -10,7 +10,7 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
-// Scrape web page for given URL
+// scrapePage fetches the given URL and returns the response body as a goquery document.
 func scrapePage(pageURL string) (*goquery.Document, error) {
 	resp, err := http.Get(pageURL)
 	if err != nil {
@@ -30,7 +30,7 @@ func scrapePage(pageURL string) (*goquery.Document, error) {
 	return doc, nil
 }
 
-// Scrape Given Schedule Page
+// GetGoQuerySelectionBody fetches the page at the given URL and returns its body as a goquery selection.
 func GetGoQuerySelectionBody(pageLink string) (*goquery.Selection, error) {
 	doc, err := scrapePage(pageLink)
 	if err != nil {

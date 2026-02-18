@@ -18,6 +18,7 @@ type oppPassTouchdowns struct {
 	page *goquery.Selection
 }
 
+// scrape extracts team pass touchdowns from the CBS passing stats table.
 func (pt teamPassTouchdowns) scrape() Stat {
 	passingStatsTable := scrapePassingStatsTable(pt.page)
 	var teamTotalsTableRow *goquery.Selection = scrapeStatsTableTeamTotalRow(passingStatsTable)
@@ -31,6 +32,7 @@ func (pt teamPassTouchdowns) scrape() Stat {
 	}
 }
 
+// scrape extracts opponent pass touchdowns from the CBS passing stats table.
 func (pt oppPassTouchdowns) scrape() Stat {
 	passingStatsTable := scrapePassingStatsTable(pt.page)
 	var opponentTotalTableRow *goquery.Selection = scrapeStatsTableOpponentTotalRow(passingStatsTable)

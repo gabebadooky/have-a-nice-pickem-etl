@@ -18,6 +18,7 @@ type oppCompletionPercentage struct {
 	page *goquery.Selection
 }
 
+// scrape extracts team completion percentage from the CBS passing stats table.
 func (cp teamCompletionPercentage) scrape() Stat {
 	passingStatsTable := scrapePassingStatsTable(cp.page)
 	var teamTotalsTableRow *goquery.Selection = scrapeStatsTableTeamTotalRow(passingStatsTable)
@@ -31,6 +32,7 @@ func (cp teamCompletionPercentage) scrape() Stat {
 	}
 }
 
+// scrape extracts opponent completion percentage from the CBS passing stats table.
 func (cp oppCompletionPercentage) scrape() Stat {
 	passingStatsTable := scrapePassingStatsTable(cp.page)
 	var opponentTotalTableRow *goquery.Selection = scrapeStatsTableOpponentTotalRow(passingStatsTable)

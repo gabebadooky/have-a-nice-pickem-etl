@@ -23,11 +23,12 @@ type foxScheduleInstantiator interface {
 	scrapeSchedule() *goquery.Selection
 }
 
+// GetScheduleForWeek runs the given Fox schedule instantiator and returns the scraped schedule page.
 func GetScheduleForWeek(s foxScheduleInstantiator) *goquery.Selection {
 	return s.scrapeSchedule()
 }
 
-// Make and handle Fox Schedule web scrape attempt
+// fetchFoxSchedule fetches the Fox schedule page at the given URL and returns its body as a goquery selection.
 func fetchFoxSchedule(foxSchedulePageLink string) *goquery.Selection {
 	log.Printf("\nRequesting Fox Schedule page for week: %s\n", foxSchedulePageLink)
 
@@ -39,6 +40,7 @@ func fetchFoxSchedule(foxSchedulePageLink string) *goquery.Selection {
 	return page
 }
 
+// instantiateShedulePageLink returns the Fox college football schedule URL for the configured week.
 func (sched FoxCfbSchedule) instantiateShedulePageLink() string {
 	var foxSchedulePageLink string
 
@@ -52,6 +54,7 @@ func (sched FoxCfbSchedule) instantiateShedulePageLink() string {
 	return foxSchedulePageLink
 }
 
+// instantiateShedulePageLink returns the Fox NFL schedule URL for the configured week.
 func (sched FoxNflSchedule) instantiateShedulePageLink() string {
 	var foxSchedulePageLink string
 
@@ -65,14 +68,14 @@ func (sched FoxNflSchedule) instantiateShedulePageLink() string {
 	return foxSchedulePageLink
 }
 
-// Scrape Fox CFB Schedule for a given week
+// scrapeSchedule fetches the Fox college football schedule page for the configured week.
 func (sched FoxCfbSchedule) scrapeSchedule() *goquery.Selection {
 	foxSchedulePageLink := sched.instantiateShedulePageLink()
 	foxSchedule := fetchFoxSchedule(foxSchedulePageLink)
 	return foxSchedule
 }
 
-// Scrape Fox NFL Schedule for a given week
+// scrapeSchedule fetches the Fox NFL schedule page for the configured week.
 func (sched FoxNflSchedule) scrapeSchedule() *goquery.Selection {
 	foxSchedulePageLink := sched.instantiateShedulePageLink()
 	foxSchedule := fetchFoxSchedule(foxSchedulePageLink)
