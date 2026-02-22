@@ -116,7 +116,7 @@ func (t CfbTeamsExtract) getTeams() []team.Team {
 	weekSchedule := schedule.ConsolidateScheduleInfo(schedule.CfbSchedule{Week: t.Week})
 	var espnWeekGames []espnsched.EventProperty = weekSchedule.ESPN.Events
 	var teamsThisWeek []team.Team
-	fmt.Printf("len(espnWeekGames): %d", len(espnWeekGames))
+
 	for i := range espnWeekGames {
 		espnTeamCode1 := espnWeekGames[i].Competitions[0].Competitors[0].ID
 		espnTeamCode2 := espnWeekGames[i].Competitions[0].Competitors[1].ID

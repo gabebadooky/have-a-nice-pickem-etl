@@ -18,16 +18,24 @@ func ParseEspnGameCode(gameExtract game.Game) string {
 }
 
 // ScrapeCbsGameCode extracts the CBS game abbreviation from the game's CBS odds block.
-func ScrapeCbsGameCode(gameExtract game.Game) string {
+func ScrapeCbsGameCode(gameExtract game.Game) (string, error) {
+	if gameExtract.CBS == nil {
+		return "", fmt.Errorf("CBS page does not exist for Game %s", gameExtract.GameID)
+	}
+
 	gameCode, exists := gameExtract.CBS.Find("table.OddsBlock-game").Attr("data-game-abbrev")
 	if !exists {
 		log.Panicf("Could not locate CBS Game Code for %v", &gameExtract.CBS)
 	}
-	return gameCode
+	return gameCode, nil
 }
 
 // ScrapeFoxGameCode extracts the Fox game path from the game's Fox odds page nav link.
-func ScrapeFoxGameCode(gameExtract game.Game) string {
+func ScrapeFoxGameCode(gameExtract game.Game) (string, error) {
+	if gameExtract.CBS == nil {
+		return "", fmt.Errorf("Fox page does not exist for Game %s", gameExtract.GameID)
+	}
+
 	matchupCell := gameExtract.FOX.OddsPage.Find("div.nav-horizontal").Find("a").First()
 	gameCode, exists := matchupCell.Attr("href")
 	if !exists {
@@ -36,9 +44,7 @@ func ScrapeFoxGameCode(gameExtract game.Game) string {
 	formattedGameCode := gameCode[1:]
 	_, stringAfterSportPrefix, _ := strings.Cut(formattedGameCode, "/")
 	stringBeforeQueryParams, _, _ := strings.Cut(stringAfterSportPrefix, "?")
-	//gameCodeWithoutBowlPrefix := utils.StripBowlGamePrefixFromFoxGameCode(stringBeforeQueryParams)
-	//gameCodeWithDateSuffix := utils.StripDateAndBoxScoreIDFromFoxGameCode(gameCodeWithoutBowlPrefix)
-	return stringBeforeQueryParams
+	return stringBeforeQueryParams, nil
 }
 
 // ParseAwayTeamID returns the away team ID from the game ID (segment before "-at-").

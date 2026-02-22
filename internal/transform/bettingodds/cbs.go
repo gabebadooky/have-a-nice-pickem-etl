@@ -22,8 +22,12 @@ type CbsHomeBettingOdds struct {
 }
 
 // parseGameOddsTable finds the CBS odds table row matching the game's CBS game code.
-func parseGameOddsTable(c game.Game) *goquery.Selection {
-	var cbsGameCode string = common.ScrapeCbsGameCode(c)
+func parseGameOddsTable(c game.Game) (*goquery.Selection, error) {
+	cbsGameCode, err := common.ScrapeCbsGameCode(c)
+	if err != nil {
+		return nil, err
+	}
+
 	var gameTables *goquery.Selection = c.CBS.Find("table.OddsBlock-game")
 	var gameOddsTable *goquery.Selection
 
@@ -38,7 +42,7 @@ func parseGameOddsTable(c game.Game) *goquery.Selection {
 		}
 	})
 
-	return gameOddsTable
+	return gameOddsTable, nil
 }
 
 // formatCBSOverUnder parses CBS over/under text (e.g. "45.5 o/u") into a float32.
@@ -90,42 +94,72 @@ func formatCBSSpread(spreadText string) float32 {
 
 // parseOverUnder returns the over/under from the game's CBS odds table (away row).
 func (c CbsAwayBettingOdds) parseOverUnder() float32 {
-	var overUnderText string = parseGameOddsTable(c.Game).Find("tbody").Find("tr").Eq(0).Find("td.OddsBlock-betOdds--total").Find("div.BetButton-text").Text()
+	gameOddsTable, err := parseGameOddsTable(c.Game)
+	if err != nil {
+		return float32(0)
+	}
+
+	var overUnderText string = gameOddsTable.Find("tbody").Find("tr").Eq(0).Find("td.OddsBlock-betOdds--total").Find("div.BetButton-text").Text()
 	overUnderFloat32 := formatCBSOverUnder(overUnderText)
 	return overUnderFloat32
 }
 
 // parseOverUnder returns the over/under from the game's CBS odds table (home row).
 func (c CbsHomeBettingOdds) parseOverUnder() float32 {
-	var overUnderText string = parseGameOddsTable(c.Game).Find("tbody").Find("tr").Eq(1).Find("td.OddsBlock-betOdds--total").Find("div.BetButton-text").Text()
+	gameOddsTable, err := parseGameOddsTable(c.Game)
+	if err != nil {
+		return float32(0)
+	}
+
+	var overUnderText string = gameOddsTable.Find("tbody").Find("tr").Eq(1).Find("td.OddsBlock-betOdds--total").Find("div.BetButton-text").Text()
 	overUnderFloat32 := formatCBSOverUnder(overUnderText)
 	return overUnderFloat32
 }
 
 // parseMoneyline returns the away team moneyline from the game's CBS odds table.
 func (c CbsAwayBettingOdds) parseMoneyline() int {
-	var moneylineText string = parseGameOddsTable(c.Game).Find("tbody").Find("tr").Eq(0).Find("td.OddsBlock-betOdds--moneyline").Find("div.BetButton-text").Text()
+	gameOddsTable, err := parseGameOddsTable(c.Game)
+	if err != nil {
+		return 0
+	}
+
+	var moneylineText string = gameOddsTable.Find("tbody").Find("tr").Eq(0).Find("td.OddsBlock-betOdds--moneyline").Find("div.BetButton-text").Text()
 	numericMoneyline := formatCBSMoneyline(moneylineText)
 	return numericMoneyline
 }
 
 // parseMoneyline returns the home team moneyline from the game's CBS odds table.
 func (c CbsHomeBettingOdds) parseMoneyline() int {
-	var moneylineText string = parseGameOddsTable(c.Game).Find("tbody").Find("tr").Eq(1).Find("td.OddsBlock-betOdds--moneyline").Find("div.BetButton-text").Text()
+	gameOddsTable, err := parseGameOddsTable(c.Game)
+	if err != nil {
+		return 0
+	}
+
+	var moneylineText string = gameOddsTable.Find("tbody").Find("tr").Eq(1).Find("td.OddsBlock-betOdds--moneyline").Find("div.BetButton-text").Text()
 	numericMoneyline := formatCBSMoneyline(moneylineText)
 	return numericMoneyline
 }
 
 // parseSpread returns the away team spread from the game's CBS odds table.
 func (c CbsAwayBettingOdds) parseSpread() float32 {
-	var spreadText string = parseGameOddsTable(c.Game).Find("tbody").Find("tr").Eq(0).Find("td.OddsBlock-betOdds--spread").Find("div.BetButton-text").Text()
+	gameOddsTable, err := parseGameOddsTable(c.Game)
+	if err != nil {
+		return float32(0)
+	}
+
+	var spreadText string = gameOddsTable.Find("tbody").Find("tr").Eq(0).Find("td.OddsBlock-betOdds--spread").Find("div.BetButton-text").Text()
 	spreadFloat32 := formatCBSSpread(spreadText)
 	return spreadFloat32
 }
 
 // parseSpread returns the home team spread from the game's CBS odds table.
 func (c CbsHomeBettingOdds) parseSpread() float32 {
-	var spreadText string = parseGameOddsTable(c.Game).Find("tbody").Find("tr").Eq(1).Find("td.OddsBlock-betOdds--spread").Find("div.BetButton-text").Text()
+	gameOddsTable, err := parseGameOddsTable(c.Game)
+	if err != nil {
+		return float32(0)
+	}
+
+	var spreadText string = gameOddsTable.Find("tbody").Find("tr").Eq(1).Find("td.OddsBlock-betOdds--spread").Find("div.BetButton-text").Text()
 	spreadFloat32 := formatCBSSpread(spreadText)
 	return spreadFloat32
 }

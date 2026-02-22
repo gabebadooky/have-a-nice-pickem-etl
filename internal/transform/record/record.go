@@ -48,8 +48,8 @@ func (o OverallRecord) instantiate() Record {
 	return Record{
 		TeamID:     o.TeamID,
 		RecordType: "Overall",
-		Wins:       o.parseOverallWins(),
-		Losses:     o.parseOverallLosses(),
-		Ties:       o.parseOverallTies(),
+		Wins:       o.parseWins(),
+		Losses:     o.parseLosses(),
+		Ties:       o.parseTies(),
 	}
 }

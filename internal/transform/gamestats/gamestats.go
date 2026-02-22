@@ -4,7 +4,6 @@
 package gamestats
 
 import (
-	"fmt"
 	"have-a-nice-pickem-etl/internal/extract/game"
 	"have-a-nice-pickem-etl/internal/transform/common"
 	"have-a-nice-pickem-etl/internal/utils"
@@ -112,7 +111,7 @@ func getNumberOfSecondsFromDurationString(durationString string) int {
 	before, after, _ := strings.Cut(durationString, ":")
 	minutes := before
 	seconds := after
-	fmt.Printf("\nminutes: %s | seconds: %s\n", minutes, seconds)
+
 	totalSeconds := (utils.ConvertStringToInt(minutes) * 60) + utils.ConvertStringToInt(seconds)
 	return totalSeconds
 }

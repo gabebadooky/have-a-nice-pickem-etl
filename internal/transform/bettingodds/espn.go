@@ -5,6 +5,7 @@ package bettingodds
 
 import (
 	"have-a-nice-pickem-etl/internal/extract/game"
+	espngame "have-a-nice-pickem-etl/internal/extract/game/espn"
 	"have-a-nice-pickem-etl/internal/utils"
 )
 
@@ -18,31 +19,56 @@ type EspnHomeBettingOdds struct {
 
 // parseOverUnder returns the over/under total from the ESPN pickcenter (away or home row).
 func (e EspnAwayBettingOdds) parseOverUnder() float32 {
-	var overUnder float32 = e.ESPN.Pickcenter[0].OverUnder
+	var pickcenterSlice []espngame.PickcenterProperty = e.ESPN.Pickcenter
+	if len(pickcenterSlice) == 0 {
+		return float32(0)
+	}
+
+	var overUnder float32 = pickcenterSlice[0].OverUnder
 	return overUnder
 }
 
 // parseOverUnder returns the over/under total from the ESPN pickcenter for the home team.
 func (e EspnHomeBettingOdds) parseOverUnder() float32 {
-	var overUnder float32 = e.ESPN.Pickcenter[1].OverUnder
+	var pickcenterSlice []espngame.PickcenterProperty = e.ESPN.Pickcenter
+	if len(pickcenterSlice) == 0 {
+		return float32(0)
+	}
+
+	var overUnder float32 = pickcenterSlice[1].OverUnder
 	return overUnder
 }
 
 // parseMoneyline returns the away team moneyline from the ESPN pickcenter.
 func (e EspnAwayBettingOdds) parseMoneyline() int {
-	var awayMoneyline int = e.ESPN.Pickcenter[0].AwayTeamOdds.Moneyline
+	var pickcenterSlice []espngame.PickcenterProperty = e.ESPN.Pickcenter
+	if len(pickcenterSlice) == 0 {
+		return 0
+	}
+
+	var awayMoneyline int = pickcenterSlice[0].AwayTeamOdds.Moneyline
 	return awayMoneyline
 }
 
 // parseMoneyline returns the home team moneyline from the ESPN pickcenter.
 func (e EspnHomeBettingOdds) parseMoneyline() int {
-	var homeMoneyline int = e.ESPN.Pickcenter[0].HomeTeamOdds.Moneyline
+	var pickcenterSlice []espngame.PickcenterProperty = e.ESPN.Pickcenter
+	if len(pickcenterSlice) == 0 {
+		return 0
+	}
+
+	var homeMoneyline int = pickcenterSlice[0].HomeTeamOdds.Moneyline
 	return homeMoneyline
 }
 
 // parseSpread returns the away team spread from the ESPN pickcenter (negated for away).
 func (e EspnAwayBettingOdds) parseSpread() float32 {
-	var awaySpread float32 = e.ESPN.Pickcenter[0].Spread
+	var pickcenterSlice []espngame.PickcenterProperty = e.ESPN.Pickcenter
+	if len(pickcenterSlice) == 0 {
+		return float32(0)
+	}
+
+	var awaySpread float32 = pickcenterSlice[0].Spread
 	if awaySpread > 0 {
 		awaySpread -= (awaySpread * 2)
 	} else {
@@ -53,7 +79,12 @@ func (e EspnAwayBettingOdds) parseSpread() float32 {
 
 // parseSpread returns the home team spread from the ESPN pickcenter.
 func (e EspnHomeBettingOdds) parseSpread() float32 {
-	var homeSpread float32 = e.ESPN.Pickcenter[0].Spread
+	var pickcenterSlice []espngame.PickcenterProperty = e.ESPN.Pickcenter
+	if len(pickcenterSlice) == 0 {
+		return float32(0)
+	}
+
+	var homeSpread float32 = pickcenterSlice[0].Spread
 	return homeSpread
 }
 

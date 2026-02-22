@@ -17,21 +17,23 @@ import (
 )
 
 // instantiateCsvWriter creates and returns a CSV writer for the given file path.
-func instantiateCsvWriter(filepath string) *csv.Writer {
-	f, err := os.OpenFile(filepath, os.O_CREATE, 0o644)
+func instantiateCsvWriter(filepath string) (*os.File, *csv.Writer) {
+	f, err := os.OpenFile(filepath, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0644)
 	if err != nil {
+		log.Print(err)
 		log.Fatalf("Error occurred instantiating CSV Writer to %s", filepath)
 	}
-	defer f.Close()
 
 	csvwriter := csv.NewWriter(f)
-	return csvwriter
+	return f, csvwriter
 }
 
 // BettingOdds writes betting odds records to data/bettingodds.csv.
-func BettingOdds(records []bettingodds.BettingOdds) {
-	bulkDataLoadFilePath := "./data/bettingodds.csv"
-	w := instantiateCsvWriter(bulkDataLoadFilePath)
+func BettingOdds(records []bettingodds.BettingOdds, csvLoadFolderPath string) {
+	bulkDataLoadFilePath := fmt.Sprintf("%s/%s", csvLoadFolderPath, "bettingodds.csv")
+	f, w := instantiateCsvWriter(bulkDataLoadFilePath)
+	defer f.Close()
+	defer w.Flush()
 
 	for _, record := range records {
 		w.Write([]string{
@@ -44,7 +46,6 @@ func BettingOdds(records []bettingodds.BettingOdds) {
 			fmt.Sprintf("%f", record.WinProbability),
 		})
 	}
-	w.Flush()
 
 	if err := w.Error(); err != nil {
 		log.Fatal(err)
@@ -52,9 +53,11 @@ func BettingOdds(records []bettingodds.BettingOdds) {
 }
 
 // Boxscores writes boxscore records to data/boxscores.csv.
-func Boxscores(records []boxscore.Boxscore) {
-	bulkDataLoadFilePath := "./data/boxscores.csv"
-	w := instantiateCsvWriter(bulkDataLoadFilePath)
+func Boxscores(records []boxscore.Boxscore, csvLoadFolderPath string) {
+	bulkDataLoadFilePath := fmt.Sprintf("%s/%s", csvLoadFolderPath, "boxscores.csv")
+	f, w := instantiateCsvWriter(bulkDataLoadFilePath)
+	defer f.Close()
+	defer w.Flush()
 
 	for _, record := range records {
 		w.Write([]string{
@@ -68,7 +71,6 @@ func Boxscores(records []boxscore.Boxscore) {
 			fmt.Sprintf("%d", record.TotalScore),
 		})
 	}
-	w.Flush()
 
 	if err := w.Error(); err != nil {
 		log.Fatal(err)
@@ -76,9 +78,11 @@ func Boxscores(records []boxscore.Boxscore) {
 }
 
 // GameDetails writes game detail records to data/gamedetails.csv.
-func GameDetails(records []gamedetails.GameDetails) {
-	bulkDataLoadFilePath := "./data/gamedetails.csv"
-	w := instantiateCsvWriter(bulkDataLoadFilePath)
+func GameDetails(records []gamedetails.GameDetails, csvLoadFolderPath string) {
+	bulkDataLoadFilePath := fmt.Sprintf("%s/%s", csvLoadFolderPath, "gamedetails.csv")
+	f, w := instantiateCsvWriter(bulkDataLoadFilePath)
+	defer f.Close()
+	defer w.Flush()
 
 	for _, record := range records {
 		w.Write([]string{
@@ -94,11 +98,10 @@ func GameDetails(records []gamedetails.GameDetails) {
 			record.HomeTeamID,
 			record.ZuluTimestamp,
 			record.Broadcast,
-			record.Location,
+			record.LocationID,
 			fmt.Sprintf("%t", record.Finished),
 		})
 	}
-	w.Flush()
 
 	if err := w.Error(); err != nil {
 		log.Fatal(err)
@@ -106,9 +109,11 @@ func GameDetails(records []gamedetails.GameDetails) {
 }
 
 // Stats writes game stats records to data/stats.csv.
-func Stats(records []gamestats.GameStats) {
-	bulkDataLoadFilePath := "./data/stats.csv"
-	w := instantiateCsvWriter(bulkDataLoadFilePath)
+func Stats(records []gamestats.GameStats, csvLoadFolderPath string) {
+	bulkDataLoadFilePath := fmt.Sprintf("%s/%s", csvLoadFolderPath, "stats.csv")
+	f, w := instantiateCsvWriter(bulkDataLoadFilePath)
+	defer f.Close()
+	defer w.Flush()
 
 	for _, record := range records {
 		var gameID string = record.GameID
@@ -124,7 +129,6 @@ func Stats(records []gamestats.GameStats) {
 		}
 
 	}
-	w.Flush()
 
 	if err := w.Error(); err != nil {
 		log.Fatal(err)
@@ -132,9 +136,11 @@ func Stats(records []gamestats.GameStats) {
 }
 
 // LocationDetails writes location detail records to data/locations.csv.
-func LocationDetails(records []locationdetails.LocationDetails) {
-	bulkDataLoadFilePath := "./data/locations.csv"
-	w := instantiateCsvWriter(bulkDataLoadFilePath)
+func LocationDetails(records []locationdetails.LocationDetails, csvLoadFolderPath string) {
+	bulkDataLoadFilePath := fmt.Sprintf("%s/%s", csvLoadFolderPath, "locations.csv")
+	f, w := instantiateCsvWriter(bulkDataLoadFilePath)
+	defer f.Close()
+	defer w.Flush()
 
 	for _, record := range records {
 		w.Write([]string{
@@ -146,7 +152,6 @@ func LocationDetails(records []locationdetails.LocationDetails) {
 			fmt.Sprintf("%f", record.Longitude),
 		})
 	}
-	w.Flush()
 
 	if err := w.Error(); err != nil {
 		log.Fatal(err)
@@ -154,9 +159,11 @@ func LocationDetails(records []locationdetails.LocationDetails) {
 }
 
 // TeamRecord writes team record rows to data/teamrecords.csv.
-func TeamRecord(records []record.Record) {
-	bulkDataLoadFilePath := "./data/teamrecords.csv"
-	w := instantiateCsvWriter(bulkDataLoadFilePath)
+func TeamRecord(records []record.Record, csvLoadFolderPath string) {
+	bulkDataLoadFilePath := fmt.Sprintf("%s/%s", csvLoadFolderPath, "teamrecords.csv")
+	f, w := instantiateCsvWriter(bulkDataLoadFilePath)
+	defer f.Close()
+	defer w.Flush()
 
 	for _, record := range records {
 		w.Write([]string{
@@ -167,7 +174,6 @@ func TeamRecord(records []record.Record) {
 			fmt.Sprintf("%d", record.Ties),
 		})
 	}
-	w.Flush()
 
 	if err := w.Error(); err != nil {
 		log.Fatal(err)
@@ -175,9 +181,11 @@ func TeamRecord(records []record.Record) {
 }
 
 // TeamDetails writes team detail records to data/teams.csv.
-func TeamDetails(records []teamdetails.TeamDetails) {
-	bulkDataLoadFilePath := "./data/teams.csv"
-	w := instantiateCsvWriter(bulkDataLoadFilePath)
+func TeamDetails(records []teamdetails.TeamDetails, csvLoadFolderPath string) {
+	bulkDataLoadFilePath := fmt.Sprintf("%s/%s", csvLoadFolderPath, "teams.csv")
+	f, w := instantiateCsvWriter(bulkDataLoadFilePath)
+	defer f.Close()
+	defer w.Flush()
 
 	for _, record := range records {
 		w.Write([]string{
@@ -195,7 +203,6 @@ func TeamDetails(records []teamdetails.TeamDetails) {
 			fmt.Sprintf("%d", record.Ranking),
 		})
 	}
-	w.Flush()
 
 	if err := w.Error(); err != nil {
 		log.Fatal(err)

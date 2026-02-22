@@ -5,11 +5,14 @@ package gamedetails
 
 import (
 	"have-a-nice-pickem-etl/internal/extract/game"
+	espngame "have-a-nice-pickem-etl/internal/extract/game/espn"
+	"have-a-nice-pickem-etl/internal/extract/location"
 	"have-a-nice-pickem-etl/internal/transform/common"
 )
 
 type New struct {
 	game.Game
+	Locations []location.Location
 }
 
 type GameDetails struct {
@@ -25,8 +28,24 @@ type GameDetails struct {
 	HomeTeamID    string
 	ZuluTimestamp string
 	Broadcast     string
-	Location      string
+	LocationID    string
 	Finished      bool
+}
+
+func (g New) setCbsGameCode() string {
+	cbsGameCode, err := common.ScrapeCbsGameCode(g.Game)
+	if err != nil {
+		return "CbsGameCode"
+	}
+	return cbsGameCode
+}
+
+func (g New) setFoxGameCode() string {
+	foxGameCode, err := common.ScrapeFoxGameCode(g.Game)
+	if err != nil {
+		foxGameCode = "FoxGameCode"
+	}
+	return foxGameCode
 }
 
 // parseLeague returns the league abbreviation (CFB or NFL) from the ESPN game header.
@@ -61,18 +80,34 @@ func (g New) parseGameZuluTimestamp() string {
 
 // parseBroadcast returns the broadcast network from the ESPN competition data.
 func (g New) parseBroadcast() string {
-	var broadcast string = g.ESPN.Header.Competitions[0].Broadcasts[0].Media.ShortName
+	var broadcastSlice []espngame.BroadcastsProperty = g.ESPN.Header.Competitions[0].Broadcasts
+	if len(broadcastSlice) == 0 {
+		return ""
+	}
+	var broadcast string = broadcastSlice[0].Media.ShortName
 	return broadcast
 }
 
-// Parses "Location" field from ESPN Game Summary API
-/*func (g New) parseLocation() string {
-	var formattedStadium string = utils.FormatStringID(location.ParseStadium(g))
-	var formattedCity string = utils.FormatStringID(location.ParseCity(g))
-	var formattedState string = utils.FormatStringID(location.ParseState(g))
-	var concatenatedLocation string = fmt.Sprintf("%s-%s-%s", formattedStadium, formattedCity, formattedState)
-	return concatenatedLocation
-}*/
+// Returns the Maidenhead property, as LocationID, for a given game
+func (g New) parseLocationID() string {
+	var gameStadium string = g.ESPN.GameInfo.Venue.FullName
+	var gameCity string = g.ESPN.GameInfo.Venue.Address.City
+	var gameState string = g.ESPN.GameInfo.Venue.Address.State
+
+	for i := range g.Locations {
+		opencageLocationResults := g.Locations[i].Opencage.Results[0]
+
+		stadium := opencageLocationResults.Components.Stadium
+		city := opencageLocationResults.Components.City
+		state := opencageLocationResults.Components.State
+
+		if (gameStadium == stadium) && (gameCity == city) && (gameState == state) {
+			return opencageLocationResults.Annotations.Maidenhead
+		}
+	}
+
+	return ""
+}
 
 // parseGameStatus returns whether the game is completed from the ESPN competition status.
 func (g New) parseGameStatus() bool {
@@ -89,14 +124,14 @@ func (g New) InstantiateGameDetails() GameDetails {
 		Week:          g.parseWeek(),
 		Year:          g.parseYear(),
 		EspnCode:      common.ParseEspnGameCode(g.Game),
-		CbsCode:       common.ScrapeCbsGameCode(g.Game),
-		FoxCode:       common.ScrapeFoxGameCode(g.Game),
+		CbsCode:       g.setCbsGameCode(),
+		FoxCode:       g.setFoxGameCode(),
 		VegasCode:     "",
 		AwayTeamID:    common.ParseAwayTeamID(g.Game),
 		HomeTeamID:    common.ParseHomeTeamID(g.Game),
 		ZuluTimestamp: g.parseGameZuluTimestamp(),
 		Broadcast:     g.parseBroadcast(),
-		Location:      "",
+		LocationID:    g.parseLocationID(),
 		Finished:      g.parseGameStatus(),
 	}
 }

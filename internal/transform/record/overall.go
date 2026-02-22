@@ -3,13 +3,19 @@
 package record
 
 import (
+	espnteam "have-a-nice-pickem-etl/internal/extract/team/espn"
 	"strconv"
 	"strings"
 )
 
 // parseOverallRecordElements parses the ESPN overall record summary into wins, losses, and ties.
 func (o OverallRecord) parseOverallRecordElements() [3]uint {
-	var overallRecord string = o.ESPN.Team.OverallRecord.RecordItems[0].Summary
+	var recordItems []espnteam.RecordItemProperty = o.ESPN.Team.OverallRecord.RecordItems
+	if len(recordItems) == 0 {
+		return [3]uint{0, 0, 0}
+	}
+
+	var overallRecord string = recordItems[0].Summary
 	recordElements := strings.Split(overallRecord, "-")
 
 	if len(recordElements) == 2 {
@@ -35,19 +41,19 @@ func (o OverallRecord) parseOverallRecordElements() [3]uint {
 }
 
 // parseOverallWins returns overall wins from the team's ESPN record.
-func (o OverallRecord) parseOverallWins() uint {
-	var overallWins uint = o.parseOverallRecordElements()[0]
+func (o OverallRecord) parseWins() uint {
+	overallWins := o.parseOverallRecordElements()[0]
 	return overallWins
 }
 
 // parseOverallLosses returns overall losses from the team's ESPN record.
-func (o OverallRecord) parseOverallLosses() uint {
-	var overallLosses uint = o.parseOverallRecordElements()[1]
+func (o OverallRecord) parseLosses() uint {
+	overallLosses := o.parseOverallRecordElements()[1]
 	return overallLosses
 }
 
 // parseOverallTies returns overall ties from the team's ESPN record.
-func (o OverallRecord) parseOverallTies() uint {
-	var overallTies uint = o.parseOverallRecordElements()[2]
+func (o OverallRecord) parseTies() uint {
+	overallTies := o.parseOverallRecordElements()[2]
 	return overallTies
 }

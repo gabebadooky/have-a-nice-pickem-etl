@@ -27,7 +27,7 @@ func GetTeamSummary(t espnTeamInstantiator) TeamSummaryEndpoint {
 
 // fetchTeamEndpointCall calls the ESPN team summary endpoint and decodes the JSON response.
 func fetchTeamEndpointCall(espnTeamEndpoint string) TeamSummaryEndpoint {
-	log.Printf("\nCalling ESPN endpoint for Team: %s\n", espnTeamEndpoint)
+	log.Printf("Calling ESPN endpoint for Team: %s\n\n", espnTeamEndpoint)
 
 	body, err := utils.CallEndpoint(espnTeamEndpoint)
 	if err != nil {

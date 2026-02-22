@@ -17,7 +17,15 @@ func scrapeConferenceRecordText(cbsTeamStatsPage *goquery.Selection) string {
 
 // parseWins returns conference wins from the CBS conference record text.
 func (c ConferenceRecord) parseWins() uint {
+	if c.CBS == nil {
+		return 0
+	}
+
 	conferenceRecordText := scrapeConferenceRecordText(c.CBS)
+	if conferenceRecordText == "" {
+		return 0
+	}
+
 	conferenceWinsString := strings.Split(conferenceRecordText, "-")[0]
 	var conferenceWins int = utils.ConvertStringToInt(conferenceWinsString)
 	return uint(conferenceWins)
@@ -25,7 +33,15 @@ func (c ConferenceRecord) parseWins() uint {
 
 // parseLosses returns conference losses from the CBS conference record text.
 func (c ConferenceRecord) parseLosses() uint {
+	if c.CBS == nil {
+		return 0
+	}
+
 	conferenceRecordText := scrapeConferenceRecordText(c.CBS)
+	if conferenceRecordText == "" {
+		return 0
+	}
+
 	conferenceLossesString := strings.Split(conferenceRecordText, "-")[1]
 	var conferenceLosses int = utils.ConvertStringToInt(conferenceLossesString)
 	return uint(conferenceLosses)
@@ -34,7 +50,15 @@ func (c ConferenceRecord) parseLosses() uint {
 // parseTies returns conference ties from the CBS conference record text.
 func (c ConferenceRecord) parseTies() uint {
 	var conferenceTiesString string
+	if c.CBS == nil {
+		return 0
+	}
+
 	conferenceRecordText := scrapeConferenceRecordText(c.CBS)
+	if conferenceRecordText == "" {
+		return 0
+	}
+
 	conferenceTiesSlice := strings.Split(conferenceRecordText, "-")
 
 	if len(conferenceTiesSlice) == 3 {
