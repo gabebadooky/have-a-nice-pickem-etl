@@ -16,14 +16,6 @@ type EspnCfbTeam struct {
 type EspnNflTeam struct {
 	TeamCode string
 }
-type espnTeamInstantiator interface {
-	getTeamSummary() TeamSummaryEndpoint
-}
-
-// GetTeamSummary runs the given ESPN team instantiator and returns the team summary response.
-func GetTeamSummary(t espnTeamInstantiator) TeamSummaryEndpoint {
-	return t.getTeamSummary()
-}
 
 // fetchTeamEndpointCall calls the ESPN team summary endpoint and decodes the JSON response.
 func fetchTeamEndpointCall(espnTeamEndpoint string) TeamSummaryEndpoint {
@@ -43,14 +35,14 @@ func fetchTeamEndpointCall(espnTeamEndpoint string) TeamSummaryEndpoint {
 }
 
 // getTeamSummary fetches the ESPN college football team summary for the configured team code.
-func (cfb EspnCfbTeam) getTeamSummary() TeamSummaryEndpoint {
+func (cfb EspnCfbTeam) GetTeamSummary() TeamSummaryEndpoint {
 	espnTeamEndpoint := fmt.Sprintf("%s%s", utils.ESPN_CFB_TEAM_ENDPOINT_URL, cfb.TeamCode)
 	espnTeamSummary := fetchTeamEndpointCall(espnTeamEndpoint)
 	return espnTeamSummary
 }
 
 // getTeamSummary fetches the ESPN NFL team summary for the configured team code.
-func (nfl EspnNflTeam) getTeamSummary() TeamSummaryEndpoint {
+func (nfl EspnNflTeam) GetTeamSummary() TeamSummaryEndpoint {
 	espnTeamEndpoint := fmt.Sprintf("%s%s", utils.ESPN_NFL_TEAM_ENDPOINT_URL, nfl.TeamCode)
 	espnTeamSummary := fetchTeamEndpointCall(espnTeamEndpoint)
 	return espnTeamSummary

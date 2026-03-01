@@ -27,21 +27,12 @@ type Team struct {
 	CBS    *goquery.Selection
 }
 
-type teamInstantiator interface {
-	extractTeam() Team
-}
-
-// ConsolidateTeamInfo runs the given team instantiator and returns the consolidated Team.
-func ConsolidateTeamInfo(t teamInstantiator) Team {
-	return t.extractTeam()
-}
-
 // extractTeam fetches and consolidates college football team data from ESPN and CBS.
 func (t CfbTeam) extractTeam() Team {
-	var espnTeam espnteam.TeamSummaryEndpoint = espnteam.GetTeamSummary(espnteam.EspnCfbTeam{TeamCode: t.EspnCode})
-	teamLocationName := fmt.Sprintf("%s %s", espnTeam.Team.Location, espnTeam.Team.Name)
-	teamID := utils.FormatStringID(teamLocationName)
-	var cbsTeamStats *goquery.Selection = cbsteam.GetTeamStatsPage(cbsteam.CbsCfbTeam{TeamID: teamID})
+	var espnTeam espnteam.TeamSummaryEndpoint = espnteam.EspnCfbTeam{TeamCode: t.EspnCode}.GetTeamSummary()
+	teamFullName := fmt.Sprintf("%s %s", espnTeam.Team.Location, espnTeam.Team.Name)
+	teamID := utils.FormatStringID(teamFullName)
+	var cbsTeamStats *goquery.Selection = cbsteam.CbsCfbTeam{TeamID: teamID}.GetTeamPage()
 
 	return Team{
 		TeamID: teamID,
@@ -53,10 +44,10 @@ func (t CfbTeam) extractTeam() Team {
 
 // extractTeam fetches and consolidates NFL team data from ESPN and CBS.
 func (t NflTeam) extractTeam() Team {
-	var espnTeam espnteam.TeamSummaryEndpoint = espnteam.GetTeamSummary(espnteam.EspnNflTeam{TeamCode: t.EspnCode})
+	var espnTeam espnteam.TeamSummaryEndpoint = espnteam.EspnNflTeam{TeamCode: t.EspnCode}.GetTeamSummary()
 	teamLocationName := fmt.Sprintf("%s %s", espnTeam.Team.Location, espnTeam.Team.Name)
 	teamID := utils.FormatStringID(teamLocationName)
-	var cbsTeamStats *goquery.Selection = cbsteam.GetTeamStatsPage(cbsteam.CbsNflTeam{TeamID: teamID})
+	var cbsTeamStats *goquery.Selection = cbsteam.CbsNflTeam{TeamID: teamID}.GetTeamPage()
 
 	return Team{
 		TeamID: teamID,
