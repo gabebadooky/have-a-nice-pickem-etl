@@ -15,15 +15,6 @@ type CbsGame struct {
 	GameId      string
 }
 
-type instantiator interface {
-	scrapeGame() *goquery.Selection
-}
-
-// GetGamePage runs the given game instantiator and returns the scraped CBS game odds selection.
-func GetGamePage(g instantiator) *goquery.Selection {
-	return g.scrapeGame()
-}
-
 // getTeamID maps a CBS team code to the global team ID using the package mapping.
 func getTeamID(teamCode string) string {
 	cbsTeamCodeWithoutAbbr := teamCode[strings.Index(teamCode, "/")+1:]
@@ -43,9 +34,11 @@ func (g CbsGame) scrapeGame() *goquery.Selection {
 	gameOddsTables.EachWithBreak(func(i int, gameOddsTable *goquery.Selection) bool {
 		// Use the table element directly instead of finding it again
 		cbsGameOddsHTML = gameOddsTable
+		var cbsAwayTeamCode string = awayTeam{oddsPageTable: gameOddsTable}.scrapeTeamCode()
+		var cbsHomeTeamCode string = homeTeam{oddsPageTable: gameOddsTable}.scrapeTeamCode()
 
-		awayTeamID := getTeamID(awayTeam{oddsPageTable: gameOddsTable}.scrapeTeamCode())
-		homeTeamID := getTeamID(homeTeam{oddsPageTable: gameOddsTable}.scrapeTeamCode())
+		awayTeamID := getTeamID(cbsAwayTeamCode)
+		homeTeamID := getTeamID(cbsHomeTeamCode)
 
 		if strings.Contains(g.GameId, awayTeamID) && strings.Contains(g.GameId, homeTeamID) {
 			// Break out of loop if GameId string containts awayTeamID and homeTeamID
