@@ -28,7 +28,7 @@ type Team struct {
 }
 
 // extractTeam fetches and consolidates college football team data from ESPN and CBS.
-func (t CfbTeam) extractTeam() Team {
+func (t CfbTeam) ExtractTeam() Team {
 	var espnTeam espnteam.TeamSummaryEndpoint = espnteam.EspnCfbTeam{TeamCode: t.EspnCode}.GetTeamSummary()
 	teamFullName := fmt.Sprintf("%s %s", espnTeam.Team.Location, espnTeam.Team.Name)
 	teamID := utils.FormatStringID(teamFullName)
@@ -43,7 +43,7 @@ func (t CfbTeam) extractTeam() Team {
 }
 
 // extractTeam fetches and consolidates NFL team data from ESPN and CBS.
-func (t NflTeam) extractTeam() Team {
+func (t NflTeam) ExtractTeam() Team {
 	var espnTeam espnteam.TeamSummaryEndpoint = espnteam.EspnNflTeam{TeamCode: t.EspnCode}.GetTeamSummary()
 	teamLocationName := fmt.Sprintf("%s %s", espnTeam.Team.Location, espnTeam.Team.Name)
 	teamID := utils.FormatStringID(teamLocationName)

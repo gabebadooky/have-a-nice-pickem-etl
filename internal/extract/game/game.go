@@ -47,7 +47,7 @@ func instantiateGameID(sched espnsched.EventProperty) string {
 }
 
 // extractGame fetches and consolidates college football game data from ESPN, CBS, and Fox.
-func (c CfbGame) extractGame() (Game, error) {
+func (c CfbGame) ExtractGame() (Game, error) {
 	gameID := instantiateGameID(c.EspnEvent)
 	fmt.Printf("\nEvent: %s", gameID)
 
@@ -64,13 +64,14 @@ func (c CfbGame) extractGame() (Game, error) {
 }
 
 // extractGame fetches and consolidates NFL game data from ESPN, CBS, and Fox.
-func (n NflGame) extractGame() (Game, error) {
+func (n NflGame) ExtractGame() (Game, error) {
 	gameID := instantiateGameID(n.EspnEvent)
 	fmt.Printf("\nEvent: %s", gameID)
 
 	if strings.Contains(gameID, "-tbd-") {
 		return Game{}, fmt.Errorf("GameID includes \"tbd\"")
 	}
+
 	return Game{
 		GameID: gameID,
 		ESPN:   espngame.EspnNflGame{GameCode: n.EspnEvent.ID}.GetGameSummary(),
