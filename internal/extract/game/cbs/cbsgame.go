@@ -27,7 +27,7 @@ func getTeamID(teamCode string) string {
 }
 
 // scrapeGame finds the CBS odds block whose away and home team IDs match the game ID.
-func (g CbsGame) scrapeGame() *goquery.Selection {
+func (g CbsGame) GetGamePage() *goquery.Selection {
 	var cbsGameOddsHTML *goquery.Selection
 	gameOddsTables := g.CbsOddsPage.Find(`div.OddsBlock`)
 

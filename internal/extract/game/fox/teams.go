@@ -16,10 +16,15 @@ type homeTeam struct {
 	hyperlink string
 }
 
+func extractFormattedGameCode(gameHyperlink string) string {
+	formattedGameCode := utils.StripDateAndBoxScoreIDFromFoxGameCode(gameHyperlink)
+	formattedGameCode = utils.StripBowlGamePrefixFromFoxGameCode(formattedGameCode)
+	return formattedGameCode
+}
+
 // scrapeTeamCode returns the Fox away team code from the game URL (before "-vs-").
 func (a awayTeam) scrapeTeamCode() string {
-	formattedGameCode := utils.StripDateAndBoxScoreIDFromFoxGameCode(a.hyperlink)
-	formattedGameCode = utils.StripBowlGamePrefixFromFoxGameCode(formattedGameCode)
+	formattedGameCode := extractFormattedGameCode(a.hyperlink)
 	teamCode, _, _ := strings.Cut(formattedGameCode, "-vs-")
 	_, teamCodeWithoutHyperlinkPrefix, exists := strings.Cut(teamCode, "l/")
 	if exists {
@@ -30,8 +35,7 @@ func (a awayTeam) scrapeTeamCode() string {
 
 // scrapeTeamCode returns the Fox home team code from the game URL (after "-vs-").
 func (h homeTeam) scrapeTeamCode() string {
-	formattedGameCode := utils.StripDateAndBoxScoreIDFromFoxGameCode(h.hyperlink)
-	formattedGameCode = utils.StripBowlGamePrefixFromFoxGameCode(formattedGameCode)
+	formattedGameCode := extractFormattedGameCode(h.hyperlink)
 	_, teamCode, _ := strings.Cut(formattedGameCode, "-vs-")
 	return teamCode
 }

@@ -15,26 +15,15 @@ type Location struct {
 	Opencage opencagelocation.OpencageEndpoint
 }
 
-type locationInstantiator interface {
-	extractLocation() Location
-}
-
-// ConsolidateLocationInfo runs the given location instantiator and returns the consolidated Location.
-func ConsolidateLocationInfo(l locationInstantiator) Location {
-	return l.extractLocation()
-}
-
 // extractLocation geocodes the venue via Opencage and returns location details.
-func (l OpencageLocation) extractLocation() Location {
-	var opencageLocationDetails opencagelocation.OpencageEndpoint
-
+func (l OpencageLocation) GetLocation() Location {
 	opencageForwardGeocode := opencagelocation.OpencageForwardGeocode{
 		Stadium: l.Stadium,
 		City:    l.City,
 		State:   l.State,
 	}
 
-	opencageLocationDetails = opencagelocation.GetLocationDetails(opencageForwardGeocode)
+	opencageLocationDetails := opencageForwardGeocode.GetGeocodeDetails()
 
 	return Location{
 		Opencage: opencageLocationDetails,

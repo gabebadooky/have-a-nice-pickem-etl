@@ -36,14 +36,14 @@ func fetchGameSummary(gameCode string, espnGameEndpoint string) GameSummaryEndpo
 }
 
 // getGameSummary fetches the ESPN college football game summary for the configured game code.
-func (g EspnCfbGame) getGameSummary() GameSummaryEndpoint {
+func (g EspnCfbGame) GetGameSummary() GameSummaryEndpoint {
 	espnGameEndpoint := fmt.Sprintf("%s%s", utils.ESPN_CFB_GAME_ENDPOINT_URL, g.GameCode)
 	espnGameSummary := fetchGameSummary(g.GameCode, espnGameEndpoint)
 	return espnGameSummary
 }
 
 // getGameSummary fetches the ESPN NFL game summary for the configured game code.
-func (g EspnNflGame) getGameSummary() GameSummaryEndpoint {
+func (g EspnNflGame) GetGameSummary() GameSummaryEndpoint {
 	espnGameEndpoint := fmt.Sprintf("%s%s", utils.ESPN_NFL_GAME_ENDPOINT_URL, g.GameCode)
 	espnGameSummary := fetchGameSummary(g.GameCode, espnGameEndpoint)
 	return espnGameSummary

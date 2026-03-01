@@ -34,15 +34,6 @@ type Game struct {
 	FOX    foxgame.FoxGamePages
 }
 
-type gameInstantiator interface {
-	extractGame() (Game, error)
-}
-
-// ConsolidateGameInfo runs the given game instantiator and returns the consolidated Game.
-func ConsolidateGameInfo(g gameInstantiator) (Game, error) {
-	return g.extractGame()
-}
-
 // instantiateGameID builds a GameID from the event name and week (or post-season).
 func instantiateGameID(sched espnsched.EventProperty) string {
 	var eventNameAndWeek string
@@ -64,15 +55,11 @@ func (c CfbGame) extractGame() (Game, error) {
 		return Game{}, fmt.Errorf("GameID includes \"tbd\"")
 	}
 
-	var espnGame espngame.GameSummaryEndpoint = espngame.GetGameSummary(espngame.EspnCfbGame{GameCode: c.EspnEvent.ID})
-	var cbsGame *goquery.Selection = cbsgame.GetGamePage(cbsgame.CbsGame{CbsOddsPage: c.CbsSchedulePage, GameId: gameID})
-	var foxGame foxgame.FoxGamePages = foxgame.GetGamePages(foxgame.FoxGame{FoxSchedulePage: c.FoxSchedulePage, GameID: gameID})
-
 	return Game{
 		GameID: gameID,
-		ESPN:   espnGame,
-		CBS:    cbsGame,
-		FOX:    foxGame,
+		ESPN:   espngame.EspnCfbGame{GameCode: c.EspnEvent.ID}.GetGameSummary(),
+		CBS:    cbsgame.CbsGame{CbsOddsPage: c.CbsSchedulePage, GameId: gameID}.GetGamePage(),
+		FOX:    foxgame.FoxGame{FoxSchedulePage: c.FoxSchedulePage, GameID: gameID}.GetGamePage(),
 	}, nil
 }
 
@@ -84,15 +71,10 @@ func (n NflGame) extractGame() (Game, error) {
 	if strings.Contains(gameID, "-tbd-") {
 		return Game{}, fmt.Errorf("GameID includes \"tbd\"")
 	}
-
-	var espnGame espngame.GameSummaryEndpoint = espngame.GetGameSummary(espngame.EspnNflGame{GameCode: n.EspnEvent.ID})
-	var cbsGame *goquery.Selection = cbsgame.GetGamePage(cbsgame.CbsGame{CbsOddsPage: n.CbsSchedulePage, GameId: gameID})
-	var foxGame foxgame.FoxGamePages = foxgame.GetGamePages(foxgame.FoxGame{FoxSchedulePage: n.FoxSchedulePage, GameID: gameID})
-
 	return Game{
 		GameID: gameID,
-		ESPN:   espnGame,
-		CBS:    cbsGame,
-		FOX:    foxGame,
+		ESPN:   espngame.EspnNflGame{GameCode: n.EspnEvent.ID}.GetGameSummary(),
+		CBS:    cbsgame.CbsGame{CbsOddsPage: n.CbsSchedulePage, GameId: gameID}.GetGamePage(),
+		FOX:    foxgame.FoxGame{FoxSchedulePage: n.FoxSchedulePage, GameID: gameID}.GetGamePage(),
 	}, nil
 }
