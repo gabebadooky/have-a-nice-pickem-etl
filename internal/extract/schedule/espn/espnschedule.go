@@ -16,14 +16,6 @@ type CfbEspnSchedule struct {
 type NflEspnSchedule struct {
 	Week uint
 }
-type espnScheduleInstantiator interface {
-	callSchedule() ScoreboardEndpoint
-}
-
-// GetScheduleForWeek runs the given ESPN schedule instantiator and returns the scoreboard response.
-func GetScheduleForWeek(s espnScheduleInstantiator) ScoreboardEndpoint {
-	return s.callSchedule()
-}
 
 // fetchEspnSchedule calls the ESPN scoreboard endpoint and decodes the JSON response.
 func fetchEspnSchedule(espnScoreboardEndpoint string) ScoreboardEndpoint {
@@ -43,7 +35,7 @@ func fetchEspnSchedule(espnScoreboardEndpoint string) ScoreboardEndpoint {
 }
 
 // instantiateScoreboardEndpoint returns the ESPN college football scoreboard URL for the configured week.
-func (sched CfbEspnSchedule) instantiateScoreboardEndpoint() string {
+func (sched CfbEspnSchedule) setScoreboardEndpoint() string {
 	var espnScoreboardEndpoint string
 
 	if sched.Week <= utils.CFB_REG_SEASON_WEEKS {
@@ -57,7 +49,7 @@ func (sched CfbEspnSchedule) instantiateScoreboardEndpoint() string {
 }
 
 // instantiateScoreboardEndpoint returns the ESPN NFL scoreboard URL for the configured week.
-func (sched NflEspnSchedule) instantiateScoreboardEndpoint() string {
+func (sched NflEspnSchedule) setScoreboardEndpoint() string {
 	var espnScoreboardEndpoint string
 
 	if sched.Week <= utils.NFL_REG_SEASON_WEEKS {
@@ -72,15 +64,15 @@ func (sched NflEspnSchedule) instantiateScoreboardEndpoint() string {
 }
 
 // callSchedule fetches the ESPN college football scoreboard for the configured week.
-func (sched CfbEspnSchedule) callSchedule() ScoreboardEndpoint {
-	espnScoreboardEndpoint := sched.instantiateScoreboardEndpoint()
+func (sched CfbEspnSchedule) GetSchedule() ScoreboardEndpoint {
+	espnScoreboardEndpoint := sched.setScoreboardEndpoint()
 	espnScoreboard := fetchEspnSchedule(espnScoreboardEndpoint)
 	return espnScoreboard
 }
 
 // callSchedule fetches the ESPN NFL scoreboard for the configured week.
-func (sched NflEspnSchedule) callSchedule() ScoreboardEndpoint {
-	espnScoreboardEndpoint := sched.instantiateScoreboardEndpoint()
+func (sched NflEspnSchedule) GetSchedule() ScoreboardEndpoint {
+	espnScoreboardEndpoint := sched.setScoreboardEndpoint()
 	espnScoreboard := fetchEspnSchedule(espnScoreboardEndpoint)
 	return espnScoreboard
 }

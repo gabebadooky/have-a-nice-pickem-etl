@@ -19,14 +19,6 @@ type CbsCfbTeam struct {
 type CbsNflTeam struct {
 	TeamID string
 }
-type cbsTeamInstantiator interface {
-	scrapeTeamPage() *goquery.Selection
-}
-
-// GetTeamStatsPage runs the given CBS team instantiator and returns the scraped team stats page selection.
-func GetTeamStatsPage(t cbsTeamInstantiator) *goquery.Selection {
-	return t.scrapeTeamPage()
-}
 
 // Make and handle CBS Team page web scrape attempt
 func scrapePage(teamsPageHyperlink string) *goquery.Selection {
@@ -74,7 +66,7 @@ func setTeamPageHyperlink(teamsPageHyperlink string, teamID string) string {
 }
 
 // scrapeTeamPage scrapes the CBS college football team stats page for the configured team.
-func (c CbsCfbTeam) scrapeTeamPage() *goquery.Selection {
+func (c CbsCfbTeam) GetTeamPage() *goquery.Selection {
 	teamPageHyperlink := setTeamPageHyperlink(utils.CBS_CFB_ALL_TEAMS_PAGE_URL, c.TeamID)
 	if teamPageHyperlink == "" {
 		return nil
@@ -86,7 +78,7 @@ func (c CbsCfbTeam) scrapeTeamPage() *goquery.Selection {
 }
 
 // scrapeTeamPage scrapes the CBS NFL team stats page for the configured team.
-func (n CbsNflTeam) scrapeTeamPage() *goquery.Selection {
+func (n CbsNflTeam) GetTeamPage() *goquery.Selection {
 	teamPageHyperlink := setTeamPageHyperlink(utils.CBS_NFL_ALL_TEAMS_PAGE_URL, n.TeamID)
 	if teamPageHyperlink == "" {
 		return nil

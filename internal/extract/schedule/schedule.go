@@ -36,26 +36,18 @@ func ConsolidateScheduleInfo(s scheduleInstantiator) Schedule {
 
 // extractSchedule fetches college football schedule data from ESPN, CBS, and Fox for the week.
 func (c CfbSchedule) extractSchedule() Schedule {
-	var EspnSchedule espnschedule.ScoreboardEndpoint = espnschedule.GetScheduleForWeek(espnschedule.CfbEspnSchedule{Week: c.Week})
-	var CbsSchedule *goquery.Selection = cbsschedule.GetScheduleForWeek(cbsschedule.CbsCfbSchedule{Week: c.Week})
-	var FoxSchedule *goquery.Selection = foxschedule.GetScheduleForWeek(foxschedule.FoxCfbSchedule{Week: c.Week})
-
 	return Schedule{
-		ESPN: EspnSchedule,
-		CBS:  CbsSchedule,
-		FOX:  FoxSchedule,
+		ESPN: espnschedule.CfbEspnSchedule{Week: c.Week}.GetSchedule(),
+		CBS:  cbsschedule.CbsCfbSchedule{Week: c.Week}.GetSchedule(),
+		FOX:  foxschedule.FoxCfbSchedule{Week: c.Week}.GetSchedule(),
 	}
 }
 
 // extractSchedule fetches NFL schedule data from ESPN, CBS, and Fox for the week.
 func (n NflSchedule) extractSchedule() Schedule {
-	var EspnSchedule espnschedule.ScoreboardEndpoint = espnschedule.GetScheduleForWeek(espnschedule.NflEspnSchedule{Week: n.Week})
-	var CbsSchedule *goquery.Selection = cbsschedule.GetScheduleForWeek(cbsschedule.CbsNflSchedule{Week: n.Week})
-	var FoxSchedule *goquery.Selection = foxschedule.GetScheduleForWeek(foxschedule.FoxNflSchedule{Week: n.Week})
-
 	return Schedule{
-		ESPN: EspnSchedule,
-		CBS:  CbsSchedule,
-		FOX:  FoxSchedule,
+		ESPN: espnschedule.NflEspnSchedule{Week: n.Week}.GetSchedule(),
+		CBS:  cbsschedule.CbsNflSchedule{Week: n.Week}.GetSchedule(),
+		FOX:  foxschedule.FoxNflSchedule{Week: n.Week}.GetSchedule(),
 	}
 }

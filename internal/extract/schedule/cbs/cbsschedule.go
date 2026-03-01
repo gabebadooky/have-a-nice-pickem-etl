@@ -18,14 +18,6 @@ type CbsCfbSchedule struct {
 type CbsNflSchedule struct {
 	Week uint
 }
-type cbsScheduleInstantiator interface {
-	scrapeSchedule() *goquery.Selection
-}
-
-// GetScheduleForWeek runs the given CBS schedule instantiator and returns the scraped schedule page.
-func GetScheduleForWeek(s cbsScheduleInstantiator) *goquery.Selection {
-	return s.scrapeSchedule()
-}
 
 // setNflPostseasonWeekValue maps an NFL postseason week number to the CBS URL path segment.
 func setNflPostseasonWeekValue(week uint) string {
@@ -46,7 +38,6 @@ func setNflPostseasonWeekValue(week uint) string {
 // fetchCbsSchedule fetches the CBS schedule page at the given URL and returns its body as a goquery selection.
 func fetchCbsSchedule(cbsSchedulePageLink string) *goquery.Selection {
 	log.Printf("\nRequesting CBS Schedule page for: %s\n", cbsSchedulePageLink)
-
 	page, err := utils.GetGoQuerySelectionBody(cbsSchedulePageLink)
 
 	if err != nil {
@@ -57,7 +48,7 @@ func fetchCbsSchedule(cbsSchedulePageLink string) *goquery.Selection {
 }
 
 // instantiateShedulePageLink returns the CBS college football schedule URL for the configured week.
-func (sched CbsCfbSchedule) instantiateShedulePageLink() string {
+func (sched CbsCfbSchedule) setShedulePageLink() string {
 	var cbsSchedulePageLink string
 
 	if sched.Week > utils.CFB_REG_SEASON_WEEKS {
@@ -70,7 +61,7 @@ func (sched CbsCfbSchedule) instantiateShedulePageLink() string {
 }
 
 // instantiateShedulePageLink returns the CBS NFL schedule URL for the configured week.
-func (sched CbsNflSchedule) instantiateShedulePageLink() string {
+func (sched CbsNflSchedule) setShedulePageLink() string {
 	var cbsSchedulePageLink string
 
 	if sched.Week > utils.NFL_REG_SEASON_WEEKS {
@@ -84,15 +75,15 @@ func (sched CbsNflSchedule) instantiateShedulePageLink() string {
 }
 
 // scrapeSchedule fetches the CBS college football schedule page for the configured week.
-func (sched CbsCfbSchedule) scrapeSchedule() *goquery.Selection {
-	cbsSchedulePageLink := sched.instantiateShedulePageLink()
+func (sched CbsCfbSchedule) GetSchedule() *goquery.Selection {
+	cbsSchedulePageLink := sched.setShedulePageLink()
 	cbsSchedule := fetchCbsSchedule(cbsSchedulePageLink)
 	return cbsSchedule
 }
 
 // scrapeSchedule fetches the CBS NFL schedule page for the configured week.
-func (sched CbsNflSchedule) scrapeSchedule() *goquery.Selection {
-	cbsSchedulePageLink := sched.instantiateShedulePageLink()
+func (sched CbsNflSchedule) GetSchedule() *goquery.Selection {
+	cbsSchedulePageLink := sched.setShedulePageLink()
 	cbsSchedule := fetchCbsSchedule(cbsSchedulePageLink)
 	return cbsSchedule
 }
