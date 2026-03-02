@@ -9,11 +9,6 @@ import (
 	"have-a-nice-pickem-etl/internal/utils"
 )
 
-/*
-	type Instantiator interface {
-		instantiate() TeamDetails
-	}
-*/
 type New struct {
 	team.Team
 }
@@ -32,12 +27,6 @@ type TeamDetails struct {
 	AlternateColor string
 	Ranking        uint
 }
-
-/*
-	func InstantiateTeamDetails(i Instantiator) TeamDetails {
-		return i.instantiate()
-	}
-*/
 
 // parseConferenceID returns the conference/group ID from the team's ESPN data.
 func (t New) parseConferenceID() string {
