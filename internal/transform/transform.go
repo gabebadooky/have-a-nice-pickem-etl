@@ -18,6 +18,7 @@ import (
 
 type NewGameTransformation struct {
 	game.Game
+	Locations []location.Location
 }
 
 type NewTeamTransformation struct {
@@ -54,75 +55,33 @@ type LocationTransformations struct {
 
 // TransformData produces all game-level transformations (details, odds, boxscore, stats) from the extracted game.
 func (g NewGameTransformation) TransformData() GameTransformations {
-	// Initialize transformation structs
-	newGameDetails := gamedetails.New{Game: g.Game}
-	newEspnAwayBettingOdds := bettingodds.EspnAwayBettingOdds{Game: g.Game}
-	newEspnHomeBettingOdds := bettingodds.EspnHomeBettingOdds{Game: g.Game}
-	newCbsAwayBettingOdds := bettingodds.CbsAwayBettingOdds{Game: g.Game}
-	newCbsHomeBettingOdds := bettingodds.CbsHomeBettingOdds{Game: g.Game}
-	newFoxAwayBettingOdds := bettingodds.FoxAwayBettingOdds{Game: g.Game}
-	newFoxHomeBettingOdds := bettingodds.FoxHomeBettingOdds{Game: g.Game}
-	newAwayBoxscore := boxscore.AwayBoxscore{Game: g.Game}
-	newHomeBoxscore := boxscore.HomeBoxscore{Game: g.Game}
-	newAwayTeamStats := gamestats.AwayTeamStat{Game: g.Game}
-	newHomeTeamStats := gamestats.HomeTeamStat{Game: g.Game}
-
-	// Perform transformations
-	gameDetails := newGameDetails.InstantiateGameDetails()
-	espnAwayBettingOdds := bettingodds.InstantiateBettingOdds(newEspnAwayBettingOdds)
-	espnHomeBettingOdds := bettingodds.InstantiateBettingOdds(newEspnHomeBettingOdds)
-	cbsAwayBettingOdds := bettingodds.InstantiateBettingOdds(newCbsAwayBettingOdds)
-	cbsHomeBettingOdds := bettingodds.InstantiateBettingOdds(newCbsHomeBettingOdds)
-	foxAwayBettingOdds := bettingodds.InstantiateBettingOdds(newFoxAwayBettingOdds)
-	foxHomeBettingOdds := bettingodds.InstantiateBettingOdds(newFoxHomeBettingOdds)
-	awayBoxscore := boxscore.InstantiateBoxscore(newAwayBoxscore)
-	homeBoxscore := boxscore.InstantiateBoxscore(newHomeBoxscore)
-	awayTeamStats := gamestats.InstantiateGameStats(newAwayTeamStats)
-	homeTeamStats := gamestats.InstantiateGameStats(newHomeTeamStats)
-
 	return GameTransformations{
-		GameDetails:         gameDetails,
-		EspnAwayBettingOdds: espnAwayBettingOdds,
-		EspnHomeBettingOdds: espnHomeBettingOdds,
-		CbsAwayBettingOdds:  cbsAwayBettingOdds,
-		CbsHomeBettingOdds:  cbsHomeBettingOdds,
-		FoxAwayBettingOdds:  foxAwayBettingOdds,
-		FoxHomeBettingOdds:  foxHomeBettingOdds,
-		AwayBoxscore:        awayBoxscore,
-		HomeBoxscore:        homeBoxscore,
-		AwayTeamStats:       awayTeamStats,
-		HomeTeamStats:       homeTeamStats,
+		GameDetails:         gamedetails.New{Game: g.Game, Locations: g.Locations}.Instantiate(),
+		EspnAwayBettingOdds: bettingodds.EspnAwayBettingOdds{Game: g.Game}.Instantiate(),
+		EspnHomeBettingOdds: bettingodds.EspnHomeBettingOdds{Game: g.Game}.Instantiate(),
+		CbsAwayBettingOdds:  bettingodds.CbsAwayBettingOdds{Game: g.Game}.Instantiate(),
+		CbsHomeBettingOdds:  bettingodds.CbsHomeBettingOdds{Game: g.Game}.Instantiate(),
+		FoxAwayBettingOdds:  bettingodds.FoxAwayBettingOdds{Game: g.Game}.Instantiate(),
+		FoxHomeBettingOdds:  bettingodds.FoxHomeBettingOdds{Game: g.Game}.Instantiate(),
+		AwayBoxscore:        boxscore.AwayBoxscore{Game: g.Game}.Instantiate(),
+		HomeBoxscore:        boxscore.HomeBoxscore{Game: g.Game}.Instantiate(),
+		AwayTeamStats:       gamestats.AwayTeamStat{Game: g.Game}.Instantiate(),
+		HomeTeamStats:       gamestats.HomeTeamStat{Game: g.Game}.Instantiate(),
 	}
 }
 
 // TransformData produces team details and conference/overall records from the extracted team.
 func (t NewTeamTransformation) TransformData() TeamTransformations {
-	// Initialize transformation structs
-	newTeamDetails := teamdetails.New{Team: t.Team}
-	newConferenceRecord := record.ConferenceRecord{Team: t.Team}
-	newOverallRecord := record.OverallRecord{Team: t.Team}
-
-	// Perform transformations
-	teamDetails := newTeamDetails.Instantiate()
-	conferenceRecord := record.InstantiateRecord(newConferenceRecord)
-	overallRecord := record.InstantiateRecord(newOverallRecord)
-
 	return TeamTransformations{
-		TeamDetails:      teamDetails,
-		ConferenceRecord: conferenceRecord,
-		OverallRecord:    overallRecord,
+		TeamDetails:      teamdetails.New{Team: t.Team}.Instantiate(),
+		ConferenceRecord: record.ConferenceRecord{Team: t.Team}.Instantiate(),
+		OverallRecord:    record.OverallRecord{Team: t.Team}.Instantiate(),
 	}
 }
 
 // TransformData produces location details from the extracted location data.
 func (l NewLocationTransformation) TransformData() LocationTransformations {
-	// Initialize transformation struct
-	newLocationDetails := locationdetails.New{Location: l.Location}
-
-	// Perform transformation
-	locationDetails := locationdetails.InstantiateLocationDetails(newLocationDetails)
-
 	return LocationTransformations{
-		Location: locationDetails,
+		Location: locationdetails.New{Location: l.Location}.Instantiate(),
 	}
 }
