@@ -5,10 +5,6 @@ package locationdetails
 
 import "have-a-nice-pickem-etl/internal/extract/location"
 
-type Instantiator interface {
-	instantiate() LocationDetails
-}
-
 type New struct {
 	location.Location
 }
@@ -20,11 +16,6 @@ type LocationDetails struct {
 	State      string
 	Latitude   float64
 	Longitude  float64
-}
-
-// InstantiateLocationDetails runs the given instantiator and returns the location details.
-func InstantiateLocationDetails(i Instantiator) LocationDetails {
-	return i.instantiate()
 }
 
 // parseLocationID returns the location ID (maidenhead) from the first Opencage result.
@@ -64,7 +55,7 @@ func (l New) parseLongitude() float64 {
 }
 
 // instantiate builds LocationDetails from the Opencage geocode response.
-func (l New) instantiate() LocationDetails {
+func (l New) Instantiate() LocationDetails {
 	return LocationDetails{
 		LocationID: l.parseLocationID(),
 		Stadium:    l.parseStadium(),
