@@ -7,10 +7,6 @@ import (
 	"have-a-nice-pickem-etl/internal/extract/team"
 )
 
-type Instantiator interface {
-	instantiate() Record
-}
-
 type ConferenceRecord struct {
 	team.Team
 }
@@ -27,13 +23,8 @@ type Record struct {
 	Ties       uint
 }
 
-// InstantiateRecord runs the given instantiator and returns the team record.
-func InstantiateRecord(i Instantiator) Record {
-	return i.instantiate()
-}
-
 // instantiate builds a conference record from the team's CBS page.
-func (c ConferenceRecord) instantiate() Record {
+func (c ConferenceRecord) Instantiate() Record {
 	return Record{
 		TeamID:     c.TeamID,
 		RecordType: "Conference",
@@ -44,7 +35,7 @@ func (c ConferenceRecord) instantiate() Record {
 }
 
 // instantiate builds an overall record from the team's ESPN data.
-func (o OverallRecord) instantiate() Record {
+func (o OverallRecord) Instantiate() Record {
 	return Record{
 		TeamID:     o.TeamID,
 		RecordType: "Overall",
