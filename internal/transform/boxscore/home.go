@@ -63,7 +63,7 @@ func (h HomeBoxscore) parseTotalScore() uint {
 }
 
 // ParseOvertimeScore returns the home team's overtime score from the ESPN linescore (fifth period if present).
-func (h HomeBoxscore) ParseOvertimeScore() uint {
+func (h HomeBoxscore) parseOvertimeScore() uint {
 	var team1HomeAway string = h.ESPN.Header.Competitions[0].Competitors[0].HomeAway
 	var team2HomeAway string = h.ESPN.Header.Competitions[0].Competitors[1].HomeAway
 	var team1PointsSlice []espngame.LinescoreProperty = h.ESPN.Header.Competitions[0].Competitors[0].Linescores

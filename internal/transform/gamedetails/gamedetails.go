@@ -117,7 +117,7 @@ func (g New) parseGameStatus() bool {
 }
 
 // InstantiateGameDetails builds a GameDetails value from the extracted game data.
-func (g New) InstantiateGameDetails() GameDetails {
+func (g New) Instantiate() GameDetails {
 	return GameDetails{
 		GameID:        g.GameID,
 		League:        g.parseLeague(),

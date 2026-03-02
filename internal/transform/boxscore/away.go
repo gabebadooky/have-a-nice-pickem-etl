@@ -63,7 +63,7 @@ func (a AwayBoxscore) parseTotalScore() uint {
 }
 
 // ParseOvertimeScore returns the away team's overtime score from the ESPN linescore (fifth period if present).
-func (a AwayBoxscore) ParseOvertimeScore() uint {
+func (a AwayBoxscore) parseOvertimeScore() uint {
 	var team1HomeAway string = a.ESPN.Header.Competitions[0].Competitors[0].HomeAway
 	var team2HomeAway string = a.ESPN.Header.Competitions[0].Competitors[1].HomeAway
 	var team1PointsSlice []espngame.LinescoreProperty = a.ESPN.Header.Competitions[0].Competitors[0].Linescores

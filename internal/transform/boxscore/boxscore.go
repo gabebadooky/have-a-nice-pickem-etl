@@ -36,7 +36,7 @@ func (a AwayBoxscore) Instantiate() Boxscore {
 		Q2Score:       a.parseQuarterScore(2),
 		Q3Score:       a.parseQuarterScore(3),
 		Q4Score:       a.parseQuarterScore(4),
-		OvertimeScore: a.ParseOvertimeScore(),
+		OvertimeScore: a.parseOvertimeScore(),
 		TotalScore:    a.parseTotalScore(),
 	}
 }
@@ -50,7 +50,7 @@ func (h HomeBoxscore) Instantiate() Boxscore {
 		Q2Score:       h.parseQuarterScore(2),
 		Q3Score:       h.parseQuarterScore(3),
 		Q4Score:       h.parseQuarterScore(4),
-		OvertimeScore: h.ParseOvertimeScore(),
+		OvertimeScore: h.parseOvertimeScore(),
 		TotalScore:    h.parseTotalScore(),
 	}
 }
