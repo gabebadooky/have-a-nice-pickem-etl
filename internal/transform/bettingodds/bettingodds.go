@@ -8,10 +8,6 @@ import (
 	"have-a-nice-pickem-etl/internal/transform/common"
 )
 
-type Instantiator interface {
-	instantiate() BettingOdds
-}
-
 type VegasAwayBettingOdds struct {
 	game.Game
 }
@@ -30,13 +26,8 @@ type BettingOdds struct {
 	WinProbability float32
 }
 
-// InstantiateBettingOdds runs the given instantiator and returns the betting odds record.
-func InstantiateBettingOdds(i Instantiator) BettingOdds {
-	return i.instantiate()
-}
-
 // instantiate builds ESPN away team betting odds from the game data.
-func (b EspnAwayBettingOdds) instantiate() BettingOdds {
+func (b EspnAwayBettingOdds) Instantiate() BettingOdds {
 	return BettingOdds{
 		GameID:         b.GameID,
 		TeamID:         common.ParseAwayTeamID(b.Game),
@@ -49,7 +40,7 @@ func (b EspnAwayBettingOdds) instantiate() BettingOdds {
 }
 
 // instantiate builds ESPN home team betting odds from the game data.
-func (b EspnHomeBettingOdds) instantiate() BettingOdds {
+func (b EspnHomeBettingOdds) Instantiate() BettingOdds {
 	return BettingOdds{
 		GameID:         b.GameID,
 		TeamID:         common.ParseHomeTeamID(b.Game),
@@ -62,7 +53,7 @@ func (b EspnHomeBettingOdds) instantiate() BettingOdds {
 }
 
 // instantiate builds CBS away team betting odds from the game's CBS odds page.
-func (b CbsAwayBettingOdds) instantiate() BettingOdds {
+func (b CbsAwayBettingOdds) Instantiate() BettingOdds {
 	return BettingOdds{
 		GameID:         b.GameID,
 		Source:         "CBS",
@@ -74,7 +65,7 @@ func (b CbsAwayBettingOdds) instantiate() BettingOdds {
 }
 
 // instantiate builds CBS home team betting odds from the game's CBS odds page.
-func (b CbsHomeBettingOdds) instantiate() BettingOdds {
+func (b CbsHomeBettingOdds) Instantiate() BettingOdds {
 	return BettingOdds{
 		GameID:         b.GameID,
 		Source:         "CBS",
@@ -86,7 +77,7 @@ func (b CbsHomeBettingOdds) instantiate() BettingOdds {
 }
 
 // instantiate builds Fox away team betting odds from the game's Fox odds page.
-func (b FoxAwayBettingOdds) instantiate() BettingOdds {
+func (b FoxAwayBettingOdds) Instantiate() BettingOdds {
 	return BettingOdds{
 		GameID:         b.GameID,
 		Source:         "FOX",
@@ -98,7 +89,7 @@ func (b FoxAwayBettingOdds) instantiate() BettingOdds {
 }
 
 // instantiate builds Fox home team betting odds from the game's Fox odds page.
-func (b FoxHomeBettingOdds) instantiate() BettingOdds {
+func (b FoxHomeBettingOdds) Instantiate() BettingOdds {
 	return BettingOdds{
 		GameID:         b.GameID,
 		Source:         "FOX",
