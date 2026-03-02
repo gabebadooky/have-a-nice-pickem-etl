@@ -4,9 +4,7 @@
 package transform
 
 import (
-	"have-a-nice-pickem-etl/internal/extract/game"
-	"have-a-nice-pickem-etl/internal/extract/location"
-	"have-a-nice-pickem-etl/internal/extract/team"
+	"have-a-nice-pickem-etl/internal/extract"
 	"have-a-nice-pickem-etl/internal/transform/bettingodds"
 	"have-a-nice-pickem-etl/internal/transform/boxscore"
 	"have-a-nice-pickem-etl/internal/transform/gamedetails"
@@ -14,74 +12,128 @@ import (
 	"have-a-nice-pickem-etl/internal/transform/locationdetails"
 	"have-a-nice-pickem-etl/internal/transform/record"
 	"have-a-nice-pickem-etl/internal/transform/teamdetails"
+	"log"
 )
 
-type NewGameTransformation struct {
-	game.Game
-	Locations []location.Location
-}
-
-type NewTeamTransformation struct {
-	team.Team
-}
-
-type NewLocationTransformation struct {
-	location.Location
+type New struct {
+	extract.Extract
 }
 
 type GameTransformations struct {
-	GameDetails         gamedetails.GameDetails
-	EspnAwayBettingOdds bettingodds.BettingOdds
-	EspnHomeBettingOdds bettingodds.BettingOdds
-	CbsAwayBettingOdds  bettingodds.BettingOdds
-	CbsHomeBettingOdds  bettingodds.BettingOdds
-	FoxAwayBettingOdds  bettingodds.BettingOdds
-	FoxHomeBettingOdds  bettingodds.BettingOdds
-	AwayBoxscore        boxscore.Boxscore
-	HomeBoxscore        boxscore.Boxscore
-	AwayTeamStats       gamestats.GameStats
-	HomeTeamStats       gamestats.GameStats
+	AllBettingOdds []bettingodds.BettingOdds
+	AllBoxscores   []boxscore.Boxscore
+	AllGameDetails []gamedetails.GameDetails
+	AllGameStats   []gamestats.GameStats
 }
 
 type TeamTransformations struct {
-	TeamDetails      teamdetails.TeamDetails
-	ConferenceRecord record.Record
-	OverallRecord    record.Record
+	AllTeams       []teamdetails.TeamDetails
+	AllTeamRecords []record.Record
 }
 
 type LocationTransformations struct {
-	Location locationdetails.LocationDetails
+	AllLocations []locationdetails.LocationDetails
+}
+
+type Transformation struct {
+	GameTransformations     GameTransformations
+	TeamTransformations     TeamTransformations
+	LocationTransformations LocationTransformations
 }
 
 // TransformData produces all game-level transformations (details, odds, boxscore, stats) from the extracted game.
-func (g NewGameTransformation) TransformData() GameTransformations {
+func (t New) transformGameData() GameTransformations {
+	var allBettingOdds []bettingodds.BettingOdds
+	var allBoxscores []boxscore.Boxscore
+	var allGameDetails []gamedetails.GameDetails
+	var allGameStats []gamestats.GameStats
+
+	for i := range t.GamesExtract {
+		game := t.GamesExtract[i]
+		log.Printf("\nTransforming Game: %v", game)
+
+		gameDetailsRow := gamedetails.New{Game: game, Locations: t.LocationsExtract}.Instantiate()
+		espnAwayBettingOddsRow := bettingodds.EspnAwayBettingOdds{Game: game}.Instantiate()
+		espnHomeBettingOddsRow := bettingodds.EspnHomeBettingOdds{Game: game}.Instantiate()
+		cbsAwayBettingOddsRow := bettingodds.CbsAwayBettingOdds{Game: game}.Instantiate()
+		cbsHomeBettingOddsRow := bettingodds.CbsHomeBettingOdds{Game: game}.Instantiate()
+		foxAwayBettingOddsRow := bettingodds.FoxAwayBettingOdds{Game: game}.Instantiate()
+		foxHomeBettingOddsRow := bettingodds.FoxHomeBettingOdds{Game: game}.Instantiate()
+		awayBoxScoreRow := boxscore.AwayBoxscore{Game: game}.Instantiate()
+		homeBoxScoreRow := boxscore.HomeBoxscore{Game: game}.Instantiate()
+		awayTeamGameStats := gamestats.AwayTeamStat{Game: game}.Instantiate()
+		homeTeamGameStats := gamestats.HomeTeamStat{Game: game}.Instantiate()
+
+		allGameDetails = append(allGameDetails, gameDetailsRow)
+		allBoxscores = append(allBoxscores, awayBoxScoreRow, homeBoxScoreRow)
+		allGameStats = append(allGameStats, awayTeamGameStats, homeTeamGameStats)
+		allBettingOdds = append(
+			allBettingOdds,
+			espnAwayBettingOddsRow,
+			espnHomeBettingOddsRow,
+			cbsAwayBettingOddsRow,
+			cbsHomeBettingOddsRow,
+			foxAwayBettingOddsRow,
+			foxHomeBettingOddsRow,
+		)
+	}
+
 	return GameTransformations{
-		GameDetails:         gamedetails.New{Game: g.Game, Locations: g.Locations}.Instantiate(),
-		EspnAwayBettingOdds: bettingodds.EspnAwayBettingOdds{Game: g.Game}.Instantiate(),
-		EspnHomeBettingOdds: bettingodds.EspnHomeBettingOdds{Game: g.Game}.Instantiate(),
-		CbsAwayBettingOdds:  bettingodds.CbsAwayBettingOdds{Game: g.Game}.Instantiate(),
-		CbsHomeBettingOdds:  bettingodds.CbsHomeBettingOdds{Game: g.Game}.Instantiate(),
-		FoxAwayBettingOdds:  bettingodds.FoxAwayBettingOdds{Game: g.Game}.Instantiate(),
-		FoxHomeBettingOdds:  bettingodds.FoxHomeBettingOdds{Game: g.Game}.Instantiate(),
-		AwayBoxscore:        boxscore.AwayBoxscore{Game: g.Game}.Instantiate(),
-		HomeBoxscore:        boxscore.HomeBoxscore{Game: g.Game}.Instantiate(),
-		AwayTeamStats:       gamestats.AwayTeamStat{Game: g.Game}.Instantiate(),
-		HomeTeamStats:       gamestats.HomeTeamStat{Game: g.Game}.Instantiate(),
+		AllBettingOdds: allBettingOdds,
+		AllBoxscores:   allBoxscores,
+		AllGameDetails: allGameDetails,
+		AllGameStats:   allGameStats,
 	}
 }
 
 // TransformData produces team details and conference/overall records from the extracted team.
-func (t NewTeamTransformation) TransformData() TeamTransformations {
+func (t New) transformTeamData() TeamTransformations {
+	var allTeamRecords []record.Record
+	var allTeams []teamdetails.TeamDetails
+
+	for i := range t.TeamsExtract {
+		team := t.TeamsExtract[i]
+		log.Printf("\nTransforming Team: %v", team)
+
+		teamDetailsRow := teamdetails.New{Team: team}.Instantiate()
+		teamConferenceRecordRow := record.ConferenceRecord{Team: team}.Instantiate()
+		teamOverallRecordRow := record.OverallRecord{Team: team}.Instantiate()
+
+		allTeams = append(allTeams, teamDetailsRow)
+		allTeamRecords = append(
+			allTeamRecords,
+			teamConferenceRecordRow,
+			teamOverallRecordRow,
+		)
+	}
+
 	return TeamTransformations{
-		TeamDetails:      teamdetails.New{Team: t.Team}.Instantiate(),
-		ConferenceRecord: record.ConferenceRecord{Team: t.Team}.Instantiate(),
-		OverallRecord:    record.OverallRecord{Team: t.Team}.Instantiate(),
+		AllTeams:       allTeams,
+		AllTeamRecords: allTeamRecords,
 	}
 }
 
 // TransformData produces location details from the extracted location data.
-func (l NewLocationTransformation) TransformData() LocationTransformations {
+func (t New) transformLocationData() LocationTransformations {
+	var allLocations []locationdetails.LocationDetails
+
+	for i := range t.LocationsExtract {
+		location := t.LocationsExtract[i]
+		log.Printf("\nTransforming Location: %v", location)
+
+		locationDetailsRow := locationdetails.New{Location: location}.Instantiate()
+		allLocations = append(allLocations, locationDetailsRow)
+	}
+
 	return LocationTransformations{
-		Location: locationdetails.New{Location: l.Location}.Instantiate(),
+		AllLocations: allLocations,
+	}
+}
+
+func (t New) PerformTransformation() Transformation {
+	return Transformation{
+		GameTransformations:     t.transformGameData(),
+		TeamTransformations:     t.transformTeamData(),
+		LocationTransformations: t.transformLocationData(),
 	}
 }
