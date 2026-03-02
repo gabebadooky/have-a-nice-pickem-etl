@@ -10,7 +10,9 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
-/*[
+/*
+[
+
 	"pass_attempts", "opp_pass_attempts",
 	"pass_completions", "opp_pass_completions",
 	"completion_percentage", "opp_completion_percentage",
@@ -21,12 +23,9 @@ import (
 	"rush_attempts", "opp_rush_attempts",
 	"yards_per_rush", "opp_yards_per_rush",
 	"rush_touchdowns", "opp_rush_touchdowns"
-]*/
 
-type scraper interface {
-	scrape() Stat
-}
-
+]
+*/
 type New struct {
 	team.Team
 }
@@ -39,11 +38,6 @@ type Stat struct {
 type TeamStats struct {
 	TeamID string
 	Stats  []Stat
-}
-
-// ScrapeStat runs the given scraper and returns the stat.
-func ScrapeStat(s scraper) Stat {
-	return s.scrape()
 }
 
 // scrapePassingStatsTable returns the first (passing) stats table from the CBS team stats page.
@@ -72,49 +66,31 @@ func scrapeStatsTableOpponentTotalRow(statsTableSelection *goquery.Selection) *g
 
 // Instantiate scrapes all team and opponent stats from the CBS team stats page and returns TeamStats.
 func (t New) Instantiate() TeamStats {
-	/*teamPassAttempts := t.scrapeTeamPassAttempts()
-	oppPassAttempts := t.scrapeOpponentPassAttempts()
-	teamCompletionPercentage := t.scrapeTeamCompletionPercentage()
-	oppCompletionPercentage := t.scrapeOpponentCompletionPercentage()
-	teamPassYards := t.scrapeTeamPassYards()
-	oppPassYards := t.scrapeOpponentPassYards()
-	teamPassTouchdowns := t.scrapeTeamPassTouchdowns()
-	oppPassTouchdowns := t.scrapeOpponentPassTouchdowns()
-	offensiveInterceptions := t.scrapeOffenseiveInterceptions()
-	defensiveInterceptions := t.scrapeDefensiveInterceptions()
-	teamRushYards := t.scrapeTeamRushYards()
-	oppRushYards := t.scrapeOpponentRushYards()
-	teamRushAttempts := t.scrapeTeamRushAttempts()
-	oppRushAttempts := t.scrapeOpponentRushAttempts()
-	teamYardsPerRush := t.scrapeTeamYardsPerRush()
-	oppYardsPerRush := t.scrapeOpponentYardsPerRush()
-	teamRushTouchdowns := t.scrapeTeamRushTouchdowns()
-	oppRushTouchdowns := t.scrapeOpponentRushTouchdowns()*/
 	cbsPage := t.CBS
 
 	return TeamStats{
 		TeamID: t.TeamID,
 		Stats: []Stat{
-			ScrapeStat(teamPassAttempts{page: cbsPage}),
-			ScrapeStat(oppPassAttempts{page: cbsPage}),
-			ScrapeStat(teamPassCompletions{page: cbsPage}),
-			ScrapeStat(oppPassCompletions{page: cbsPage}),
-			ScrapeStat(teamCompletionPercentage{page: cbsPage}),
-			ScrapeStat(oppCompletionPercentage{page: cbsPage}),
-			ScrapeStat(teamPassTouchdowns{page: cbsPage}),
-			ScrapeStat(oppPassTouchdowns{page: cbsPage}),
-			ScrapeStat(teamPassYards{page: cbsPage}),
-			ScrapeStat(oppPassYards{page: cbsPage}),
-			ScrapeStat(offenseInterceptions{page: cbsPage}),
-			ScrapeStat(defenseInterceptions{page: cbsPage}),
-			ScrapeStat(teamRushAttempts{page: cbsPage}),
-			ScrapeStat(oppRushAttempts{page: cbsPage}),
-			ScrapeStat(teamRushTouchdowns{page: cbsPage}),
-			ScrapeStat(oppRushTouchdowns{page: cbsPage}),
-			ScrapeStat(teamRushYards{page: cbsPage}),
-			ScrapeStat(oppRushYards{page: cbsPage}),
-			ScrapeStat(teamYardsPerRush{page: cbsPage}),
-			ScrapeStat(oppYardsPerRush{page: cbsPage}),
+			teamPassAttempts{page: cbsPage}.scrape(),
+			oppPassAttempts{page: cbsPage}.scrape(),
+			teamPassCompletions{page: cbsPage}.scrape(),
+			oppPassCompletions{page: cbsPage}.scrape(),
+			teamCompletionPercentage{page: cbsPage}.scrape(),
+			oppCompletionPercentage{page: cbsPage}.scrape(),
+			teamPassTouchdowns{page: cbsPage}.scrape(),
+			oppPassTouchdowns{page: cbsPage}.scrape(),
+			teamPassYards{page: cbsPage}.scrape(),
+			oppPassYards{page: cbsPage}.scrape(),
+			offenseInterceptions{page: cbsPage}.scrape(),
+			defenseInterceptions{page: cbsPage}.scrape(),
+			teamRushAttempts{page: cbsPage}.scrape(),
+			oppRushAttempts{page: cbsPage}.scrape(),
+			teamRushTouchdowns{page: cbsPage}.scrape(),
+			oppRushTouchdowns{page: cbsPage}.scrape(),
+			teamRushYards{page: cbsPage}.scrape(),
+			oppRushYards{page: cbsPage}.scrape(),
+			teamYardsPerRush{page: cbsPage}.scrape(),
+			oppYardsPerRush{page: cbsPage}.scrape(),
 		},
 	}
 }
