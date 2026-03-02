@@ -12,10 +12,6 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
-type Instantiator interface {
-	instantiate() GameStats
-}
-
 type AwayTeamStat struct {
 	game.Game
 }
@@ -50,11 +46,6 @@ type GameStats struct {
 	GameID string
 	TeamID string
 	Stats  []Stat
-}
-
-// InstantiateGameStats runs the given instantiator and returns the consolidated game stats.
-func InstantiateGameStats(i Instantiator) GameStats {
-	return i.instantiate()
 }
 
 const awayStatSpanIndex int = 0
@@ -147,7 +138,7 @@ func scrapeStat(GameStatsPageSelection *goquery.Selection, statTableIndex int, s
 }
 
 // instantiate scrapes away team stats from the game's Fox stats page and returns GameStats.
-func (a AwayTeamStat) instantiate() GameStats {
+func (a AwayTeamStat) Instantiate() GameStats {
 	var statSlice []Stat
 	var teamID string = common.ParseAwayTeamID(a.Game)
 
@@ -166,7 +157,7 @@ func (a AwayTeamStat) instantiate() GameStats {
 }
 
 // instantiate scrapes home team stats from the game's Fox stats page and returns GameStats.
-func (h HomeTeamStat) instantiate() GameStats {
+func (h HomeTeamStat) Instantiate() GameStats {
 	var statSlice []Stat
 	var teamID string = common.ParseAwayTeamID(h.Game)
 
