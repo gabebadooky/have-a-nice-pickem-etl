@@ -8,10 +8,6 @@ import (
 	"have-a-nice-pickem-etl/internal/transform/common"
 )
 
-type Instantiator interface {
-	instantiate() Boxscore
-}
-
 type AwayBoxscore struct {
 	game.Game
 }
@@ -31,13 +27,8 @@ type Boxscore struct {
 	TotalScore    uint
 }
 
-// InstantiateBoxscore runs the given instantiator and returns the boxscore.
-func InstantiateBoxscore(i Instantiator) Boxscore {
-	return i.instantiate()
-}
-
 // instantiate builds the away team boxscore from the game's ESPN linescore data.
-func (a AwayBoxscore) instantiate() Boxscore {
+func (a AwayBoxscore) Instantiate() Boxscore {
 	return Boxscore{
 		GameID:        a.GameID,
 		TeamID:        common.ParseAwayTeamID(a.Game),
@@ -51,7 +42,7 @@ func (a AwayBoxscore) instantiate() Boxscore {
 }
 
 // instantiate builds the home team boxscore from the game's ESPN linescore data.
-func (h HomeBoxscore) instantiate() Boxscore {
+func (h HomeBoxscore) Instantiate() Boxscore {
 	return Boxscore{
 		GameID:        h.GameID,
 		TeamID:        common.ParseHomeTeamID(h.Game),
