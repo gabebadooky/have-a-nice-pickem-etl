@@ -6,6 +6,7 @@ package boxscore
 import (
 	"have-a-nice-pickem-etl/internal/extract/game"
 	"have-a-nice-pickem-etl/internal/transform/common"
+	"time"
 )
 
 type AwayBoxscore struct {
@@ -17,14 +18,15 @@ type HomeBoxscore struct {
 }
 
 type Boxscore struct {
-	GameID        string
-	TeamID        string
-	Q1Score       uint
-	Q2Score       uint
-	Q3Score       uint
-	Q4Score       uint
-	OvertimeScore uint
-	TotalScore    uint
+	GameID        string    `gorm:"column:game_id"`
+	TeamID        string    `gorm:"column:team_id"`
+	Q1Score       uint      `gorm:"column:q1_score"`
+	Q2Score       uint      `gorm:"column:q2_score"`
+	Q3Score       uint      `gorm:"column:q3_score"`
+	Q4Score       uint      `gorm:"column:q4_score"`
+	OvertimeScore uint      `gorm:"column:overtime"`
+	TotalScore    uint      `gorm:"column:total"`
+	UpdatedAt     time.Time `gorm:"column:updated_at"`
 }
 
 // instantiate builds the away team boxscore from the game's ESPN linescore data.
