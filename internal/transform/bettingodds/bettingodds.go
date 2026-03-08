@@ -6,6 +6,7 @@ package bettingodds
 import (
 	"have-a-nice-pickem-etl/internal/extract/game"
 	"have-a-nice-pickem-etl/internal/transform/common"
+	"time"
 )
 
 type VegasAwayBettingOdds struct {
@@ -16,7 +17,7 @@ type VegasHomeBettingOdds struct {
 	game.Game
 }
 
-type BettingOdds struct {
+type BettingOdds1 struct {
 	GameID         string
 	TeamID         string
 	Source         string
@@ -24,6 +25,17 @@ type BettingOdds struct {
 	Moneyline      int
 	Spread         float32
 	WinProbability float32
+}
+
+type BettingOdds struct {
+	GameID         string    `gorm:"column:game_id"`
+	TeamID         string    `gorm:"column:team_id"`
+	Source         string    `gorm:"column:source"`
+	OverUnder      float32   `gorm:"column:over_under"`
+	Moneyline      int       `gorm:"column:moneyline"`
+	Spread         float32   `gorm:"column:spread"`
+	WinProbability float32   `gorm:"column:win_probability"`
+	UpdatedAt      time.Time `gorm:"column:updated_at"`
 }
 
 // instantiate builds ESPN away team betting odds from the game data.

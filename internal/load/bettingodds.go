@@ -1,36 +1,58 @@
 package load
 
 import (
-	"fmt"
 	"have-a-nice-pickem-etl/internal/transform/bettingodds"
-	"log"
+
+	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 // BettingOdds writes betting odds records to data/bettingodds.csv.
-func loadBettingOdds(records []bettingodds.BettingOdds, csvLoadFolderPath string) {
-	bulkDataLoadFilePath := fmt.Sprintf("%s/%s", csvLoadFolderPath, "bettingodds.csv")
-	f, w := instantiateCsvWriter(bulkDataLoadFilePath)
-	defer f.Close()
-	defer w.Flush()
+func loadBettingOdds(records []bettingodds.BettingOdds, db *gorm.DB) {
+	db.Clauses(clause.OnConflict{
+		Columns: []clause.Column{
+			{Name: "game_id"},
+			{Name: "team_id"},
+		},
+		DoUpdates: clause.AssignmentColumns([]string{"source", "over_under", "moneyline", "spread", "win_probability"}),
+	}).Create(&records)
 
-	log.Printf("Writing Betting Odds records to %s", bulkDataLoadFilePath)
-
+	/*var insertRows string
 	for _, record := range records {
-		w.Write([]string{
-			record.GameID,
-			record.TeamID,
-			record.Source,
-			fmt.Sprintf("%f", record.OverUnder),
-			fmt.Sprintf("%d", record.Moneyline),
-			fmt.Sprintf("%f", record.Spread),
-			fmt.Sprintf("%f", record.WinProbability),
-		})
+		newRow := fmt.Sprintf("('%s', '%s', '%s', '%f', '%d', '%f', '%f')", record.GameID, record.TeamID, record.Source, record.OverUnder, record.Moneyline, record.Spread, record.WinProbability)
+		insertRows = fmt.Sprintf(insertRows, ", ", newRow)
 	}
 
-	if err := w.Error(); err != nil {
-		log.Fatal(err)
-	}
+	bulkLoadSqlStatement := fmt.Sprintf("INSERT INTO betting_odds VALUES %s", insertRows)
+	callBulkLoadProcedure(bulkLoadSqlStatement)*/
 
-	queryString := fmt.Sprintf("CALL %s('%s')", "bulk_load_betting_odds", bulkDataLoadFilePath)
-	callBulkLoadProcedure(queryString)
+	/*
+		bulkDataLoadFilePath := fmt.Sprintf("%s/%s", csvLoadFolderPath, "bettingodds.csv")
+		f, w := instantiateCsvWriter(bulkDataLoadFilePath)
+		defer f.Close()
+		defer w.Flush()
+
+		log.Printf("Writing Betting Odds header to %s", bulkDataLoadFilePath)
+		w.Write([]string{"GameID", "TeamID", "Source", "OverUnder", "Moneyline", "Spread", "WinProbability"})
+
+		log.Printf("Writing Betting Odds records to %s", bulkDataLoadFilePath)
+
+		for _, record := range records {
+			w.Write([]string{
+				record.GameID,
+				record.TeamID,
+				record.Source,
+				fmt.Sprintf("%f", record.OverUnder),
+				fmt.Sprintf("%d", record.Moneyline),
+				fmt.Sprintf("%f", record.Spread),
+				fmt.Sprintf("%f", record.WinProbability),
+			})
+		}
+
+		if err := w.Error(); err != nil {
+			log.Fatal(err)
+		}
+
+		queryString := fmt.Sprintf("CALL %s('%s')", "bulk_load_betting_odds", bulkDataLoadFilePath)
+		callBulkLoadProcedure(queryString) */
 }

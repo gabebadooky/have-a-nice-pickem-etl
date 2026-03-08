@@ -106,8 +106,12 @@ func formatFoxSpread(oddsTableRow *goquery.Selection) float32 {
 
 // formatFoxWinProbability parses the win probability percentage from Fox probability text.
 func formatFoxWinProbability(probabilityText string) float32 {
-	probabilityText = strings.Split(probabilityText, " ")[1]
-	probabilityText = strings.ReplaceAll(probabilityText, "%", "")
+	probabilityStringElements := strings.Split(probabilityText, " ")
+	if len(probabilityStringElements) < 2 {
+		return float32(0)
+	}
+
+	probabilityText = strings.ReplaceAll(probabilityStringElements[1], "%", "")
 	if probabilityText == "" {
 		return float32(0)
 	}
