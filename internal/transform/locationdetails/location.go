@@ -3,19 +3,23 @@
 // stadium name, city, state, and geographic coordinates.
 package locationdetails
 
-import "have-a-nice-pickem-etl/internal/extract/location"
+import (
+	"have-a-nice-pickem-etl/internal/extract/location"
+	"time"
+)
 
 type New struct {
 	location.Location
 }
 
 type LocationDetails struct {
-	LocationID string
-	Stadium    string
-	City       string
-	State      string
-	Latitude   float64
-	Longitude  float64
+	LocationID string    `gorm:"column:id"`
+	Stadium    string    `gorm:"column:stadium"`
+	City       string    `gorm:"column:city"`
+	State      string    `gorm:"column:state"`
+	Latitude   float64   `gorm:"column:latitude"`
+	Longitude  float64   `gorm:"column:longitude"`
+	UpdatedAt  time.Time `gorm:"column:updated_at"`
 }
 
 // parseLocationID returns the location ID (maidenhead) from the first Opencage result.

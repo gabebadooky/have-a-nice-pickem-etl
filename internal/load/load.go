@@ -62,7 +62,7 @@ func (l New) PerformLoad() {
 	loadGameDetails(l.GameTransformations.AllGameDetails, db)
 	loadGameStats(l.GameTransformations.AllGameStats, db)
 
-	loadTeamDetails(l.TeamTransformations.AllTeams, csvLoadFolderPath)
+	loadTeamDetails(l.TeamTransformations.AllTeams, db)
 	loadTeamRecord(l.TeamTransformations.AllTeamRecords, csvLoadFolderPath)
 
 	loadLocationDetails(l.LocationTransformations.AllLocations, csvLoadFolderPath)
