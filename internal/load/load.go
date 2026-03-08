@@ -55,7 +55,6 @@ func callBulkLoadProcedure(queryString string) {
 
 func (l New) PerformLoad() {
 	db := instantiateDatabaseConnection()
-	csvLoadFolderPath := instantiateLoadDirectory()
 
 	loadBettingOdds(l.GameTransformations.AllBettingOdds, db)
 	loadBoxscores(l.GameTransformations.AllBoxscores, db)

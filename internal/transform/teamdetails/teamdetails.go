@@ -7,6 +7,7 @@ import (
 	"have-a-nice-pickem-etl/internal/extract/team"
 	"have-a-nice-pickem-etl/internal/transform/common"
 	"have-a-nice-pickem-etl/internal/utils"
+	"time"
 )
 
 type New struct {
@@ -14,18 +15,20 @@ type New struct {
 }
 
 type TeamDetails struct {
-	TeamID         string
-	League         string
-	ESPNCode       string
-	CBSCode        string
-	FoxCode        string
-	VegasCode      string
-	ConferenceID   string
-	Name           string
-	Mascot         string
-	PrimaryColor   string
-	AlternateColor string
-	Ranking        uint
+	TeamID         string    `gorm:"column:team_id"`
+	League         string    `gorm:"column:league"`
+	ESPNCode       string    `gorm:"column:espn_code"`
+	CBSCode        string    `gorm:"column:cbs_code"`
+	FoxCode        string    `gorm:"column:fox_code"`
+	VegasCode      string    `gorm:"column:vegas_code"`
+	ConferenceID   string    `gorm:"column:conference_id"`
+	DivisionName   string    `gorm:"column:division_name"`
+	Name           string    `gorm:"column:team_name"`
+	Mascot         string    `gorm:"column:team_mascot"`
+	PrimaryColor   string    `gorm:"column:primary_color"`
+	AlternateColor string    `gorm:"column:alternate_color"`
+	Ranking        uint      `gorm:"column:ranking"`
+	UpdatedAt      time.Time `gorm:"column:updated_at"`
 }
 
 // parseConferenceID returns the conference/group ID from the team's ESPN data.
