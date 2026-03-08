@@ -8,6 +8,7 @@ import (
 	"have-a-nice-pickem-etl/internal/transform/common"
 	"have-a-nice-pickem-etl/internal/utils"
 	"strings"
+	"time"
 
 	"github.com/PuerkitoBio/goquery"
 )
@@ -38,14 +39,15 @@ TODO:
 */
 
 type Stat struct {
-	StatType string
-	Value    float32
+	StatType string  `gorm:"column:stat_type"`
+	Value    float32 `gorm:"column:stat_value"`
 }
 
 type GameStats struct {
-	GameID string
-	TeamID string
-	Stats  []Stat
+	GameID    string `gorm:"column:game_id"`
+	TeamID    string `gorm:"column:team_id"`
+	Stats     []Stat
+	UpdatedAt time.Time `gorm:"column:updated_at"`
 }
 
 const awayStatSpanIndex int = 0

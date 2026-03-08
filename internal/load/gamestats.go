@@ -1,39 +1,56 @@
 package load
 
 import (
-	"fmt"
 	"have-a-nice-pickem-etl/internal/transform/gamestats"
-	"log"
+
+	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 // Stats writes game stats records to data/stats.csv.
-func loadGameStats(records []gamestats.GameStats, csvLoadFolderPath string) {
-	bulkDataLoadFilePath := fmt.Sprintf("%s/%s", csvLoadFolderPath, "stats.csv")
-	f, w := instantiateCsvWriter(bulkDataLoadFilePath)
-	defer f.Close()
-	defer w.Flush()
+func loadGameStats(records []gamestats.GameStats, db *gorm.DB) {
+	for i := range records {
+		db.Clauses(clause.OnConflict{
+			Columns: []clause.Column{
+				{Name: "game_id"},
+				{Name: "team_id"},
+				{Name: "stat_type"},
+			},
+			DoUpdates: clause.Assignments(map[string]interface{}{
+				"stat_value": gorm.Expr("EXCLUDED.stat_value"),
+				"updated_at": gorm.Expr("CURRENT_TIMESTAMP"),
+			}),
+		}).Create(&records[i].Stats)
+	}
 
-	log.Printf("Writing Stats records to %s", bulkDataLoadFilePath)
+	/*
+		bulkDataLoadFilePath := fmt.Sprintf("%s/%s", csvLoadFolderPath, "stats.csv")
+		f, w := instantiateCsvWriter(bulkDataLoadFilePath)
+		defer f.Close()
+		defer w.Flush()
 
-	for _, record := range records {
-		var gameID string = record.GameID
-		var teamID string = record.TeamID
+		log.Printf("Writing Stats records to %s", bulkDataLoadFilePath)
 
-		for _, stat := range record.Stats {
-			w.Write([]string{
-				gameID,
-				teamID,
-				stat.StatType,
-				fmt.Sprintf("%f", stat.Value),
-			})
+		for _, record := range records {
+			var gameID string = record.GameID
+			var teamID string = record.TeamID
+
+			for _, stat := range record.Stats {
+				w.Write([]string{
+					gameID,
+					teamID,
+					stat.StatType,
+					fmt.Sprintf("%f", stat.Value),
+				})
+			}
+
 		}
 
-	}
+		if err := w.Error(); err != nil {
+			log.Fatal(err)
+		}
 
-	if err := w.Error(); err != nil {
-		log.Fatal(err)
-	}
-
-	queryString := fmt.Sprintf("CALL %s('%s')", "bulk_load_locations", bulkDataLoadFilePath)
-	callBulkLoadProcedure(queryString)
+		queryString := fmt.Sprintf("CALL %s('%s')", "bulk_load_locations", bulkDataLoadFilePath)
+		callBulkLoadProcedure(queryString)
+	*/
 }
