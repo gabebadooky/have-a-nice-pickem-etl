@@ -5,6 +5,7 @@ package record
 
 import (
 	"have-a-nice-pickem-etl/internal/extract/team"
+	"time"
 )
 
 type ConferenceRecord struct {
@@ -16,11 +17,12 @@ type OverallRecord struct {
 }
 
 type Record struct {
-	TeamID     string
-	RecordType string
-	Wins       uint
-	Losses     uint
-	Ties       uint
+	TeamID     string    `gorm:"column:team_id"`
+	RecordType string    `gorm:"column:record_type"`
+	Wins       uint      `gorm:"column:wins"`
+	Losses     uint      `gorm:"column:losses"`
+	Ties       uint      `gorm:"column:ties"`
+	UpdatedAt  time.Time `gorm:"column:updated_at"`
 }
 
 // instantiate builds a conference record from the team's CBS page.

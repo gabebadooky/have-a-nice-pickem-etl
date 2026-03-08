@@ -63,9 +63,9 @@ func (l New) PerformLoad() {
 	loadGameStats(l.GameTransformations.AllGameStats, db)
 
 	loadTeamDetails(l.TeamTransformations.AllTeams, db)
-	loadTeamRecord(l.TeamTransformations.AllTeamRecords, csvLoadFolderPath)
+	loadTeamRecord(l.TeamTransformations.AllTeamRecords, db)
 
-	loadLocationDetails(l.LocationTransformations.AllLocations, csvLoadFolderPath)
+	loadLocationDetails(l.LocationTransformations.AllLocations, db)
 }
 
 func TestConnection() {
