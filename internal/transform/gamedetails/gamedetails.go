@@ -8,6 +8,7 @@ import (
 	espngame "have-a-nice-pickem-etl/internal/extract/game/espn"
 	"have-a-nice-pickem-etl/internal/extract/location"
 	"have-a-nice-pickem-etl/internal/transform/common"
+	"time"
 )
 
 type New struct {
@@ -16,20 +17,21 @@ type New struct {
 }
 
 type GameDetails struct {
-	GameID        string
-	League        string
-	Week          int8
-	Year          uint
-	EspnCode      string
-	CbsCode       string
-	FoxCode       string
-	VegasCode     string
-	AwayTeamID    string
-	HomeTeamID    string
-	ZuluTimestamp string
-	Broadcast     string
-	LocationID    string
-	Finished      bool
+	GameID        string    `gorm:"column:id"`
+	League        string    `gorm:"column:league"`
+	Week          int8      `gorm:"column:weeknum"`
+	Year          uint      `gorm:"column:season"`
+	EspnCode      string    `gorm:"column:espn_code"`
+	CbsCode       string    `gorm:"column:cbs_code"`
+	FoxCode       string    `gorm:"column:fox_code"`
+	VegasCode     string    `gorm:"column:vegas_code"`
+	AwayTeamID    string    `gorm:"column:away_team_id"`
+	HomeTeamID    string    `gorm:"column:home_team_id"`
+	ZuluTimestamp string    `gorm:"column:zulu_game_time"`
+	Broadcast     string    `gorm:"column:broadcast"`
+	LocationID    string    `gorm:"column:location_id"`
+	Finished      bool      `gorm:"column:finished"`
+	UpdatedAt     time.Time `gorm:"column:updated_at"`
 }
 
 func (g New) setCbsGameCode() string {

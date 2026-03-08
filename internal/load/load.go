@@ -58,8 +58,8 @@ func (l New) PerformLoad() {
 	csvLoadFolderPath := instantiateLoadDirectory()
 
 	loadBettingOdds(l.GameTransformations.AllBettingOdds, db)
-	loadBoxscores(l.GameTransformations.AllBoxscores, csvLoadFolderPath)
-	loadGameDetails(l.GameTransformations.AllGameDetails, csvLoadFolderPath)
+	loadBoxscores(l.GameTransformations.AllBoxscores, db)
+	loadGameDetails(l.GameTransformations.AllGameDetails, db)
 	loadGameStats(l.GameTransformations.AllGameStats, csvLoadFolderPath)
 
 	loadTeamDetails(l.TeamTransformations.AllTeams, csvLoadFolderPath)
