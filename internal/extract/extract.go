@@ -10,6 +10,7 @@ import (
 	"have-a-nice-pickem-etl/internal/extract/schedule"
 	espnsched "have-a-nice-pickem-etl/internal/extract/schedule/espn"
 	"have-a-nice-pickem-etl/internal/extract/team"
+	"time"
 )
 
 type CfbExtract struct {
@@ -158,6 +159,7 @@ func (l NflExtract) compileLocations() []location.Location {
 		}
 
 		locationDetails := opencageLocation.GetLocation()
+		time.Sleep(2 * time.Second) // Forced delay between Opencage Geocode API calls
 		locationsThisWeek = append(locationsThisWeek, locationDetails)
 	}
 
