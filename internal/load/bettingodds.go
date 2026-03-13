@@ -13,6 +13,21 @@ func loadBettingOdds(records []bettingodds.BettingOdds, db *gorm.DB) {
 		Columns: []clause.Column{
 			{Name: "game_id"},
 			{Name: "team_id"},
+			{Name: "source"},
+		},
+		DoUpdates: clause.AssignmentColumns([]string{
+			"over_under",
+			"moneyline",
+			"spread",
+			"win_probability",
+			"updated_at",
+		}),
+	}).Create(&records)
+
+	/*db.Clauses(clause.OnConflict{
+		Columns: []clause.Column{
+			{Name: "game_id"},
+			{Name: "team_id"},
 		},
 		DoUpdates: clause.Assignments(map[string]interface{}{
 			"source":          gorm.Expr("EXCLUDED.source"),
@@ -22,7 +37,7 @@ func loadBettingOdds(records []bettingodds.BettingOdds, db *gorm.DB) {
 			"win_probability": gorm.Expr("EXCLUDED.win_probability"),
 			"updated_at":      gorm.Expr("CURRENT_TIMESTAMP"),
 		}),
-	}).Create(&records)
+	}).Create(&records)*/
 
 	/*var insertRows string
 	for _, record := range records {

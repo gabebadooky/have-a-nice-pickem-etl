@@ -70,6 +70,7 @@ type GameInfoProperty struct {
 }
 
 type VenueProperty struct {
+	ID       string          `json:"id"`
 	FullName string          `json:"fullName"`
 	Address  AddressProperty `json:"address"`
 }

@@ -50,6 +50,10 @@ type GameStats struct {
 	UpdatedAt time.Time `gorm:"column:updated_at"`
 }
 
+func (Stat) TableName() string {
+	return "pickem.stats"
+}
+
 const awayStatSpanIndex int = 0
 const homeStatSpanIndex int = 1
 
@@ -161,7 +165,7 @@ func (a AwayTeamStat) Instantiate() GameStats {
 // instantiate scrapes home team stats from the game's Fox stats page and returns GameStats.
 func (h HomeTeamStat) Instantiate() GameStats {
 	var statSlice []Stat
-	var teamID string = common.ParseAwayTeamID(h.Game)
+	var teamID string = common.ParseHomeTeamID(h.Game)
 
 	for statTableIndex, statTable := range statTableIndices {
 		for statIndex := range statTable {

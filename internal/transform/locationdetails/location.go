@@ -22,27 +22,31 @@ type LocationDetails struct {
 	UpdatedAt  time.Time `gorm:"column:updated_at"`
 }
 
+func (LocationDetails) TableName() string {
+	return "pickem.locations"
+}
+
 // parseLocationID returns the location ID (maidenhead) from the first Opencage result.
 func (l New) parseLocationID() string {
-	var locationID string = l.Opencage.Results[0].Annotations.Maidenhead
+	var locationID string = l.LocationID
 	return locationID
 }
 
 // parseStadium returns the stadium name from the first Opencage result components.
 func (l New) parseStadium() string {
-	var stadium string = l.Opencage.Results[0].Components.Stadium
+	var stadium string = l.Stadium
 	return stadium
 }
 
 // parseCity returns the city from the first Opencage result components.
 func (l New) parseCity() string {
-	var city string = l.Opencage.Results[0].Components.City
+	var city string = l.City
 	return city
 }
 
 // parseState returns the state from the first Opencage result components.
 func (l New) parseState() string {
-	var state string = l.Opencage.Results[0].Components.State
+	var state string = l.State
 	return state
 }
 

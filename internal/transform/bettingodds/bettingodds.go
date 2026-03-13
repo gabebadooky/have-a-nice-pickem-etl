@@ -38,6 +38,10 @@ type BettingOdds struct {
 	UpdatedAt      time.Time `gorm:"column:updated_at"`
 }
 
+func (BettingOdds) TableName() string {
+	return "pickem.betting_odds"
+}
+
 // instantiate builds ESPN away team betting odds from the game data.
 func (b EspnAwayBettingOdds) Instantiate() BettingOdds {
 	return BettingOdds{
@@ -66,8 +70,10 @@ func (b EspnHomeBettingOdds) Instantiate() BettingOdds {
 
 // instantiate builds CBS away team betting odds from the game's CBS odds page.
 func (b CbsAwayBettingOdds) Instantiate() BettingOdds {
+
 	return BettingOdds{
 		GameID:         b.GameID,
+		TeamID:         common.ParseAwayTeamID(b.Game),
 		Source:         "CBS",
 		OverUnder:      b.parseOverUnder(),
 		Moneyline:      b.parseMoneyline(),
@@ -80,6 +86,7 @@ func (b CbsAwayBettingOdds) Instantiate() BettingOdds {
 func (b CbsHomeBettingOdds) Instantiate() BettingOdds {
 	return BettingOdds{
 		GameID:         b.GameID,
+		TeamID:         common.ParseHomeTeamID(b.Game),
 		Source:         "CBS",
 		OverUnder:      b.parseOverUnder(),
 		Moneyline:      b.parseMoneyline(),
@@ -92,6 +99,7 @@ func (b CbsHomeBettingOdds) Instantiate() BettingOdds {
 func (b FoxAwayBettingOdds) Instantiate() BettingOdds {
 	return BettingOdds{
 		GameID:         b.GameID,
+		TeamID:         common.ParseAwayTeamID(b.Game),
 		Source:         "FOX",
 		OverUnder:      b.parseOverUnder(),
 		Moneyline:      b.parseMoneyline(),
@@ -104,6 +112,7 @@ func (b FoxAwayBettingOdds) Instantiate() BettingOdds {
 func (b FoxHomeBettingOdds) Instantiate() BettingOdds {
 	return BettingOdds{
 		GameID:         b.GameID,
+		TeamID:         common.ParseHomeTeamID(b.Game),
 		Source:         "FOX",
 		OverUnder:      b.parseOverUnder(),
 		Moneyline:      b.parseMoneyline(),

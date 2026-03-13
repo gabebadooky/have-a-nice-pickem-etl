@@ -7,3 +7,5 @@ const OPENCAGE_GEOCODE_ENDPOINT_URL string = "https://api.opencagedata.com/geoco
 const SEASON_YEAR string = "2026"
 const CFB_REG_SEASON_WEEKS uint = 14
 const NFL_REG_SEASON_WEEKS uint = 18
+
+var POWER_CONFERENCES [4]string = [4]string{"1", "4", "5", "8"}

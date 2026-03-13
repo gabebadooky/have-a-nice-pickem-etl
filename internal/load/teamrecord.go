@@ -14,11 +14,11 @@ func loadTeamRecord(records []record.Record, db *gorm.DB) {
 			{Name: "team_id"},
 			{Name: "record_type"},
 		},
-		DoUpdates: clause.Assignments(map[string]interface{}{
-			"stadium":    gorm.Expr("EXCLUDED.wins"),
-			"city":       gorm.Expr("EXCLUDED.losses"),
-			"state":      gorm.Expr("EXCLUDED.ties"),
-			"updated_at": gorm.Expr("CURRENT_TIMESTAMP"),
+		DoUpdates: clause.AssignmentColumns([]string{
+			"wins",
+			"losses",
+			"ties",
+			"updated_at",
 		}),
 	}).Create(&records)
 

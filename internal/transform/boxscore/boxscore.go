@@ -29,6 +29,10 @@ type Boxscore struct {
 	UpdatedAt     time.Time `gorm:"column:updated_at"`
 }
 
+func (Boxscore) TableName() string {
+	return "pickem.box_scores"
+}
+
 // instantiate builds the away team boxscore from the game's ESPN linescore data.
 func (a AwayBoxscore) Instantiate() Boxscore {
 	return Boxscore{

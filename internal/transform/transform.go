@@ -13,6 +13,7 @@ import (
 	"have-a-nice-pickem-etl/internal/transform/record"
 	"have-a-nice-pickem-etl/internal/transform/teamdetails"
 	"log"
+	"slices"
 )
 
 type New struct {
@@ -39,6 +40,17 @@ type Transformation struct {
 	GameTransformations     GameTransformations
 	TeamTransformations     TeamTransformations
 	LocationTransformations LocationTransformations
+}
+
+func keyExistsInSlice[T any](
+	slice []T,
+	target T,
+	equals func(T, T) bool,
+) bool {
+	idx := slices.IndexFunc(slice, func(item T) bool {
+		return equals(item, target)
+	})
+	return idx != -1
 }
 
 // TransformData produces all game-level transformations (details, odds, boxscore, stats) from the extracted game.
@@ -99,12 +111,23 @@ func (t New) transformTeamData() TeamTransformations {
 		teamConferenceRecordRow := record.ConferenceRecord{Team: team}.Instantiate()
 		teamOverallRecordRow := record.OverallRecord{Team: team}.Instantiate()
 
-		allTeams = append(allTeams, teamDetailsRow)
-		allTeamRecords = append(
-			allTeamRecords,
-			teamConferenceRecordRow,
-			teamOverallRecordRow,
-		)
+		if !keyExistsInSlice(allTeams, teamDetailsRow, func(a, b teamdetails.TeamDetails) bool {
+			return a.TeamID == b.TeamID
+		}) {
+			allTeams = append(allTeams, teamDetailsRow)
+		}
+
+		if !keyExistsInSlice(allTeamRecords, teamOverallRecordRow, func(a, b record.Record) bool {
+			return a.TeamID == b.TeamID && a.RecordType == b.RecordType
+		}) {
+			allTeamRecords = append(allTeamRecords, teamOverallRecordRow)
+		}
+
+		if !keyExistsInSlice(allTeamRecords, teamConferenceRecordRow, func(a, b record.Record) bool {
+			return a.TeamID == b.TeamID && a.RecordType == b.RecordType
+		}) {
+			allTeamRecords = append(allTeamRecords, teamConferenceRecordRow)
+		}
 	}
 
 	return TeamTransformations{
@@ -122,7 +145,12 @@ func (t New) transformLocationData() LocationTransformations {
 		log.Printf("\nTransforming Location: %v", location)
 
 		locationDetailsRow := locationdetails.New{Location: location}.Instantiate()
-		allLocations = append(allLocations, locationDetailsRow)
+
+		if !keyExistsInSlice(allLocations, locationDetailsRow, func(a, b locationdetails.LocationDetails) bool {
+			return a.LocationID == b.LocationID
+		}) {
+			allLocations = append(allLocations, locationDetailsRow)
+		}
 	}
 
 	return LocationTransformations{

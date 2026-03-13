@@ -124,14 +124,16 @@ func (l CfbExtract) compileLocations() []location.Location {
 	var locationsThisWeek []location.Location
 
 	for i := range espnWeekGames {
+		var locationID string = espnWeekGames[i].Competitions[0].Venue.ID
 		var stadium string = espnWeekGames[i].Competitions[0].Venue.FullName
 		var city string = espnWeekGames[i].Competitions[0].Venue.Address.City
 		var state string = espnWeekGames[i].Competitions[0].Venue.Address.State
 
 		opencageLocation := location.OpencageLocation{
-			Stadium: stadium,
-			City:    city,
-			State:   state,
+			LocationID: locationID,
+			Stadium:    stadium,
+			City:       city,
+			State:      state,
 		}
 
 		locationDetails := opencageLocation.GetLocation()

@@ -19,15 +19,22 @@ type New struct {
 	transform.Transformation
 }
 
-func instantiateDatabaseConnection() *gorm.DB {
-	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=%s TimeZone=%s",
-		os.Getenv("DATABASE_HOST"),
-		os.Getenv("DATABASE_USER"),
-		os.Getenv("DATABASE_PASSWORD"),
-		os.Getenv("DATABASE_NAME"),
-		os.Getenv("DATABASE_PORT"),
-		os.Getenv("SSLMODE"),
-		os.Getenv("TIMEZONE"),
+func InstantiateDatabaseConnection() *gorm.DB {
+	host := os.Getenv("DATABASE_HOST")
+	user := os.Getenv("DATABASE_USER")
+	password := os.Getenv("DATABASE_PASSWORD")
+	dbname := os.Getenv("DATABASE_NAME")
+	port := os.Getenv("DATABASE_PORT")
+	sslmode := os.Getenv("SSLMODE")
+	timezone := os.Getenv("TIMEZONE")
+
+	passwordPart := fmt.Sprintf("password=%s", password)
+	if password == "" {
+		passwordPart = "password=''"
+	}
+
+	dsn := fmt.Sprintf("host=%s user=%s %s dbname=%s port=%s sslmode=%s TimeZone=%s",
+		host, user, passwordPart, dbname, port, sslmode, timezone,
 	)
 
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
@@ -53,17 +60,18 @@ func callBulkLoadProcedure(queryString string) {
 }
 
 func (l New) PerformLoad() {
-	db := instantiateDatabaseConnection()
+	db := InstantiateDatabaseConnection()
 
-	loadBettingOdds(l.GameTransformations.AllBettingOdds, db)
-	loadBoxscores(l.GameTransformations.AllBoxscores, db)
-	loadGameDetails(l.GameTransformations.AllGameDetails, db)
-	loadGameStats(l.GameTransformations.AllGameStats, db)
+	loadLocationDetails(l.LocationTransformations.AllLocations, db)
 
 	loadTeamDetails(l.TeamTransformations.AllTeams, db)
 	loadTeamRecord(l.TeamTransformations.AllTeamRecords, db)
 
-	loadLocationDetails(l.LocationTransformations.AllLocations, db)
+	loadGameDetails(l.GameTransformations.AllGameDetails, db)
+
+	loadBettingOdds(l.GameTransformations.AllBettingOdds, db)
+	loadBoxscores(l.GameTransformations.AllBoxscores, db)
+	loadGameStats(l.GameTransformations.AllGameStats, db)
 }
 
 func TestConnection() {

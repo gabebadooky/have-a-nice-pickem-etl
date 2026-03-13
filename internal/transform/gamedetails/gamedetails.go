@@ -34,6 +34,10 @@ type GameDetails struct {
 	UpdatedAt     time.Time `gorm:"column:updated_at"`
 }
 
+func (GameDetails) TableName() string {
+	return "pickem.games"
+}
+
 func (g New) setCbsGameCode() string {
 	cbsGameCode, err := common.ScrapeCbsGameCode(g.Game)
 	if err != nil {
@@ -92,23 +96,8 @@ func (g New) parseBroadcast() string {
 
 // Returns the Maidenhead property, as LocationID, for a given game
 func (g New) parseLocationID() string {
-	var gameStadium string = g.ESPN.GameInfo.Venue.FullName
-	var gameCity string = g.ESPN.GameInfo.Venue.Address.City
-	var gameState string = g.ESPN.GameInfo.Venue.Address.State
-
-	for i := range g.Locations {
-		opencageLocationResults := g.Locations[i].Opencage.Results[0]
-
-		stadium := opencageLocationResults.Components.Stadium
-		city := opencageLocationResults.Components.City
-		state := opencageLocationResults.Components.State
-
-		if (gameStadium == stadium) && (gameCity == city) && (gameState == state) {
-			return opencageLocationResults.Annotations.Maidenhead
-		}
-	}
-
-	return ""
+	var locationID string = g.ESPN.GameInfo.Venue.ID
+	return locationID
 }
 
 // parseGameStatus returns whether the game is completed from the ESPN competition status.

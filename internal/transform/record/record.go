@@ -25,6 +25,10 @@ type Record struct {
 	UpdatedAt  time.Time `gorm:"column:updated_at"`
 }
 
+func (Record) TableName() string {
+	return "pickem.team_records"
+}
+
 // instantiate builds a conference record from the team's CBS page.
 func (c ConferenceRecord) Instantiate() Record {
 	return Record{
