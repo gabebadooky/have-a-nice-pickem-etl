@@ -8,6 +8,8 @@ import (
 	"have-a-nice-pickem-etl/internal/utils"
 	"log"
 	"os"
+
+	"github.com/joho/godotenv"
 )
 
 type OpencageForwardGeocode struct {
@@ -18,6 +20,7 @@ type OpencageForwardGeocode struct {
 
 // formatURLwithQueryString builds the Opencage forward geocode URL with API key and address query.
 func formatURLwithQueryString(stadium string, city string, state string) string {
+	godotenv.Load()
 	var apikey string = os.Getenv("OPENCAGE_API_KEY")
 	log.Printf("apikey: %s", apikey)
 	url := fmt.Sprintf("%s?key=%s", utils.OPENCAGE_GEOCODE_ENDPOINT_URL, apikey)

@@ -21,6 +21,8 @@ func loadTeamDetails(records []teamdetails.TeamDetails, db *gorm.DB) {
 			"division_name",
 			"team_name",
 			"team_mascot",
+			"team_logo_url",
+			"team_dark_logo_url",
 			"power_conference",
 			"primary_color",
 			"alternate_color",

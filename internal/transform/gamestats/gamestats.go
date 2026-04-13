@@ -125,6 +125,10 @@ func scrapeStatContainerRow(gameStatsPageSelection *goquery.Selection, statTable
 func scrapeStat(GameStatsPageSelection *goquery.Selection, statTableIndex int, statIndex int, statComparisonRowSpanIndex int) Stat {
 	var statFloat float32
 
+	if GameStatsPageSelection == nil {
+		return Stat{}
+	}
+
 	statComparisonRow := scrapeStatContainerRow(GameStatsPageSelection, statTableIndex, statIndex)
 	statSpan := statComparisonRow.Find("span.comparison-data").Eq(statComparisonRowSpanIndex)
 	statText := strings.TrimSpace(statSpan.Text())
@@ -169,6 +173,7 @@ func (h HomeTeamStat) Instantiate() GameStats {
 
 	for statTableIndex, statTable := range statTableIndices {
 		for statIndex := range statTable {
+
 			awayStat := scrapeStat(h.FOX.StatsPage, statTableIndex, statIndex, homeStatSpanIndex)
 			statSlice = append(statSlice, awayStat)
 		}

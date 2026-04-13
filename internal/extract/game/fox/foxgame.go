@@ -66,12 +66,17 @@ func scrapeGameHyperlinkFromSchedulePage(gameID string, urlPrefix string, schedu
 
 	})
 
+	foxGameHyperlink = ""
 	return foxGameHyperlink
 }
 
 // scrapeGame fetches the Fox boxscore, stats, and odds pages for the configured game.
 func (g FoxGame) GetGamePage() FoxGamePages {
 	foxGameHyperlink := scrapeGameHyperlinkFromSchedulePage(g.GameID, utils.FOX_BASE_URL, g.FoxSchedulePage)
+
+	if foxGameHyperlink == "" {
+		return FoxGamePages{}
+	}
 
 	foxGameBoxscoreTabHyperlink := fmt.Sprint(foxGameHyperlink, utils.FOX_GAME_BOXSCORE_URL_SUFFIX)
 	foxGameStatsTabHyperlink := fmt.Sprint(foxGameHyperlink, utils.FOX_GAME_STATS_URL_SUFFIX)

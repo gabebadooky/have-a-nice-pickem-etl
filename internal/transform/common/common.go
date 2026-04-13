@@ -49,7 +49,9 @@ func ScrapeFoxGameCode(gameExtract game.Game) (string, error) {
 
 // ParseAwayTeamID returns the away team ID from the game ID (segment before "-at-").
 func ParseAwayTeamID(gameExtract game.Game) string {
-	before, _, _ := strings.Cut(gameExtract.GameID, "-at-")
+	idx := strings.LastIndex(gameExtract.GameID, "-at-")
+	before := gameExtract.GameID[:idx]
+	//before, _, _ := strings.Cut(gameExtract.GameID)
 	return before
 }
 
