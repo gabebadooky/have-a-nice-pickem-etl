@@ -57,8 +57,8 @@ func ParseAwayTeamID(gameExtract game.Game) string {
 
 // ParseHomeTeamID returns the home team ID from the game ID (between "-at-" and "-week-").
 func ParseHomeTeamID(gameExtract game.Game) string {
-	fmt.Printf("gameExtract.GameID: %s", gameExtract.GameID)
-	startIndex := strings.Index(gameExtract.GameID, "-at-") + 4
+	// startIndex := gameExtract.GameID[idx:]
+	startIndex := strings.LastIndex(gameExtract.GameID, "-at-") + 4
 	endIndex := strings.LastIndex(gameExtract.GameID, "-week-")
 	homeTeamID := gameExtract.GameID[startIndex:endIndex]
 	return homeTeamID
