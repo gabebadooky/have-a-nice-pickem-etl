@@ -155,7 +155,9 @@ func (a AwayTeamStat) Instantiate() GameStats {
 	for statTableIndex, statTable := range statTableIndices {
 		for statIndex := range statTable {
 			awayStat := scrapeStat(a.FOX.StatsPage, statTableIndex, statIndex, awayStatSpanIndex)
-			statSlice = append(statSlice, awayStat)
+			if len(awayStat.StatType) > 0 {
+				statSlice = append(statSlice, awayStat)
+			}
 		}
 	}
 
@@ -173,9 +175,10 @@ func (h HomeTeamStat) Instantiate() GameStats {
 
 	for statTableIndex, statTable := range statTableIndices {
 		for statIndex := range statTable {
-
-			awayStat := scrapeStat(h.FOX.StatsPage, statTableIndex, statIndex, homeStatSpanIndex)
-			statSlice = append(statSlice, awayStat)
+			homeStat := scrapeStat(h.FOX.StatsPage, statTableIndex, statIndex, homeStatSpanIndex)
+			if len(homeStat.StatType) > 0 {
+				statSlice = append(statSlice, homeStat)
+			}
 		}
 	}
 
