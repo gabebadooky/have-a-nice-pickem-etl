@@ -161,6 +161,9 @@ func (a AwayTeamStat) Instantiate() GameStats {
 		}
 	}
 
+	if len(statSlice) == 0 {
+		return GameStats{}
+	}
 	return GameStats{
 		GameID: a.GameID,
 		TeamID: teamID,
@@ -182,6 +185,9 @@ func (h HomeTeamStat) Instantiate() GameStats {
 		}
 	}
 
+	if len(statSlice) == 0 {
+		return GameStats{}
+	}
 	return GameStats{
 		GameID: h.GameID,
 		TeamID: teamID,

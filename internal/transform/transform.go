@@ -78,7 +78,12 @@ func (t New) transformGameData() GameTransformations {
 
 		allGameDetails = append(allGameDetails, gameDetailsRow)
 		allBoxscores = append(allBoxscores, awayBoxScoreRow, homeBoxScoreRow)
-		allGameStats = append(allGameStats, awayTeamGameStats, homeTeamGameStats)
+		if len(awayTeamGameStats.Stats) > 0 {
+			allGameStats = append(allGameStats, awayTeamGameStats)
+		}
+		if len(homeTeamGameStats.Stats) > 0 {
+			allGameStats = append(allGameStats, homeTeamGameStats)
+		}
 		allBettingOdds = append(
 			allBettingOdds,
 			espnAwayBettingOddsRow,

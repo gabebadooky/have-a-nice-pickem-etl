@@ -87,6 +87,13 @@ func (l New) PerformLoad() {
 	}
 
 	if len(l.GameTransformations.AllGameStats) > 0 {
+		fmt.Println("")
+		fmt.Println("")
+		fmt.Printf("GameStats Length: %d", len(l.GameTransformations.AllGameStats))
+		fmt.Println("")
+		fmt.Printf("GameStats: %v", l.GameTransformations.AllGameStats)
+		fmt.Println("")
+		fmt.Println("")
 		loadGameStats(l.GameTransformations.AllGameStats, db)
 	}
 
