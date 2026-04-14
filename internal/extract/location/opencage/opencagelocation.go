@@ -22,7 +22,6 @@ type OpencageForwardGeocode struct {
 func formatURLwithQueryString(stadium string, city string, state string) string {
 	godotenv.Load()
 	var apikey string = os.Getenv("OPENCAGE_API_KEY")
-	log.Printf("apikey: %s", apikey)
 	url := fmt.Sprintf("%s?key=%s", utils.OPENCAGE_GEOCODE_ENDPOINT_URL, apikey)
 
 	var formattedStadium string = utils.FormatStringID(stadium)

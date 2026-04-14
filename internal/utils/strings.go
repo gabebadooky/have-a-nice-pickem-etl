@@ -6,6 +6,7 @@ package utils
 import (
 	"strconv"
 	"strings"
+	"time"
 )
 
 // FormatStringID normalizes a string into an ID: lowercase, spaces to hyphens, and strips .')(&é.
@@ -88,4 +89,16 @@ func GetNumberOfSecondsFromDurationString(durationString string) int {
 	seconds := durationString[colonIndex:]
 	totalSeconds := ConvertStringToInt(minutes) + ConvertStringToInt(seconds)
 	return totalSeconds
+}
+
+func ConvertZuluTimestampToUnixTime(zuluTimestamp string) string {
+	var unixTime int64
+	t, err := time.Parse(time.RFC3339, zuluTimestamp)
+	if err != nil {
+		unixTime = time.Now().Unix()
+		return strconv.FormatInt(unixTime, 10)
+	}
+
+	unixTime = t.Unix()
+	return strconv.FormatInt(unixTime, 10)
 }

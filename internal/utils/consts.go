@@ -4,6 +4,8 @@ package utils
 
 const OPENCAGE_GEOCODE_ENDPOINT_URL string = "https://api.opencagedata.com/geocode/v1/json"
 
+const OPENWEATHERMAP_TIMESTAMP_ENDPOINT_URL string = "https://api.openweathermap.org/data/3.0/onecall/timemachine"
+
 const SEASON_YEAR string = "2026"
 const CFB_REG_SEASON_WEEKS uint = 14
 const NFL_REG_SEASON_WEEKS uint = 18
