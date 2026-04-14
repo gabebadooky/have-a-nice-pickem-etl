@@ -62,16 +62,34 @@ func callBulkLoadProcedure(queryString string) {
 func (l New) PerformLoad() {
 	db := InstantiateDatabaseConnection()
 
-	loadLocationDetails(l.LocationTransformations.AllLocations, db)
+	if len(l.LocationTransformations.AllLocations) > 0 {
+		loadLocationDetails(l.LocationTransformations.AllLocations, db)
+	}
 
-	loadTeamDetails(l.TeamTransformations.AllTeams, db)
-	loadTeamRecord(l.TeamTransformations.AllTeamRecords, db)
+	if len(l.TeamTransformations.AllTeams) > 0 {
+		loadTeamDetails(l.TeamTransformations.AllTeams, db)
+	}
 
-	loadGameDetails(l.GameTransformations.AllGameDetails, db)
+	if len(l.TeamTransformations.AllTeamRecords) > 0 {
+		loadTeamRecord(l.TeamTransformations.AllTeamRecords, db)
+	}
 
-	loadBettingOdds(l.GameTransformations.AllBettingOdds, db)
-	loadBoxscores(l.GameTransformations.AllBoxscores, db)
-	loadGameStats(l.GameTransformations.AllGameStats, db)
+	if len(l.GameTransformations.AllGameDetails) > 0 {
+		loadGameDetails(l.GameTransformations.AllGameDetails, db)
+	}
+
+	if len(l.GameTransformations.AllBettingOdds) > 0 {
+		loadBettingOdds(l.GameTransformations.AllBettingOdds, db)
+	}
+
+	if len(l.GameTransformations.AllBoxscores) > 0 {
+		loadBoxscores(l.GameTransformations.AllBoxscores, db)
+	}
+
+	if len(l.GameTransformations.AllGameStats) > 0 {
+		loadGameStats(l.GameTransformations.AllGameStats, db)
+	}
+
 }
 
 func TestConnection() {
