@@ -5,6 +5,7 @@ package extract
 
 import (
 	"fmt"
+	"have-a-nice-pickem-etl/internal/extract/forecast"
 	"have-a-nice-pickem-etl/internal/extract/game"
 	"have-a-nice-pickem-etl/internal/extract/location"
 	"have-a-nice-pickem-etl/internal/extract/schedule"
@@ -25,6 +26,7 @@ type Extract struct {
 	GamesExtract     []game.Game
 	TeamsExtract     []team.Team
 	LocationsExtract []location.Location
+	ForecastsExtract []forecast.Forecast
 }
 
 // getGames fetches and consolidates college football games for the configured week.
@@ -144,10 +146,11 @@ func (l CfbExtract) compileLocations() []location.Location {
 }
 
 // getLocations fetches and consolidates NFL game locations for the configured week.
-func (l NflExtract) compileLocations() []location.Location {
+func (l NflExtract) compileLocationsAndForecasts() ([]location.Location, []forecast.Forecast) {
 	weekSchedule := schedule.ConsolidateScheduleInfo(schedule.NflSchedule{Week: l.Week})
 	var espnWeekGames []espnsched.EventProperty = weekSchedule.ESPN.Events
 	var locationsThisWeek []location.Location
+	var forecastsThisWeek []forecast.Forecast
 
 	for i := range espnWeekGames {
 		var stadium string = espnWeekGames[i].Competitions[0].Venue.FullName
@@ -163,9 +166,20 @@ func (l NflExtract) compileLocations() []location.Location {
 		locationDetails := opencageLocation.GetLocation()
 		time.Sleep(2 * time.Second) // Forced delay between Opencage Geocode API calls
 		locationsThisWeek = append(locationsThisWeek, locationDetails)
+
+		openWeatherForecast := forecast.OpenWeatherForecast{
+			LocationID:   locationDetails.LocationID,
+			ZuluGameTime: espnWeekGames[i].Date,
+			Lat:          locationDetails.Opencage.Results[0].Geometry.Lat,
+			Lon:          locationDetails.Opencage.Results[0].Geometry.Lon,
+		}
+
+		forecastDetails := openWeatherForecast.GetForecast()
+		time.Sleep(2 * time.Second)
+		forecastsThisWeek = append(forecastsThisWeek, forecastDetails)
 	}
 
-	return locationsThisWeek
+	return locationsThisWeek, forecastsThisWeek
 }
 
 func (e CfbExtract) PerformExtract() Extract {

@@ -9,6 +9,7 @@ type ScoreboardEndpoint struct {
 
 type EventProperty struct {
 	ID           string                 `json:"id"`
+	Date         string                 `json:"date"`
 	Name         string                 `json:"name"`
 	Season       SeasonProperty         `json:"season"`
 	Week         WeekProperty           `json:"week"`

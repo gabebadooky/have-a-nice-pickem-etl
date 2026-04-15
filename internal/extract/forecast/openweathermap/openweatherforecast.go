@@ -10,12 +10,12 @@ import (
 )
 
 type OpenWeatherTimestampForecast struct {
-	Lat          float32
-	Lon          float32
+	Lat          float64
+	Lon          float64
 	ZuluGameTime string
 }
 
-func formatURLwithQueryString(lat float32, lon float32, zuluGameTime string) string {
+func formatURLwithQueryString(lat float64, lon float64, zuluGameTime string) string {
 	godotenv.Load()
 	var apikey string = os.Getenv("fb4548e7e50ecf86dbf87a952860a254")
 	var unixTimestamp string = utils.ConvertZuluTimestampToUnixTime(zuluGameTime)

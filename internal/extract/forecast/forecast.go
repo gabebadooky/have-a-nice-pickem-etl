@@ -5,8 +5,8 @@ import "have-a-nice-pickem-etl/internal/extract/forecast/openweathermap"
 type OpenWeatherForecast struct {
 	LocationID   string
 	ZuluGameTime string
-	Lat          float32
-	Lon          float32
+	Lat          float64
+	Lon          float64
 }
 
 type Forecast struct {
