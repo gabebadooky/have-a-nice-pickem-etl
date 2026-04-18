@@ -120,10 +120,11 @@ func (t NflExtract) compileTeams() []team.Team {
 }
 
 // getLocations fetches and consolidates college football game locations for the configured week.
-func (l CfbExtract) compileLocations() []location.Location {
+func (l CfbExtract) compileLocationsAndForecasts() ([]location.Location, []forecast.Forecast) {
 	weekSchedule := schedule.ConsolidateScheduleInfo(schedule.CfbSchedule{Week: l.Week})
 	var espnWeekGames []espnsched.EventProperty = weekSchedule.ESPN.Events
 	var locationsThisWeek []location.Location
+	var forecastsThisWeek []forecast.Forecast
 
 	for i := range espnWeekGames {
 		var locationID string = espnWeekGames[i].Competitions[0].Venue.ID
@@ -140,9 +141,20 @@ func (l CfbExtract) compileLocations() []location.Location {
 
 		locationDetails := opencageLocation.GetLocation()
 		locationsThisWeek = append(locationsThisWeek, locationDetails)
+
+		openWeatherForecast := forecast.OpenWeatherForecast{
+			LocationID:   locationDetails.LocationID,
+			ZuluGameTime: espnWeekGames[i].Date,
+			Lat:          locationDetails.Opencage.Results[0].Geometry.Lat,
+			Lon:          locationDetails.Opencage.Results[0].Geometry.Lon,
+		}
+
+		forecastDetails := openWeatherForecast.GetForecast()
+		time.Sleep(2 * time.Second) // Forced delay between OpenWeatherMap API calls
+		forecastsThisWeek = append(forecastsThisWeek, forecastDetails)
 	}
 
-	return locationsThisWeek
+	return locationsThisWeek, forecastsThisWeek
 }
 
 // getLocations fetches and consolidates NFL game locations for the configured week.
@@ -175,7 +187,7 @@ func (l NflExtract) compileLocationsAndForecasts() ([]location.Location, []forec
 		}
 
 		forecastDetails := openWeatherForecast.GetForecast()
-		time.Sleep(2 * time.Second)
+		time.Sleep(2 * time.Second) // Forced delay between OpenWeatherMap API calls
 		forecastsThisWeek = append(forecastsThisWeek, forecastDetails)
 	}
 
@@ -184,10 +196,12 @@ func (l NflExtract) compileLocationsAndForecasts() ([]location.Location, []forec
 
 func (e CfbExtract) PerformExtract() Extract {
 	weekExtract := CfbExtract{Week: e.Week}
+	locationExtracts, forecastExtracts := weekExtract.compileLocationsAndForecasts()
 
 	return Extract{
 		GamesExtract:     weekExtract.compileGames(),
 		TeamsExtract:     weekExtract.compileTeams(),
-		LocationsExtract: weekExtract.compileLocations(),
+		LocationsExtract: locationExtracts,
+		ForecastsExtract: forecastExtracts,
 	}
 }

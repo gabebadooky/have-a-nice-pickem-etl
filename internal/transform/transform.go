@@ -7,6 +7,7 @@ import (
 	"have-a-nice-pickem-etl/internal/extract"
 	"have-a-nice-pickem-etl/internal/transform/bettingodds"
 	"have-a-nice-pickem-etl/internal/transform/boxscore"
+	"have-a-nice-pickem-etl/internal/transform/forecastdetails"
 	"have-a-nice-pickem-etl/internal/transform/gamedetails"
 	"have-a-nice-pickem-etl/internal/transform/gamestats"
 	"have-a-nice-pickem-etl/internal/transform/locationdetails"
@@ -36,10 +37,15 @@ type LocationTransformations struct {
 	AllLocations []locationdetails.LocationDetails
 }
 
+type ForecastTransformations struct {
+	AllForecasts []forecastdetails.ForecastDetails
+}
+
 type Transformation struct {
 	GameTransformations     GameTransformations
 	TeamTransformations     TeamTransformations
 	LocationTransformations LocationTransformations
+	ForecastTransformations ForecastTransformations
 }
 
 func keyExistsInSlice[T any](
@@ -163,10 +169,32 @@ func (t New) transformLocationData() LocationTransformations {
 	}
 }
 
+func (t New) transformForecasts() ForecastTransformations {
+	var allForecasts []forecastdetails.ForecastDetails
+
+	for i := range t.ForecastsExtract {
+		forecast := t.ForecastsExtract[i]
+		log.Printf("\nTransforming Forecast: %v", forecast)
+
+		forecastDetailsrow := forecastdetails.New{Forecast: forecast}.Instantiate()
+
+		if !keyExistsInSlice(allForecasts, forecastDetailsrow, func(a, b forecastdetails.ForecastDetails) bool {
+			return a.LocationID == b.LocationID && a.ZuluTimestamp == b.ZuluTimestamp
+		}) {
+			allForecasts = append(allForecasts, forecastDetailsrow)
+		}
+	}
+
+	return ForecastTransformations{
+		AllForecasts: allForecasts,
+	}
+}
+
 func (t New) PerformTransformation() Transformation {
 	return Transformation{
 		GameTransformations:     t.transformGameData(),
 		TeamTransformations:     t.transformTeamData(),
 		LocationTransformations: t.transformLocationData(),
+		ForecastTransformations: t.transformForecasts(),
 	}
 }
