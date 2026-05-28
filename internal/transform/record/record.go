@@ -17,7 +17,7 @@ type OverallRecord struct {
 }
 
 type Record struct {
-	TeamID     string    `gorm:"column:team_id"`
+	TeamID     string    `gorm:"column:team"`
 	RecordType string    `gorm:"column:record_type"`
 	Wins       uint      `gorm:"column:wins"`
 	Losses     uint      `gorm:"column:losses"`
@@ -26,7 +26,7 @@ type Record struct {
 }
 
 func (Record) TableName() string {
-	return "pickem.team_records"
+	return "team_record"
 }
 
 // instantiate builds a conference record from the team's CBS page.

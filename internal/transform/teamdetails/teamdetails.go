@@ -35,7 +35,7 @@ type TeamDetails struct {
 }
 
 func (TeamDetails) TableName() string {
-	return "pickem.teams"
+	return "team"
 }
 
 // parseConferenceID returns the conference/group ID from the team's ESPN data.

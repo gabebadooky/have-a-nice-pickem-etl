@@ -40,18 +40,18 @@ TODO:
 
 type Stat struct {
 	StatType string  `gorm:"column:stat_type"`
-	Value    float32 `gorm:"column:stat_value"`
+	Value    float32 `gorm:"column:value"`
 }
 
 type GameStats struct {
-	GameID    string `gorm:"column:game_id"`
-	TeamID    string `gorm:"column:team_id"`
+	GameID    string `gorm:"column:game"`
+	TeamID    string `gorm:"column:team"`
 	Stats     []Stat
 	UpdatedAt time.Time `gorm:"column:updated_at"`
 }
 
 func (Stat) TableName() string {
-	return "pickem.stats"
+	return "stat"
 }
 
 const awayStatSpanIndex int = 0

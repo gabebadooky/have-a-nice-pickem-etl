@@ -23,7 +23,7 @@ type LocationDetails struct {
 }
 
 func (LocationDetails) TableName() string {
-	return "pickem.locations"
+	return "location"
 }
 
 // parseLocationID returns the location ID (maidenhead) from the first Opencage result.

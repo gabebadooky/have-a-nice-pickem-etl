@@ -19,23 +19,23 @@ type New struct {
 type GameDetails struct {
 	GameID        string    `gorm:"column:id"`
 	League        string    `gorm:"column:league"`
-	Week          int8      `gorm:"column:weeknum"`
+	Week          int8      `gorm:"column:week"`
 	Year          uint      `gorm:"column:season"`
 	EspnCode      string    `gorm:"column:espn_code"`
 	CbsCode       string    `gorm:"column:cbs_code"`
 	FoxCode       string    `gorm:"column:fox_code"`
 	VegasCode     string    `gorm:"column:vegas_code"`
-	AwayTeamID    string    `gorm:"column:away_team_id"`
-	HomeTeamID    string    `gorm:"column:home_team_id"`
-	ZuluTimestamp string    `gorm:"column:zulu_game_time"`
+	AwayTeamID    string    `gorm:"column:away_team"`
+	HomeTeamID    string    `gorm:"column:home_team"`
+	ZuluTimestamp string    `gorm:"column:kickoff_utc"`
 	Broadcast     string    `gorm:"column:broadcast"`
-	LocationID    string    `gorm:"column:location_id"`
+	LocationID    string    `gorm:"column:location"`
 	Finished      bool      `gorm:"column:finished"`
 	UpdatedAt     time.Time `gorm:"column:updated_at"`
 }
 
 func (GameDetails) TableName() string {
-	return "pickem.games"
+	return "game"
 }
 
 func (g New) setCbsGameCode() string {

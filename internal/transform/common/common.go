@@ -32,7 +32,7 @@ func ScrapeCbsGameCode(gameExtract game.Game) (string, error) {
 
 // ScrapeFoxGameCode extracts the Fox game path from the game's Fox odds page nav link.
 func ScrapeFoxGameCode(gameExtract game.Game) (string, error) {
-	if gameExtract.CBS == nil {
+	if gameExtract.FOX.OddsPage == nil {
 		return "", fmt.Errorf("Fox page does not exist for Game %s", gameExtract.GameID)
 	}
 

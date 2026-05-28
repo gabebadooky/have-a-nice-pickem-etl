@@ -7,13 +7,12 @@ import (
 	"gorm.io/gorm/clause"
 )
 
-// writes betting odds records to data/bettingodds.csv.
 func loadForecastDetails(records []forecastdetails.ForecastDetails, db *gorm.DB) {
 	if len(records) > 0 {
 		db.Clauses(clause.OnConflict{
 			Columns: []clause.Column{
 				{Name: "location_id"},
-				{Name: "zulu_game_time"},
+				{Name: "zulu_timestamp"},
 			},
 			DoUpdates: clause.AssignmentColumns([]string{
 				"temperature",
@@ -23,6 +22,7 @@ func loadForecastDetails(records []forecastdetails.ForecastDetails, db *gorm.DB)
 				"wind_speed",
 				"short_description",
 				"long_description",
+				"updated_at",
 			}),
 		}).Create(&records)
 	}

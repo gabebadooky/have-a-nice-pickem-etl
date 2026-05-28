@@ -1,6 +1,9 @@
 package forecast
 
-import "have-a-nice-pickem-etl/internal/extract/forecast/openweathermap"
+import (
+	"fmt"
+	"have-a-nice-pickem-etl/internal/extract/forecast/openweathermap"
+)
 
 type OpenWeatherForecast struct {
 	LocationID   string
@@ -15,18 +18,22 @@ type Forecast struct {
 	OpenWeather  openweathermap.OpenWeatherMapEndpoint
 }
 
-func (w OpenWeatherForecast) GetForecast() Forecast {
+func (w OpenWeatherForecast) GetForecast() (Forecast, error) {
 	openWeatherTimestampForecast := openweathermap.OpenWeatherTimestampForecast{
 		Lat:          w.Lat,
 		Lon:          w.Lon,
 		ZuluGameTime: w.ZuluGameTime,
 	}
 
-	openWeatherForecastDetails := openWeatherTimestampForecast.GetForecastDetails()
+	openWeatherForecastDetails, err := openWeatherTimestampForecast.GetForecastDetails()
+
+	if err != nil {
+		return Forecast{}, fmt.Errorf("get forecast details: %w", err)
+	}
 
 	return Forecast{
 		LocationID:   w.LocationID,
 		ZuluGameTime: w.ZuluGameTime,
 		OpenWeather:  openWeatherForecastDetails,
-	}
+	}, nil
 }

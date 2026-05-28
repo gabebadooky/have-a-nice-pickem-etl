@@ -149,9 +149,12 @@ func (l CfbExtract) compileLocationsAndForecasts() ([]location.Location, []forec
 			Lon:          locationDetails.Opencage.Results[0].Geometry.Lon,
 		}
 
-		forecastDetails := openWeatherForecast.GetForecast()
+		forecastDetails, err := openWeatherForecast.GetForecast()
 		time.Sleep(2 * time.Second) // Forced delay between OpenWeatherMap API calls
-		forecastsThisWeek = append(forecastsThisWeek, forecastDetails)
+
+		if err == nil {
+			forecastsThisWeek = append(forecastsThisWeek, forecastDetails)
+		}
 	}
 
 	return locationsThisWeek, forecastsThisWeek
@@ -186,9 +189,12 @@ func (l NflExtract) compileLocationsAndForecasts() ([]location.Location, []forec
 			Lon:          locationDetails.Opencage.Results[0].Geometry.Lon,
 		}
 
-		forecastDetails := openWeatherForecast.GetForecast()
+		forecastDetails, err := openWeatherForecast.GetForecast()
 		time.Sleep(2 * time.Second) // Forced delay between OpenWeatherMap API calls
-		forecastsThisWeek = append(forecastsThisWeek, forecastDetails)
+
+		if err == nil {
+			forecastsThisWeek = append(forecastsThisWeek, forecastDetails)
+		}
 	}
 
 	return locationsThisWeek, forecastsThisWeek

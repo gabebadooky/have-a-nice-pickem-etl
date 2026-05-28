@@ -35,7 +35,7 @@ func (e EspnHomeBettingOdds) parseOverUnder() float32 {
 		return float32(0)
 	}
 
-	var overUnder float32 = pickcenterSlice[1].OverUnder
+	var overUnder float32 = pickcenterSlice[0].OverUnder
 	return overUnder
 }
 

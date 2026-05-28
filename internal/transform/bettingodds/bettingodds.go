@@ -28,8 +28,8 @@ type BettingOdds1 struct {
 }
 
 type BettingOdds struct {
-	GameID         string    `gorm:"column:game_id"`
-	TeamID         string    `gorm:"column:team_id"`
+	GameID         string    `gorm:"column:game"`
+	TeamID         string    `gorm:"column:team"`
 	Source         string    `gorm:"column:source"`
 	OverUnder      float32   `gorm:"column:over_under"`
 	Moneyline      int       `gorm:"column:moneyline"`
@@ -39,7 +39,7 @@ type BettingOdds struct {
 }
 
 func (BettingOdds) TableName() string {
-	return "pickem.betting_odds"
+	return "betting_odds"
 }
 
 // instantiate builds ESPN away team betting odds from the game data.

@@ -3,13 +3,11 @@
 package load
 
 import (
-	"context"
 	"fmt"
 	"have-a-nice-pickem-etl/internal/transform"
 	"log"
 	"os"
 
-	"github.com/jackc/pgx/v5"
 	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -19,22 +17,32 @@ type New struct {
 	transform.Transformation
 }
 
+// InstantiateDatabaseConnection opens Postgres via GORM. The pickem schema is not set on
+// the DSN; each model's TableName() returns a schema-qualified name (e.g. pickem.games).
 func InstantiateDatabaseConnection() *gorm.DB {
+	_ = godotenv.Load()
+
 	host := os.Getenv("DATABASE_HOST")
 	user := os.Getenv("DATABASE_USER")
 	password := os.Getenv("DATABASE_PASSWORD")
 	dbname := os.Getenv("DATABASE_NAME")
 	port := os.Getenv("DATABASE_PORT")
 	sslmode := os.Getenv("SSLMODE")
+	channelBinding := os.Getenv("CHANNEL_BINDING")
 	timezone := os.Getenv("TIMEZONE")
+	schemaName := os.Getenv("SCHEMA")
+	if schemaName == "" {
+		schemaName = "pickem"
+	}
 
 	passwordPart := fmt.Sprintf("password=%s", password)
 	if password == "" {
 		passwordPart = "password=''"
 	}
 
-	dsn := fmt.Sprintf("host=%s user=%s %s dbname=%s port=%s sslmode=%s TimeZone=%s",
-		host, user, passwordPart, dbname, port, sslmode, timezone,
+	dsn := fmt.Sprintf("host=%s user=%s %s dbname=%s port=%s sslmode=%s channel_binding=%s TimeZone=%s search_path=%s,public",
+		host, user, passwordPart, dbname, port, sslmode, channelBinding, timezone,
+		schemaName,
 	)
 
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
@@ -42,21 +50,35 @@ func InstantiateDatabaseConnection() *gorm.DB {
 		log.Fatalf("Error occurred connecting to Postgres Database %s:\n%s", os.Getenv("DATABASE_NAME"), err)
 	}
 
+	// Ensure the session is actually using the expected schema (and log what is visible)
+	if err := db.Exec(fmt.Sprintf(`SET search_path TO "%s", public`, schemaName)).Error; err != nil {
+		log.Fatalf("Error setting search_path to %s: %v", schemaName, err)
+	}
+
+	var searchPath string
+	if err := db.Raw(`SHOW search_path`).Scan(&searchPath).Error; err == nil {
+		log.Printf("Postgres search_path=%s", searchPath)
+	}
+
+	type tableRow struct {
+		TableSchema string `gorm:"column:table_schema"`
+		TableName   string `gorm:"column:table_name"`
+	}
+	var tables []tableRow
+	if err := db.Raw(`
+		SELECT table_schema, table_name
+		FROM information_schema.tables
+		WHERE table_type = 'BASE TABLE'
+		  AND table_schema = current_schema()
+		ORDER BY table_schema, table_name
+	`).Scan(&tables).Error; err == nil {
+		log.Printf("Tables visible in current_schema(): %d", len(tables))
+		for _, t := range tables {
+			log.Printf("table=%s.%s", t.TableSchema, t.TableName)
+		}
+	}
+
 	return db
-}
-
-func callBulkLoadProcedure(queryString string) {
-	godotenv.Load()
-	conn, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
-	if err != nil {
-		log.Printf("Error occurred instantiating Postgres Database connection: %s", err)
-	}
-	defer conn.Close(context.Background())
-
-	_, err = conn.Exec(context.Background(), queryString)
-	if err != nil {
-		log.Printf("Error occurred with the SQL command %s: %s", queryString, err)
-	}
 }
 
 func (l New) PerformLoad() {
@@ -98,12 +120,23 @@ func (l New) PerformLoad() {
 
 func TestConnection() {
 	godotenv.Load()
-	ctx := context.Background()
-	databaseURL := os.Getenv("DATABASE_URL")
-	println(databaseURL)
-	conn, err := pgx.Connect(ctx, databaseURL)
-	if err != nil {
-		log.Printf("Error occurred instantiating Postgres Database connection: %s", err)
+	db := InstantiateDatabaseConnection()
+
+	type schemaRow struct {
+		SchemaName string `gorm:"column:schema_name"`
 	}
-	defer conn.Close(context.Background())
+
+	var schemas []schemaRow
+	if err := db.Raw(`
+		SELECT schema_name
+		FROM information_schema.schemata
+		ORDER BY schema_name
+	`).Scan(&schemas).Error; err != nil {
+		log.Fatalf("Error querying schemas: %v", err)
+	}
+
+	log.Printf("Schemas returned: %d", len(schemas))
+	for _, s := range schemas {
+		log.Printf("schema_name=%s", s.SchemaName)
+	}
 }

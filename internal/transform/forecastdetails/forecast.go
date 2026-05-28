@@ -10,8 +10,8 @@ type New struct {
 }
 
 type ForecastDetails struct {
-	LocationID       string    `gorm:"column:location_id"`
-	ZuluTimestamp    string    `gorm:"column:zulu_timestamp"`
+	LocationID       string    `gorm:"column:location"`
+	ZuluTimestamp    string    `gorm:"column:timestamp_utc"`
 	Temperature      float32   `gorm:"column:temperature"`
 	FeelsLike        float32   `gorm:"column:feels_like"`
 	Humidity         float32   `gorm:"column:humidity"`
@@ -20,6 +20,10 @@ type ForecastDetails struct {
 	ShortDescription string    `gorm:"column:short_description"`
 	LongDescription  string    `gorm:"column:long_description"`
 	UpdatedAt        time.Time `gorm:"column:updated_at"`
+}
+
+func (ForecastDetails) TableName() string {
+	return "forecast"
 }
 
 func (f New) parseTemperature() float32 {

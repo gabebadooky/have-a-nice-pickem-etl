@@ -18,8 +18,8 @@ type HomeBoxscore struct {
 }
 
 type Boxscore struct {
-	GameID        string    `gorm:"column:game_id"`
-	TeamID        string    `gorm:"column:team_id"`
+	GameID        string    `gorm:"column:game"`
+	TeamID        string    `gorm:"column:team"`
 	Q1Score       uint      `gorm:"column:q1_score"`
 	Q2Score       uint      `gorm:"column:q2_score"`
 	Q3Score       uint      `gorm:"column:q3_score"`
@@ -30,7 +30,7 @@ type Boxscore struct {
 }
 
 func (Boxscore) TableName() string {
-	return "pickem.box_scores"
+	return "box_score"
 }
 
 // instantiate builds the away team boxscore from the game's ESPN linescore data.
