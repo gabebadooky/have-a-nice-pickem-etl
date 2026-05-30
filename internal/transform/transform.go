@@ -7,6 +7,7 @@ import (
 	"have-a-nice-pickem-etl/internal/extract"
 	"have-a-nice-pickem-etl/internal/transform/bettingodds"
 	"have-a-nice-pickem-etl/internal/transform/boxscore"
+	"have-a-nice-pickem-etl/internal/transform/conferencedetails"
 	"have-a-nice-pickem-etl/internal/transform/forecastdetails"
 	"have-a-nice-pickem-etl/internal/transform/gamedetails"
 	"have-a-nice-pickem-etl/internal/transform/gamestats"
@@ -33,6 +34,10 @@ type TeamTransformations struct {
 	AllTeamRecords []record.Record
 }
 
+type ConferenceTransformations struct {
+	AllConferences []conferencedetails.ConferenceDetails
+}
+
 type LocationTransformations struct {
 	AllLocations []locationdetails.LocationDetails
 }
@@ -42,10 +47,11 @@ type ForecastTransformations struct {
 }
 
 type Transformation struct {
-	GameTransformations     GameTransformations
-	TeamTransformations     TeamTransformations
-	LocationTransformations LocationTransformations
-	ForecastTransformations ForecastTransformations
+	GameTransformations       GameTransformations
+	TeamTransformations       TeamTransformations
+	ConferenceTransformations ConferenceTransformations
+	LocationTransformations   LocationTransformations
+	ForecastTransformations   ForecastTransformations
 }
 
 func keyExistsInSlice[T any](
@@ -147,6 +153,27 @@ func (t New) transformTeamData() TeamTransformations {
 	}
 }
 
+func (t New) transformConferenceData() ConferenceTransformations {
+	var allConferences []conferencedetails.ConferenceDetails
+
+	for i := range t.TeamsExtract {
+		team := t.TeamsExtract[i]
+
+		conferenceRow := conferencedetails.New{Team: team}.Instantiate()
+		log.Printf("\nTransforming Conference: %v", conferenceRow.Name)
+
+		if !keyExistsInSlice(allConferences, conferenceRow, func(a, b conferencedetails.ConferenceDetails) bool {
+			return a.ConferenceID == b.ConferenceID
+		}) {
+			allConferences = append(allConferences, conferenceRow)
+		}
+	}
+
+	return ConferenceTransformations{
+		AllConferences: allConferences,
+	}
+}
+
 // TransformData produces location details from the extracted location data.
 func (t New) transformLocationData() LocationTransformations {
 	var allLocations []locationdetails.LocationDetails
@@ -192,9 +219,10 @@ func (t New) transformForecasts() ForecastTransformations {
 
 func (t New) PerformTransformation() Transformation {
 	return Transformation{
-		GameTransformations:     t.transformGameData(),
-		TeamTransformations:     t.transformTeamData(),
-		LocationTransformations: t.transformLocationData(),
-		ForecastTransformations: t.transformForecasts(),
+		GameTransformations:       t.transformGameData(),
+		TeamTransformations:       t.transformTeamData(),
+		ConferenceTransformations: t.transformConferenceData(),
+		LocationTransformations:   t.transformLocationData(),
+		ForecastTransformations:   t.transformForecasts(),
 	}
 }
