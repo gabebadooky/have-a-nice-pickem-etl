@@ -11,14 +11,14 @@ import (
 func loadBoxscores(records []boxscore.Boxscore, db *gorm.DB) {
 	db.Clauses(clause.OnConflict{
 		Columns: []clause.Column{
-			{Name: "game_id"},
-			{Name: "team_id"},
+			{Name: "game"},
+			{Name: "team"},
 		},
 		DoUpdates: clause.AssignmentColumns([]string{
-			"q1_score",
-			"q2_score",
-			"q3_score",
-			"q4_score",
+			"quarter1",
+			"quarter2",
+			"quarter3",
+			"quarter4",
 			"overtime",
 			"total",
 			"updated_at",

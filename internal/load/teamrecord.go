@@ -11,7 +11,7 @@ import (
 func loadTeamRecord(records []record.Record, db *gorm.DB) {
 	db.Clauses(clause.OnConflict{
 		Columns: []clause.Column{
-			{Name: "team_id"},
+			{Name: "team"},
 			{Name: "record_type"},
 		},
 		DoUpdates: clause.AssignmentColumns([]string{

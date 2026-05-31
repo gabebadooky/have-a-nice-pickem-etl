@@ -21,13 +21,12 @@ type TeamDetails struct {
 	CBSCode         string    `gorm:"column:cbs_code"`
 	FoxCode         string    `gorm:"column:fox_code"`
 	VegasCode       string    `gorm:"column:vegas_code"`
-	ConferenceID    string    `gorm:"column:conference_id"`
-	DivisionName    string    `gorm:"column:division_name"`
-	Name            string    `gorm:"column:team_name"`
-	Mascot          string    `gorm:"column:team_mascot"`
-	PowerConference bool      `gorm:"column:power_conference"`
-	TeamLogoURL     string    `gorm:"column:team_logo_url"`
-	TeamDarkLogoURL string    `gorm:"column:team_dark_logo_url"`
+	ConferenceID    string    `gorm:"column:conference"`
+	DivisionName    string    `gorm:"column:division"`
+	Name            string    `gorm:"column:name"`
+	Mascot          string    `gorm:"column:mascot"`
+	TeamLogoURL     string    `gorm:"column:logo_url"`
+	TeamDarkLogoURL string    `gorm:"column:dark_logo_url"`
 	PrimaryColor    string    `gorm:"column:primary_color"`
 	AlternateColor  string    `gorm:"column:alternate_color"`
 	Ranking         uint      `gorm:"column:ranking"`
@@ -54,20 +53,6 @@ func (t New) parseTeamName() string {
 func (t New) parseTeamMascot() string {
 	var teamMascot string = t.ESPN.Team.Name
 	return teamMascot
-}
-
-// parsePowerConference returns the boolean value for if the conference the team is in is a power conference
-func (t New) parsePowerConference() bool {
-	var conferenceID string = t.ESPN.Team.Groups.ID
-	var powerConferenceArray [4]string = utils.POWER_CONFERENCES
-
-	for i := range len(utils.POWER_CONFERENCES) {
-		if conferenceID == powerConferenceArray[i] {
-			return true
-		}
-	}
-
-	return false
 }
 
 // parseTeamLogoURL returns the team's primary logo URL
@@ -114,7 +99,6 @@ func (t New) Instantiate() TeamDetails {
 		ConferenceID:    t.parseConferenceID(),
 		Name:            t.parseTeamName(),
 		Mascot:          t.parseTeamMascot(),
-		PowerConference: t.parsePowerConference(),
 		TeamLogoURL:     t.parseTeamLogoURL(),
 		TeamDarkLogoURL: t.parseTeamDarkLogoURL(),
 		PrimaryColor:    t.parsePrimaryColor(),

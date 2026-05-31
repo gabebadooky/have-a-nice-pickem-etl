@@ -20,10 +20,10 @@ type HomeBoxscore struct {
 type Boxscore struct {
 	GameID        string    `gorm:"column:game"`
 	TeamID        string    `gorm:"column:team"`
-	Q1Score       uint      `gorm:"column:q1_score"`
-	Q2Score       uint      `gorm:"column:q2_score"`
-	Q3Score       uint      `gorm:"column:q3_score"`
-	Q4Score       uint      `gorm:"column:q4_score"`
+	Q1Score       uint      `gorm:"column:quarter1"`
+	Q2Score       uint      `gorm:"column:quarter2"`
+	Q3Score       uint      `gorm:"column:quarter3"`
+	Q4Score       uint      `gorm:"column:quarter4"`
 	OvertimeScore uint      `gorm:"column:overtime"`
 	TotalScore    uint      `gorm:"column:total"`
 	UpdatedAt     time.Time `gorm:"column:updated_at"`

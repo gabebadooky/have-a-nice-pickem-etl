@@ -11,8 +11,8 @@ func loadForecastDetails(records []forecastdetails.ForecastDetails, db *gorm.DB)
 	if len(records) > 0 {
 		db.Clauses(clause.OnConflict{
 			Columns: []clause.Column{
-				{Name: "location_id"},
-				{Name: "zulu_timestamp"},
+				{Name: "location"},
+				{Name: "timestamp_utc"},
 			},
 			DoUpdates: clause.AssignmentColumns([]string{
 				"temperature",

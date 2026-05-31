@@ -9,10 +9,10 @@ import (
 )
 
 type stats struct {
-	GameID    string    `gorm:"column:game_id"`
-	TeamID    string    `gorm:"column:team_id"`
+	GameID    string    `gorm:"column:game"`
+	TeamID    string    `gorm:"column:team"`
 	StatType  string    `gorm:"column:stat_type"`
-	StatValue float32   `gorm:"column:stat_value"`
+	StatValue float32   `gorm:"column:value"`
 	UpdatedAt time.Time `gorm:"column:updated_at"`
 }
 

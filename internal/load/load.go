@@ -84,6 +84,10 @@ func InstantiateDatabaseConnection() *gorm.DB {
 func (l New) PerformLoad() {
 	db := InstantiateDatabaseConnection()
 
+	if len(l.ConferenceTransformations.AllConferences) > 0 {
+		loadConferenceDetails(l.ConferenceTransformations.AllConferences, db)
+	}
+
 	if len(l.LocationTransformations.AllLocations) > 0 {
 		loadLocationDetails(l.LocationTransformations.AllLocations, db)
 	}

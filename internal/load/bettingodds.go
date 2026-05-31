@@ -12,8 +12,8 @@ func loadBettingOdds(records []bettingodds.BettingOdds, db *gorm.DB) {
 	if len(records) > 0 {
 		db.Clauses(clause.OnConflict{
 			Columns: []clause.Column{
-				{Name: "game_id"},
-				{Name: "team_id"},
+				{Name: "game"},
+				{Name: "team"},
 				{Name: "source"},
 			},
 			DoUpdates: clause.AssignmentColumns([]string{
